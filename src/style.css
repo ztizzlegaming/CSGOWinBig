@@ -1,0 +1,56 @@
+#chatbox {
+	overflow: none;
+	position: relative;
+	height: 400px;
+	padding: 0px;
+	border: 1px solid black;
+}
+
+#chatmessages {
+	overflow: auto;
+	position: absolute;
+	bottom: 0px;
+	width: 100%;
+	max-height: 400px;
+}
+
+.chat-message:nth-child(even) {
+	background-color: #AAA;
+}
+
+.chat-messge:nth-child(odd) {
+	
+}
+
+.chat-message:not(:last-child) {
+	margin-bottom: 5px;
+}
+
+.chat-message {
+	word-wrap: break-word;
+	position: relative;
+}
+
+.chat-profile-pic {
+	position: absolute;
+	top: 2px;
+	left: 2px;
+	height: 30px;
+	width: 30px;
+}
+
+.chat-profile-name {
+	position: absolute;
+	top: 0px;
+	left: 35px;
+}
+
+.chat-date-time {
+	position: absolute;
+	top: 15px;
+	left: 35px;
+}
+
+.chat-text {
+	padding-top: 35px;
+}

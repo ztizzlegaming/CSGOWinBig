@@ -14,6 +14,7 @@
 	<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/sweetalert/1.0.1/sweetalert.min.css">
 	<script src="//cdnjs.cloudflare.com/ajax/libs/sweetalert/1.0.1/sweetalert.min.js"></script>
 
+	<link rel="stylesheet" type="text/css" href="style.css">
 	<script src="script.js"></script>
 </head>
 <body>
@@ -38,7 +39,8 @@
 						</a>
 					</li>
 					<li class="logout" style="display: none;">
-						<a href="">Deposit skins</a>
+						<!-- <a href="https://steamcommunity.com/tradeoffer/new/?partner=278478260&token=s8MZ56C5" target="_blank">Deposit skins</a> -->
+						<a href="https://steamcommunity.com/tradeoffer/new/?partner=60354605&token=gxN5u_IK" target="_blank">Deposit skins</a>
 					</li>
 					<li class="logout" style="display: none;">
 						<a href="php/steamauth/logout.php">Logout</a>
@@ -49,7 +51,13 @@
 	</div>
 
 	<div class="container">
-		<h1 id="steam-profile-name"></h1>
+		<div class="col-sm-4">
+			<div id="chatbox">
+				<div id="chatmessages"></div>
+			</div>
+			<input id="chat-input" style="width: 100%; display: none;" placeholder="Send message (press 'Enter' to send)">
+		</div>
+		<div class="col-sm-8"></div>
 	</div>
 </body>
 </html>
