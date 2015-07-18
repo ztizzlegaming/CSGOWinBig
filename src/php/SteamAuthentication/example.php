@@ -2,7 +2,7 @@
     require ('steamauth/steamauth.php');  
     
 	# You would uncomment the line beneath to make it refresh the data every time the page is loaded
-	$_SESSION['steam_uptodate'] = false;
+	// $_SESSION['steam_uptodate'] = false;
 ?>
 <html>
 <head>
@@ -13,7 +13,7 @@
 if(!isset($_SESSION['steamid'])) {
 
     echo "welcome guest! please login \n \n";
-    steamlogin(); //login button
+    echo steamlogin(); //login button
     
 }  else {
     include ('steamauth/userInfo.php');

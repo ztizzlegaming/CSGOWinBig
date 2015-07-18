@@ -1,6 +1,24 @@
 <?php
-require ('steamauth/openid.php');
+function getDB() {
+	$dbHost = 'localhost';
+	$db     = 'jordantu_csgowinbig';
+	$dbUser = "jordantu_ztizzle";
 
+	# Get database password from outside of web root
+	$fileLoc = $_SERVER['DOCUMENT_ROOT'] . '/../../passwords.txt';
+	if (file_exists($fileLoc)) {
+		$fh = fopen($fileLoc, 'r');
+		$jsonStr = fgets($fh);
+		$arr = json_decode($jsonStr, true);
+		$dbPass = $arr['default-password'];
+		fclose($fh);
+	} else {
+		die('no file found');
+	}
+
+	$db = new PDO("mysql:host=$dbHost;dbname=$db;charset=utf8", $dbUser, $dbPass);
+	return $db;
+}
 
 function getSteamProfileInfoForSteamID($allUsersInfoStr, $steamIDToFind) {
 	$allUsersInfo = json_decode($allUsersInfoStr, true);
@@ -34,7 +52,7 @@ function generateChatArr() {
 	$allUserIDsStr = join(',', $allUserIDs);
 
 	# Get all user info for the steam user IDs
-	$usersInfoStr = file_get_contents("http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=6BF5980401E3EB67D921BF4704521AD5&steamids=$allUserIDsStr");
+	$usersInfoStr = file_get_contents("http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=1FBC1D48247E517DB7CE37C093450807&steamids=$allUserIDsStr");
 
 	$chatMessagesArr = array();
 
@@ -62,5 +80,9 @@ function jsonSuccess($data) {
 
 function jsonErr($errMsg) {
 	return json_encode(array('success' => 0, 'errMsg' => $errMsg));
+}
+
+function getSteamAPIKey() {
+	return '1FBC1D48247E517DB7CE37C093450807';
 }
 ?>

@@ -17,6 +17,7 @@ $(function () {
 			}
 
 			$('#loading-menubar').css('display', 'none');
+			//setTimeout(update, 1000);
 		});
 	});
 
@@ -41,8 +42,6 @@ $(function () {
 			});
 		}
 	});
-
-	update();
 });
 
 function update () {
@@ -52,7 +51,7 @@ function update () {
 		async: true,
 		cache: false,
 		dataType: 'json',
-		timeout: 9000,
+		timeout: 10000,
 		success: function (jsonObj) {
 			console.log('Response received.');
 			handleJsonResponse(jsonObj, function (data) {
