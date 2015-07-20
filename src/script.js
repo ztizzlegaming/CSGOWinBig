@@ -1,29 +1,39 @@
-var mostRecentID = 0;
+//The most recent ID for the chat
+var localMostRecentID = 0;
+
+//Whether or not the user is logged in
+var loggedIn = false;
+
+//The user's information
+var mUserInfo = null;
 
 $(function () {
 	$.getJSON('php/login-status.php', function (jsonObj) {
 		handleJsonResponse(jsonObj, function (data) {
-			var loginStatus = data['loginStatus'],
-				steamProfileName = data['steamProfileName'],
-				steamProfileID = data['steamProfileID'];
+			var loginStatus = data['loginStatus'];
+
+			mUserInfo = data['userInfo'];
 
 			if (loginStatus === 1) {
 				//They are logged in
 				$('.logout').css('display', 'inline');
 				$('#chat-input').css('display', 'block');
+
+				loggedIn = true;
 			} else {
 				//They are not logged in
 				$('.login').css('display', 'inline');
 			}
 
 			$('#loading-menubar').css('display', 'none');
-			//setTimeout(update, 1000);
+
+			setTimeout(update, 1000);
 		});
 	});
 
 	var isSending = false;
 	$('#chat-input').on('keydown', function (event) {
-		if (event.which === 13) {
+		if (event.which === 13 || loggedIn === false) {
 			var text = this.value;
 
 			if (text.length === 0) {
@@ -36,8 +46,23 @@ $(function () {
 
 			isSending = true;
 
+			var dateTime = getFormattedDate(),
+				profileName = mUserInfo['personaname'],
+				avatar = mUserInfo['avatar'];
+
+			var str = '<div class="chat-message">';
+			str += '<img src="' + avatar + '" class="chat-profile-pic">';
+			str += '<div class="chat-profile-name">' + profileName + '</div>';
+			str += '<div class="chat-date-time">' + dateTime + '</div>';
+			str += '<div class="chat-text">' + text + '</div>';
+			str += '</div>';
+
+			$('#chatmessages').append(str);
+			$('#chatmessages').scrollTop($('#chatmessages')[0].scrollHeight);
+
+			$('#chat-input').val('');
+
 			$.post('php/send-chat-message.php', {text: text}, function () {
-				$('#chat-input').val('');
 				isSending = false;
 			});
 		}
@@ -45,36 +70,24 @@ $(function () {
 });
 
 function update () {
-	$.ajax({
-		type: 'GET',
-		url: 'php/update.php?mostRecentMessageID=' + mostRecentID,
-		async: true,
-		cache: false,
-		dataType: 'json',
-		timeout: 10000,
-		success: function (jsonObj) {
+	$.getJSON('php/update.php', function (jsonObj) {
+		handleJsonResponse(jsonObj, function (data) {
 			console.log('Response received.');
-			handleJsonResponse(jsonObj, function (data) {
-				var chat = data['chat'];
-				var recentID = chat[chat.length - 1]['id'];
+			var chat = data['chat'];
+
+			var serverMostRecentID = chat[chat.length - 1]['id'];
+
+			if (serverMostRecentID > localMostRecentID) {
+				console.log('New messages!');
+				localMostRecentID = serverMostRecentID;
 
 				var chatStr = generateChatStr(chat);
 				$('#chatmessages').html(chatStr);
 				$('#chatmessages').scrollTop($('#chatmessages')[0].scrollHeight);
+			}
 
-				mostRecentID = recentID;
-
-				setTimeout(update, 1000);
-			});
-		},
-		error: function (XMLHttpRequest, textStatus, errorThrown) {
-			//if (textStatus === 'timeout') {
-			console.log('An error has occured. Error message: ' + textStatus);
-				setTimeout(update, 1000);
-			//} else {
-			//	errMsg('Please refresh the page and try again.\nError message: ' + textStatus);
-			//}
-		}
+			setTimeout(update, 2000); //Call update again after 2 seconds
+		});
 	});
 }
 
@@ -92,7 +105,10 @@ function generateChatStr (chat) {
 		var profileName = userInfo['personaname'],
 			profilePicSmall = userInfo['avatar'];
 
-		str += '<div class="chat-message"><img src="' + profilePicSmall + '" class="chat-profile-pic"><div class="chat-profile-name">' + profileName + '</div><div class="chat-date-time">' + date + ' at ' + time + '</div><div class="chat-text">' + text + '</div></div>';
+		str += '<div class="chat-message">';
+		str += '<img src="' + profilePicSmall + '" class="chat-profile-pic">';
+		str += '<div class="chat-profile-name">' + profileName + '</div>';
+		str += '<div class="chat-date-time">' + date + ' at ' + time + '</div><div class="chat-text">' + text + '</div></div>';
 	}
 	return str;
 }
@@ -112,4 +128,11 @@ function errMsg (message) {
 		message = 'An unknown error has occured. Please refresh the page and try again.';
 	}
 	swal('Hmm, something went wrong', message, 'error');
+}
+
+function getFormattedDate() {
+	var date = new Date();
+	var str = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " at " +  date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+
+	return str;
 }

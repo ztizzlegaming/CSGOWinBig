@@ -1,24 +1,12 @@
 <?php
 session_start();
 include 'default.php';
+include 'SteamAuthentication/steamauth/userInfo.php';
 
-$steamID = $_SESSION['steamid'];
+$steamID = isset($_SESSION['steamid']) ? $_SESSION['steamid'] : null;
 
-if (!is_null($steamID) && isset($steamID)) {
-	# Make call to steam api for the user logged in's information
-	$apiKey = getSteamAPIKey();
-	$userInfoStr = file_get_contents("http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=$apiKey&steamids=$steamID");
-	$userInfo = getSteamProfileInfoForSteamID($userInfoStr, $steamID);
+$loginStatus = !is_null($steamID) && isset($steamID) ? 1 : 0;
 
-	$loginStatus = 1;
-	$steamProfileName = $userInfo['personaname'];
-	$steamProfileID = $userInfo['steamid'];
-} else {
-	$loginStatus = 0;
-	$steamProfileName = '';
-	$steamProfileID = '';
-}
-
-$data = array('loginStatus' => $loginStatus, 'steamProfileName' => $steamProfileName, 'steamProfileID' => $steamProfileID);
+$data = array('loginStatus' => $loginStatus, 'userInfo' => $loginStatus === 1 ? $steamprofile : null);
 echo jsonSuccess($data);
 ?>

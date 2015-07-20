@@ -52,7 +52,8 @@ function generateChatArr() {
 	$allUserIDsStr = join(',', $allUserIDs);
 
 	# Get all user info for the steam user IDs
-	$usersInfoStr = file_get_contents("http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=1FBC1D48247E517DB7CE37C093450807&steamids=$allUserIDsStr");
+	$chatAPIKey = getSteamAPIKey('chat');
+	$usersInfoStr = file_get_contents("http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=$chatAPIKey&steamids=$allUserIDsStr");
 
 	$chatMessagesArr = array();
 
@@ -82,7 +83,20 @@ function jsonErr($errMsg) {
 	return json_encode(array('success' => 0, 'errMsg' => $errMsg));
 }
 
-function getSteamAPIKey() {
-	return '1FBC1D48247E517DB7CE37C093450807';
+function getSteamAPIKey($type) {
+	switch ($type) {
+		case 'login':
+			return '1FBC1D48247E517DB7CE37C093450807'; # Key for testbotztizzle
+
+		case 'chat':
+			return 'C3755F409079584CFEAF47C0C9164283'; # Key for jturley128
+
+		case 'items':
+			return ''; # Add this later once I start working on the items, once the chat is working.
+		
+		default:
+			return null;
+	}
+	;
 }
 ?>

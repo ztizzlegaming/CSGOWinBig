@@ -1,7 +1,7 @@
 <?php
 session_start();
 include 'default.php';
-include 'steamauth/userInfo.php';
+include 'SteamAuthentication/steamauth/userInfo.php';
 $db = getDB();
 
 if (!isset($_SESSION['steamid'])) {
@@ -23,5 +23,5 @@ $stmt->bindValue(':userid', $steamUserID);
 $stmt->bindValue(':text', $text);
 $stmt->execute();
 
-echo jsonSuccess();
+echo jsonSuccess(array('message' => 'Message has been sent!'));
 ?>
