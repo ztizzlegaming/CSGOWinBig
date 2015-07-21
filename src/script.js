@@ -1,6 +1,10 @@
 //The most recent ID for the chat
 var localMostRecentID = 0, potCount = 0;
 
+//The most recent ID for the user sending the chat.
+//Used if they want to send multiple messages before the chat refreshes.
+var localChatIDForColor = 0;
+
 //Whether or not the user is logged in
 var loggedIn = false;
 
@@ -27,11 +31,10 @@ $(function () {
 
 			$('#loading-menubar').css('display', 'none');
 
-			setTimeout(update, 1000);
+			setTimeout(update, 200);
 		});
 	});
 
-	var isSending = false;
 	$('#chat-input').on('keydown', function (event) {
 		if (event.which === 13 || loggedIn === false) {
 			var text = this.value;
@@ -40,31 +43,26 @@ $(function () {
 				return;
 			}
 
-			if (isSending) {
-				return;
-			}
+			localChatIDForColor++;
 
-			isSending = true;
+			var date = getFormattedDate(), time = getFormattedTime();
 
-			var dateTime = getFormattedDate(),
-				profileName = mUserInfo['personaname'],
-				avatar = mUserInfo['avatar'];
+			var msgObj = {
+				id: localChatIDForColor,
+				text: text,
+				date: date,
+				time: time,
+				steamUserInfo: mUserInfo
+			};
 
-			var str = '<div class="chat-message">';
-			str += '<img src="' + avatar + '" class="chat-profile-pic">';
-			str += '<div class="chat-profile-name">' + profileName + '</div>';
-			str += '<div class="chat-date-time">' + dateTime + '</div>';
-			str += '<div class="chat-text">' + text + '</div>';
-			str += '</div>';
+			var str = generateChatMsgStr(msgObj);
 
 			$('#chatmessages').append(str);
 			$('#chatmessages').scrollTop($('#chatmessages')[0].scrollHeight);
 
 			$('#chat-input').val('');
 
-			$.post('php/send-chat-message.php', {text: text}, function () {
-				isSending = false;
-			});
+			$.post('php/send-chat-message.php', {text: text});
 		}
 	});
 });
@@ -77,12 +75,13 @@ function update () {
 				pot = data['pot'],
 				potPrice = data['potPrice'];
 
-			var serverMostRecentID = chat[chat.length - 1]['id'];
+			var serverMostRecentID = parseInt(chat[chat.length - 1]['id'], 10);
 
 			//Check for new messages
 			if (serverMostRecentID > localMostRecentID) {
 				console.log('New messages!');
 				localMostRecentID = serverMostRecentID;
+				localChatIDForColor = serverMostRecentID;
 
 				var chatStr = generateChatStr(chat);
 				$('#chatmessages').html(chatStr);
@@ -108,20 +107,33 @@ function generateChatStr (chat) {
 	for (var i1 = 0; i1 < chat.length; i1++) {
 		var msg = chat[i1];
 
-		var id = msg['id'],
-			text = msg['text'],
-			date = msg['date'],
-			time = msg['time'],
-			userInfo = msg['steamUserInfo'];
-
-		var profileName = userInfo['personaname'],
-			profilePicSmall = userInfo['avatar'];
-
-		str += '<div class="chat-message">';
-		str += '<img src="' + profilePicSmall + '" class="chat-profile-pic">';
-		str += '<div class="chat-profile-name">' + profileName + '</div>';
-		str += '<div class="chat-date-time">' + date + ' at ' + time + '</div><div class="chat-text">' + text + '</div></div>';
+		str += generateChatMsgStr(msg);
 	}
+	return str;
+}
+
+function generateChatMsgStr (msg) {
+	var id = parseInt(msg['id'], 10),
+		text = msg['text'],
+		date = msg['date'],
+		time = msg['time'],
+		userInfo = msg['steamUserInfo'];
+
+	var profileName = userInfo['personaname'],
+		steamID = userInfo['steamid'];
+		profilePicSmall = userInfo['avatar'];
+
+	var colorClass = id % 2 === 0 ? 'chat-message-even' : 'chat-message-odd';
+
+	var str = '<div class="chat-message ' + colorClass + '">';
+	str += '<a href="http://steamcommunity.com/profiles/' + steamID + '/" target="_blank">';
+	str += '<img src="' + profilePicSmall + '" class="chat-profile-pic">';
+	str += '<div class="chat-profile-name">' + profileName + '</div>';
+	str += '</a>';
+	str += '<div class="chat-date-time">' + date + ' at ' + time + '</div>';
+	str += '<div class="chat-text">' + text + '</div>';
+	str += '</div>';
+
 	return str;
 }
 
@@ -158,7 +170,17 @@ function errMsg (message) {
 
 function getFormattedDate() {
 	var date = new Date();
-	var str = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " at " +  date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
 
-	return str;
+	var month = date.getMonth() + 1;
+	if (month < 10) {
+		month = '0' + month;
+	}
+
+	return date.getFullYear() + "-" + month + "-" + date.getDate();
+}
+
+function getFormattedTime (argument) {
+	var date = new Date();
+
+	return date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
 }

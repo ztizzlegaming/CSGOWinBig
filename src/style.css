@@ -14,12 +14,12 @@
 	max-height: 400px;
 }
 
-.chat-message:nth-child(even) {
+.chat-message-even {
 	background-color: #AAA;
 }
 
-.chat-messge:nth-child(odd) {
-	
+.chat-messge-odd {
+	background-color: #FFF;
 }
 
 .chat-message:not(:last-child) {
