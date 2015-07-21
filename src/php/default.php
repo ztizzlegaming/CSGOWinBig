@@ -45,18 +45,31 @@ function jsonErr($errMsg) {
 }
 
 function getSteamAPIKey($type) {
-	switch ($type) {
-		case 'login':
-			return '1FBC1D48247E517DB7CE37C093450807'; # Key for testbotztizzle
+	$fileLoc = $_SERVER['DOCUMENT_ROOT'] . '/../../passwords.txt';
+	if (file_exists($fileLoc)) {
+		$fh = fopen($fileLoc, 'r');
+		$jsonStr = fgets($fh);
+		$arr = json_decode($jsonStr, true);
 
-		case 'chat':
-			return 'C3755F409079584CFEAF47C0C9164283'; # Key for jturley128
+		switch ($type) {
+			case 'login':
+				return $arr['steamLoginAPIKey']; # Key for testbotztizzle
 
-		case 'pot':
-			return ''; # Add this later once I start working on the items, once the chat is working.
-		
-		default:
-			return null;
+			case 'chat':
+				return $arr['steamChatAPIKey']; # Key for jturley128
+
+			case 'pot':
+				return $arr['steamPotAPIKey']; # Add this later once I start working on the items, once the chat is working.
+
+			default:
+				return null;
+		}
+
+		fclose($fh);
+	} else {
+		die('no file found');
 	}
+
+	
 }
 ?>
