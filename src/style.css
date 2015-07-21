@@ -54,3 +54,27 @@
 .chat-text {
 	padding-top: 35px;
 }
+
+#pot {
+	width: 100%;
+}
+
+.pot-item {
+	position: relative;
+	width: 100%;
+	height: 100px;
+}
+
+.pot-item-image {
+	position: absolute;
+	top: 15px;
+	left: 15px;
+	height: 85px;
+	width: 70px;
+}
+
+.pot-item-name-price {
+	position: absolute;
+	top: 15px;
+	left: 90px;
+}

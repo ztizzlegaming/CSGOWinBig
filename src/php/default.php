@@ -52,7 +52,7 @@ function getSteamAPIKey($type) {
 		case 'chat':
 			return 'C3755F409079584CFEAF47C0C9164283'; # Key for jturley128
 
-		case 'items':
+		case 'pot':
 			return ''; # Add this later once I start working on the items, once the chat is working.
 		
 		default:

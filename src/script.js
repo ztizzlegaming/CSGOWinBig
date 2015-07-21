@@ -1,5 +1,5 @@
 //The most recent ID for the chat
-var localMostRecentID = 0;
+var localMostRecentID = 0, potCount = 0;
 
 //Whether or not the user is logged in
 var loggedIn = false;
@@ -73,10 +73,13 @@ function update () {
 	$.getJSON('php/update.php', function (jsonObj) {
 		handleJsonResponse(jsonObj, function (data) {
 			console.log('Response received.');
-			var chat = data['chat'];
+			var chat = data['chat'],
+				pot = data['pot'],
+				potPrice = data['potPrice'];
 
 			var serverMostRecentID = chat[chat.length - 1]['id'];
 
+			//Check for new messages
 			if (serverMostRecentID > localMostRecentID) {
 				console.log('New messages!');
 				localMostRecentID = serverMostRecentID;
@@ -84,6 +87,15 @@ function update () {
 				var chatStr = generateChatStr(chat);
 				$('#chatmessages').html(chatStr);
 				$('#chatmessages').scrollTop($('#chatmessages')[0].scrollHeight);
+			}
+
+			//Check for new items in the pot
+			if (pot.length > potCount) {
+				console.log('New items in pot!');
+				potCount = pot.length;
+
+				var potStr = generatePotStr(pot);
+				$('#pot').html(potStr);
 			}
 
 			setTimeout(update, 2000); //Call update again after 2 seconds
@@ -111,6 +123,17 @@ function generateChatStr (chat) {
 		str += '<div class="chat-date-time">' + date + ' at ' + time + '</div><div class="chat-text">' + text + '</div></div>';
 	}
 	return str;
+}
+
+function generatePotStr (pot) {
+	var str = '';
+	for (var i1 = 0; i1 < pot.length; i1++) {
+		var item = pot[i1];
+
+		var itemID = item['id'],
+			itemOwnerSteamID = item['itemOwnerSteamID'],
+			
+	};
 }
 
 function handleJsonResponse (jsonObj, callback) {
