@@ -69,7 +69,5 @@ function getSteamAPIKey($type) {
 	} else {
 		die('no file found');
 	}
-
-	
 }
 ?>
