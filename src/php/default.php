@@ -53,13 +53,13 @@ function getSteamAPIKey($type) {
 
 		switch ($type) {
 			case 'login':
-				return $arr['steamLoginAPIKey']; # Key for testbotztizzle
+				return $arr['steamLoginAPIKey'];
 
 			case 'chat':
-				return $arr['steamChatAPIKey']; # Key for jturley128
+				return $arr['steamChatAPIKey'];
 
 			case 'pot':
-				return $arr['steamPotAPIKey']; # Add this later once I start working on the items, once the chat is working.
+				return $arr['steamPotAPIKey'];
 
 			default:
 				return null;
