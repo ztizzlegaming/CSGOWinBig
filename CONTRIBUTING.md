@@ -26,4 +26,4 @@ If you find a problem in the code, please submit an issue. Please make sure you:
 * Give a plausible solution
 
 ## Commits ##
-Commits should be in the past tense, in a sentence, and preferably less than 50 characters, e.g. "Added some new feature."  If needed, a body to the commit can be on the next line.
+Commits should be in the present tense, in a sentence, and preferably less than 50 characters, e.g. "Add some new feature."  If needed, a body to the commit can be on the next line.
