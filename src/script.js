@@ -131,9 +131,12 @@ function generatePotStr (pot) {
 		var item = pot[i1];
 
 		var itemID = item['id'],
-			itemOwnerSteamID = item['itemOwnerSteamID'],
-			
-	};
+			itemOwnerSteamInfo = item['itemOwnerSteamInfo'],
+			itemName = item['itemName'],
+			itemPrice = item['itemPrice'];
+
+		//Do the rest of this later
+	}
 }
 
 function handleJsonResponse (jsonObj, callback) {

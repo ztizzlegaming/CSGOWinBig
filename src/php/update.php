@@ -68,7 +68,7 @@ foreach ($currentPotArr as $itemInPot) {
 	$itemOwnerSteamID = $itemInPot['ownerSteamID'];
 	$steamUserInfo = getSteamProfileInfoForSteamID($usersInfoStrPot, $itemOwnerSteamID);
 
-	$arr = array('itemID' => $itemID, 'itemSteamOwnerInfo' => $steamUserInfo, 'itemName' => $itemName, 'itemPrice' => $itemPrice, 'steamUserInfo');
+	$arr = array('itemID' => $itemID, 'itemSteamOwnerInfo' => $steamUserInfo, 'itemName' => $itemName, 'itemPrice' => $itemPrice);
 	array_push($currentPot, $arr);
 
 	$potPrice += $itemPrice;
