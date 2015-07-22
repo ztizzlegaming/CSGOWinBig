@@ -1,6 +1,9 @@
 //The most recent ID for the chat
 var localMostRecentID = 0, potCount = 0;
 
+//Whether or not the call of update() is the first call
+var firstUpdate = true;
+
 //The most recent ID for the user sending the chat.
 //Used if they want to send multiple messages before the chat refreshes.
 var localChatIDForColor = 0;
@@ -77,6 +80,11 @@ function update () {
 
 			var serverMostRecentID = parseInt(chat[chat.length - 1]['id'], 10);
 
+			//Check if this is the first time update has been called
+			if (firstUpdate) {
+				$('#pot-items-price').css('display', 'block');
+			}
+
 			//Check for new messages
 			if (serverMostRecentID > localMostRecentID) {
 				console.log('New messages!');
@@ -93,6 +101,17 @@ function update () {
 				console.log('New items in pot!');
 				potCount = pot.length;
 
+				//Set pot price
+				var realPotPrice = potPrice / 100;
+				if (realPotPrice % 1 === 0) {
+					realPotPrice = realPotPrice + '.00';
+				}
+				$('#pot-price').text(realPotPrice);
+
+				//Set number of pot items
+				$('#pot-items').text(potCount);
+
+				//Set items in pot
 				var potStr = generatePotStr(pot);
 				$('#pot').html(potStr);
 			}
@@ -120,13 +139,14 @@ function generateChatMsgStr (msg) {
 		userInfo = msg['steamUserInfo'];
 
 	var profileName = userInfo['personaname'],
+		profileURL = userInfo['profileurl'],
 		steamID = userInfo['steamid'];
 		profilePicSmall = userInfo['avatar'];
 
 	var colorClass = id % 2 === 0 ? 'chat-message-even' : 'chat-message-odd';
 
 	var str = '<div class="chat-message ' + colorClass + '">';
-	str += '<a href="http://steamcommunity.com/profiles/' + steamID + '/" target="_blank">';
+	str += '<a href="' + profileURL + '" target="_blank">';
 	str += '<img src="' + profilePicSmall + '" class="chat-profile-pic">';
 	str += '<div class="chat-profile-name">' + profileName + '</div>';
 	str += '</a>';
@@ -143,12 +163,31 @@ function generatePotStr (pot) {
 		var item = pot[i1];
 
 		var itemID = item['id'],
-			itemOwnerSteamInfo = item['itemOwnerSteamInfo'],
+			itemOwnerSteamInfo = item['itemSteamOwnerInfo'],
 			itemName = item['itemName'],
 			itemPrice = item['itemPrice'];
 
-		//Do the rest of this later
+		var profileName = itemOwnerSteamInfo['personaname'],
+			profileAvatar = itemOwnerSteamInfo['avatarfull'],
+			profileURL = itemOwnerSteamInfo['profileurl'];
+
+		//Use image for Dragon Lore for the time being
+		var itemImageURl = 'http://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgpot621FAR17P7NdTRH-t26q4SZlvD7PYTQgXtu5Mx2gv2P9o6migzl_Us5ZmCmLYDDJgU9NA6B81S5yezvg8e-7cycnXJgvHZx5WGdwUJqz1Tl4g/512fx512f';
+
+		var itemRealPrice = itemPrice / 100;
+
+		if (itemRealPrice % 1 === 0) {
+			itemRealPrice = itemRealPrice + '.00';
+		}
+
+		str += '<div class="pot-item">'
+		str += '<a href="' + profileURL + '" target="_blank"><img src="' + profileAvatar + '" class="pot-item-profile-image">';
+		str += '<div class="pot-item-name">' + profileName + '</a>' + ': ' + itemName + ' - $' + itemRealPrice + '</div>';
+		str += '<img src="' + itemImageURl + '" class="pot-item-image">';
+		str += '</div>';
 	}
+
+	return str;
 }
 
 function handleJsonResponse (jsonObj, callback) {
