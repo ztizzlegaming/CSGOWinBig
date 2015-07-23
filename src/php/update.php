@@ -74,6 +74,19 @@ foreach ($currentPotArr as $itemInPot) {
 	$potPrice += $itemPrice;
 }
 
-$data = array('chat' => $chatMessagesArr, 'pot' => $currentPot, 'potPrice' => $potPrice);
+# Get the past pot and check if someone just now won
+$stmt = $db->query('SELECT * FROM history ORDER BY id DESC');
+if ($stmt->rowCount() > 0) {
+	$mostRecentGame = $stmt->fetch();
+} else {
+	$mostRecentGame = null;
+}
+
+$data = array(
+	'chat' => $chatMessagesArr,
+	'pot' => $currentPot,
+	'potPrice' => $potPrice,
+	'mostRecentGame' => $mostRecentGame
+);
 echo jsonSuccess($data);
 ?>
