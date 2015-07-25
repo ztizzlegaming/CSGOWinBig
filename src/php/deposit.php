@@ -13,12 +13,18 @@ if (is_null($tradeOffer) || is_null($allItemsJson) || strlen($tradeOwner) === 0 
 	return;
 }
 
+# Get bot's inventory for getting item information
+$botInventory = json_decode(file_get_contents('https://steamcommunity.com/profiles/76561198238743988/inventory/json/730/2'));
+
+$allInventoryItems = $botInventory['rgDescriptions'];
+
 # Get count of all items in pot
 $query = $db->query('SELECT COUNT(*) FROM `currentPot`');
 $countRow = $query->fetch();
 $currentPotCount = $countRow['COUNT(*)'];
 
 # Check if pot items count is greater than limit
+# If it is greater, then these items will go into the next pot
 if ($currentPotCount >= $maxPotCount) {
 	$table = 'nextPot';
 } else {
@@ -58,9 +64,20 @@ if ($currentPotCount >= $maxPotCount) {
 	$winnerSteamID = $ticketsArr[array_rand($ticketsArr)];
 
 	# Add this game to the past games database
-	# implement this later...
+	$stmt = $db->prepare('INSERT INTO history (winnerSteamID, userPutInPrice, potPrice, allItems) VALUES (:id, :userprice, :potprice, :allitems)');
+	$stmt->bindValue(':id', $winnerSteamID);
+	$stmt->bindValue(':userprice', $);
+	$stmt->bindValue(':potprice', $);
+	$stmt->bindValue(':allitems', $);
+	$stmt->execute();
+
+	# Clear the current pot
+	$stmt = $db->query('TRUNCATE TABLE currentPot');
 
 	# Get items from nextPot and put them in currentPot
-	# implement this later...
+	$stmt = $db->query('INSERT INTO currentPot SELECT * FROM nextPot');
+
+	# Clear nextPot
+	$stmt = $db->query('TRUNCATE TABLE nextPot');
 }
 ?>
