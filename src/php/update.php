@@ -75,12 +75,23 @@ foreach ($currentPotArr as $itemInPot) {
 }
 
 # Get the past pot and check if someone just now won
-$stmt = $db->query('SELECT * FROM history ORDER BY id DESC');
-if ($stmt->rowCount() > 0) {
-	$mostRecentGame = $stmt->fetch();
-} else {
-	$mostRecentGame = null;
-}
+$prevGameID = $prevPot['id'];
+$winnerSteamID = $prevPot['winnerSteamID'];
+$userPutInPrice = $prevPot['userPutInPrice'];
+$potPrice = $prevPot['potPrice'];
+$allItems = $prevPot['allItems'];
+$paid = $prevPot['paid'];
+
+$winnerSteamInfo = getSteamProfileInfoForSteamID($usersInfoStr, $winnerSteamID);
+
+$mostRecentGame = array(
+	'prevGameID' => $prevGameID,
+	'winnerSteamInfo' => $winnerSteamInfo,
+	'userPutInPrice' => $userPutInPrice,
+	'potPrice' => $potPrice,
+	'allItems' => $allItems,
+	'paid' => $paid
+);
 
 $data = array(
 	'chat' => $chatMessagesArr,

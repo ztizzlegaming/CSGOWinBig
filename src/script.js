@@ -76,7 +76,8 @@ function update () {
 			console.log('Response received.');
 			var chat = data['chat'],
 				pot = data['pot'],
-				potPrice = data['potPrice'];
+				potPrice = data['potPrice'],
+				mostRecentGame = data['mostRecentGame'];
 
 			var serverMostRecentID = parseInt(chat[chat.length - 1]['id'], 10);
 
@@ -114,6 +115,23 @@ function update () {
 				//Set items in pot
 				var potStr = generatePotStr(pot);
 				$('#pot').html(potStr);
+			}
+
+			if (mostRecentGame !== null) {
+				var prevGameID = mostRecentGame['prevGameID'],
+					winnerSteamInfo = mostRecentGame['winnerSteamInfo'],
+					userPutInPrice = parseInt(mostRecentGame['userPutInPrice']),
+					potPrice = parseInt(mostRecentGame['potPrice']),
+					allItems = mostRecentGame['allItems'],
+					paid = mostRecentGame['paid'];
+
+				var percentageChange = (userPutInPrice / potPrice * 100).toFixed(2);
+				var profileName = winnerSteamInfo['personaname'];
+				var potPriceReal = '$' + (potPrice / 100) + ((potPrice % 1 === 0) ? '.00' : '');
+
+				var str = 'Previous Winner: ' + profileName + ' won ' + potPriceReal + ' with a ' + percentageChange + '% chance.';
+				$('#prev-game-info').html(str);
+				$('#prev-game-info').css('display', 'block');
 			}
 
 			setTimeout(update, 2000); //Call update again after 2 seconds
