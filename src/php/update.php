@@ -3,7 +3,7 @@ session_start();
 include 'default.php';
 $db = getDB();
 
-# Get all chat messages
+# Get all users in chat messages
 $stmt = $db->query('SELECT * FROM `chat` ORDER BY `id` DESC LIMIT 50');
 $chatMessages = $stmt->fetchAll();
 
@@ -14,8 +14,27 @@ foreach ($chatMessages as $message) {
 	array_push($allUserIDsChat, $steamUserID);
 }
 
-# Convert array to csv for steam API call
-$allUserIDsStr = join(',', $allUserIDsChat);
+# Get all users in pot
+$stmt = $db->query('SELECT * FROM `currentPot`');
+$currentPotArr = $stmt->fetchAll();
+
+$allUserIDsPot = array();
+
+foreach ($currentPotArr as $item) {
+	$steamUserID = $item['ownerSteamID'];
+	array_push($allUserIDsPot, $steamUserID);
+}
+
+# Get previous winner's steam ID
+$stmt = $db->query('SELECT * FROM history ORDER BY id DESC');
+$prevPot = $stmt->fetch();
+$prevWinner = $prevPot['winnerSteamID'];
+
+$prevWinnerArr = array($prevWinner);
+
+# Create array of all users, without repeats
+$allUsersArr = array_unique(array_merge($allUserIDsChat, $allUserIDsPot, $prevWinnerArr));
+$allUserIDsStr = join(',', $allUsersArr);
 
 # Get all user info for the steam user IDs
 $chatAPIKey = getSteamAPIKey('chat');
@@ -40,22 +59,7 @@ for ($i1 = count($chatMessages) - 1; $i1 >= 0; $i1--) {
 
 # Get the current pot
 $stmt = $db->query('SELECT * FROM `currentPot`');
-
 $currentPotArr = $stmt->fetchAll();
-
-$allUserIDsPot = array();
-
-foreach ($currentPotArr as $item) {
-	$steamUserID = $item['ownerSteamUserID'];
-	array_push($allUserIDsPot, $steamUserID);
-}
-
-# Convert array to csv for steam API call
-$allUserIDsPotStr = join(',', $allUserIDsPot);
-
-# Get all user info for the steam user IDs for the pot
-$potAPIKey = getSteamAPIKey('pot');
-$usersInfoStrPot = file_get_contents("http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=$chatAPIKey&steamids=$allUserIDsStr");
 
 $currentPot = array();
 $potPrice = 0;
@@ -66,7 +70,7 @@ foreach ($currentPotArr as $itemInPot) {
 	$itemPrice = $itemInPot['itemPrice'];
 
 	$itemOwnerSteamID = $itemInPot['ownerSteamID'];
-	$steamUserInfo = getSteamProfileInfoForSteamID($usersInfoStrPot, $itemOwnerSteamID);
+	$steamUserInfo = getSteamProfileInfoForSteamID($usersInfoStr, $itemOwnerSteamID);
 
 	$arr = array('itemID' => $itemID, 'itemSteamOwnerInfo' => $steamUserInfo, 'itemName' => $itemName, 'itemPrice' => $itemPrice);
 	array_push($currentPot, $arr);
