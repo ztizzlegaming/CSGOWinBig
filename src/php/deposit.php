@@ -47,14 +47,17 @@ foreach ($allItems as $item) {
 # Check if this deposit put the pot over the top
 # If it did, generate the array of tickets and pick a winner
 if ($currentPotCount >= $maxPotCount) {
-	$query = $db->query('SELECT * FROM currentPot');
-	$allPotItems = $query->fetchAll();
+	$stmt = $db->query('SELECT * FROM currentPot');
+	$allPotItems = $stmt->fetchAll();
 
 	$ticketsArr = array();
+	$totalPotPrice = 0;
 
 	foreach ($allPotItems as $item) {
 		$itemOwner = $item['ownerSteamID'];
-		$tickets = $item['itemPrice'];
+		$itemPrice = $item['itemPrice'];
+
+		$totalPotPrice += $itemPrice;
 
 		for ($i1=0; $i1 < $tickets; $i1++) { 
 			array_push($ticketsArr, $itemOwner);
@@ -63,12 +66,50 @@ if ($currentPotCount >= $maxPotCount) {
 
 	$winnerSteamID = $ticketsArr[array_rand($ticketsArr)];
 
+	$stmt = $db->prepare('SELECT * FROM currentPot WHERE ownerSteamID = :id');
+	$stmt->bindValue(':id', $winnerSteamID);
+	$stmt->execute();
+
+	$winnerItems = $stmt->fetchAll();
+
+	$userPrice = 0;
+
+	foreach ($winnerItems as $item) {
+		$itemPrice = $item['itemPrice'];
+
+		$userPrice += $itemPrice;
+	}
+
+	# Calculate which items to keep and which to give to winner
+	# The site will take ~2%, but no more than 5%
+	$stmt = $db->query('SELECT * FROM currentPot ORDER BY itemPrice DESC');
+
+	$allItems = $stmt->fetchAll();
+	$keepPercentage = 0;
+	$itemsToKeep = array();
+	foreach ($allItems as $item) {
+		$itemPrice = intval($item['itemPrice']);
+		$itemPercentage = $itemPrice / $totalPotPrice;
+
+		if ($keepPercentage + $itemPercentage > 0.05) {
+			break;
+		}
+
+		if ($keepPercentage + $itemPercentage >= 0.02 && $keepPercentage < 0.02) {
+			array_push($itemsToKeep, $item);
+			break;
+		}
+
+		array_push($itemsToKeep, $item);
+	}
+
+
 	# Add this game to the past games database
 	$stmt = $db->prepare('INSERT INTO history (winnerSteamID, userPutInPrice, potPrice, allItems) VALUES (:id, :userprice, :potprice, :allitems)');
 	$stmt->bindValue(':id', $winnerSteamID);
-	$stmt->bindValue(':userprice', $);
-	$stmt->bindValue(':potprice', $);
-	$stmt->bindValue(':allitems', $);
+	$stmt->bindValue(':userprice', $userPrice);
+	$stmt->bindValue(':potprice', $totalPotPrice);
+	$stmt->bindValue(':allitems', $); # Add this later, once the bot is working and I can see what all I would need for it.
 	$stmt->execute();
 
 	# Clear the current pot
@@ -80,4 +121,6 @@ if ($currentPotCount >= $maxPotCount) {
 	# Clear nextPot
 	$stmt = $db->query('TRUNCATE TABLE nextPot');
 }
+
+# echo out jsonSuccess stuff, and if it is the end of a round, echo the winner and all items
 ?>
