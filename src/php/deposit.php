@@ -19,8 +19,8 @@ $botInventory = json_decode(file_get_contents('https://steamcommunity.com/profil
 $allInventoryItems = $botInventory['rgDescriptions'];
 
 # Get count of all items in pot
-$query = $db->query('SELECT COUNT(*) FROM `currentPot`');
-$countRow = $query->fetch();
+$stmt = $db->query('SELECT COUNT(*) FROM `currentPot`');
+$countRow = $stmt->fetch();
 $currentPotCount = $countRow['COUNT(*)'];
 
 # Check if pot items count is greater than limit
@@ -37,11 +37,23 @@ foreach ($allItems as $item) {
 	$name = $item['name'];
 	$price = $item['price'];
 
-	$query = $db->prepare("INSERT INTO $table (ownerSteamID, itemName, itemPrice) VALUES (:steamid, :name, :price)");
-	$query->bindValue(':steamid', $tradeOwnerSteamID);
-	$query->bindValue(':name', $name);
-	$query->bindValue(':price', $price);
-	$query->execute();
+	$appId = $item['appId'];
+	$contextId = $item['contextId'];
+	$assetId = $item['assetId'];
+
+	$itemInventoryDesc = findItemInInventory($name);
+	$itemIcon = $itemInventoryDesc['icon_url'];
+
+	$itemIconURL = "http://steamcommunity-a.akamaihd.net/economy/image/$itemIcon/360fx360f";
+
+	$stmt = $db->prepare("INSERT INTO $table (ownerSteamID, itemName, itemPrice, appId, contextId, assetId) VALUES (:steamid, :name, :price, :appid, :contextid, assetid)");
+	$stmt->bindValue(':steamid', $tradeOwnerSteamID);
+	$stmt->bindValue(':name', $name);
+	$stmt->bindValue(':price', $price);
+	$stmt->bindValue(':appid', $appId);
+	$stmt->bindValue(':contextid', $contextId);
+	$stmt->bindValue(':assetid', $assetId);
+	$stmt->execute();
 }
 
 # Check if this deposit put the pot over the top
