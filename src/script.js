@@ -183,14 +183,12 @@ function generatePotStr (pot) {
 		var itemID = item['id'],
 			itemOwnerSteamInfo = item['itemSteamOwnerInfo'],
 			itemName = item['itemName'],
-			itemPrice = item['itemPrice'];
+			itemPrice = item['itemPrice'],
+			itemIcon = item['itemIcon'];
 
 		var profileName = itemOwnerSteamInfo['personaname'],
 			profileAvatar = itemOwnerSteamInfo['avatarfull'],
 			profileURL = itemOwnerSteamInfo['profileurl'];
-
-		//Use image for Dragon Lore for the time being
-		var itemImageURl = 'http://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgpot621FAR17P7NdTRH-t26q4SZlvD7PYTQgXtu5Mx2gv2P9o6migzl_Us5ZmCmLYDDJgU9NA6B81S5yezvg8e-7cycnXJgvHZx5WGdwUJqz1Tl4g/512fx512f';
 
 		var itemRealPrice = itemPrice / 100;
 
@@ -201,7 +199,7 @@ function generatePotStr (pot) {
 		str += '<div class="pot-item">'
 		str += '<a href="' + profileURL + '" target="_blank"><img src="' + profileAvatar + '" class="pot-item-profile-image">';
 		str += '<div class="pot-item-name">' + profileName + '</a>' + ': ' + itemName + ' - $' + itemRealPrice + '</div>';
-		str += '<img src="' + itemImageURl + '" class="pot-item-image">';
+		str += '<img src="' + itemIcon + '" class="pot-item-image">';
 		str += '</div>';
 	}
 
