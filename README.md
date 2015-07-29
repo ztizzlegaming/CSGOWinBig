@@ -17,8 +17,10 @@ In addition to the website, we are also making use of a custom version of [Jesse
 ### How to setup this project for my own use?
 If you would like to setup this project for your own project, there are a couple of steps you must follow:
 
-* In src/php/default.php, you must configure your own database credentials. The way I have it setup is I have a file outside of the web root with my passwords in it, which I read and get the password for the database from, instead of writing my password directly in the code. Then, import database-config.sql to your MySQL database.  If you want to use a database other than MySQL, you will have to set it up on your own.
-* Because this project utilizes many aspects of the Steam API, you must have a Steam API key of your own. I am actually making use of 3 different API keys: one for logging in through Steam, one for getting the users' information of the chat, and one for getting the users' information of items deposited. I believe this could be done with only one API key, but I wanted to use a different key for each of these things to keep everything organized and separated. Again, like the database password, my API keys are stored outside of the web root for safety, so you will have to change that.
+* In src/php/default.php, you must configure your own database credentials. The way I have it setup is I have a file outside of the web root with my passwords in it, called 'passwords.txt', which I read and get the password for the database from, instead of writing my password directly in the code. Then, import database-config.sql to your MySQL database.  If you want to use a database other than MySQL, you will have to set it up on your own.
+* Also, because you login through Steam for this site, you must have a Steam API Key. You can request a key for yourself [here](https://steamcommunity.com/dev/apikey). Like the database password, I also have this key stored outside of the web root in passwords.txt.
+* Here is an example of my passwords.txt:  
+{"default-password":"YOUR DATABASE PASSWORD","steamAPIKey":"YOUR STEAM API KEY"}
 
 ### How can I contribute to this project?
 Please read [CONTRIBUTING.md](https://github.com/ztizzlegaming/csgo-win-big/blob/master/CONTRIBUTING.md).
