@@ -4,7 +4,7 @@ if (file_exists($fileLoc)) {
 	$fh = fopen($fileLoc, 'r');
 	$jsonStr = fgets($fh);
 	$arr = json_decode($jsonStr, true);
-	$apiKey = $arr['steamLoginAPIKey'];
+	$apiKey = $arr['steamAPIKey'];
 	fclose($fh);
 } else {
 	die('no file found');

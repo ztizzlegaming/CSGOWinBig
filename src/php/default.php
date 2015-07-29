@@ -52,22 +52,9 @@ function getSteamAPIKey($type) {
 		$fh = fopen($fileLoc, 'r');
 		$jsonStr = fgets($fh);
 		$arr = json_decode($jsonStr, true);
-
-		switch ($type) {
-			case 'login':
-				return $arr['steamLoginAPIKey'];
-
-			case 'chat':
-				return $arr['steamChatAPIKey'];
-
-			case 'pot':
-				return $arr['steamPotAPIKey'];
-
-			default:
-				return null;
-		}
-
+		$key = $arr['steamAPIKey'];
 		fclose($fh);
+		return $key;
 	} else {
 		die('no file found');
 	}

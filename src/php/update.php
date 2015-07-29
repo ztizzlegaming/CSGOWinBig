@@ -39,7 +39,7 @@ $allUsersArr = array_unique(array_merge($allUserIDsChat, $allUserIDsPot, $prevWi
 $allUserIDsStr = join(',', $allUsersArr);
 
 # Get all user info for the steam user IDs
-$chatAPIKey = getSteamAPIKey('chat');
+$chatAPIKey = getSteamAPIKey();
 $usersInfoStr = file_get_contents("http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=$chatAPIKey&steamids=$allUserIDsStr");
 
 $chatMessagesArr = array();
