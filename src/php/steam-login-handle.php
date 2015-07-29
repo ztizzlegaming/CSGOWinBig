@@ -1,4 +1,6 @@
 <?php
+# Copyright (c) 2015 Jordan Turley, CSGO Win Big. All Rights Reserved.
+
 session_start();
 require('SteamAuthentication/steamauth/openid.php');
 

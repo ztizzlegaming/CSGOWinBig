@@ -1,4 +1,6 @@
 <?php
+# Copyright (c) 2015 Jordan Turley, CSGO Win Big. All Rights Reserved.
+
 function getDB() {
 	$dbHost = 'localhost';
 	$db     = 'jordantu_csgowinbig';

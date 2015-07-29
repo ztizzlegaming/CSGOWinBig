@@ -7,6 +7,8 @@
 -- Server version: 5.5.42-37.1-log
 -- PHP Version: 5.4.23
 
+-- Copyright (c) 2015 Jordan Turley, CSGO Win Big. All Rights Reserved.
+
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 

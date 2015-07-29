@@ -1,3 +1,5 @@
+//Copyright (c) 2015 Jordan Turley, CSGO Win Big. All Rights Reserved.
+
 //The most recent ID for the chat
 var localMostRecentID = 0, potCount = 0;
 

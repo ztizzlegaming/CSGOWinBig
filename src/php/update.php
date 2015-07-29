@@ -1,4 +1,6 @@
 <?php
+# Copyright (c) 2015 Jordan Turley, CSGO Win Big. All Rights Reserved.
+
 session_start();
 include 'default.php';
 $db = getDB();
