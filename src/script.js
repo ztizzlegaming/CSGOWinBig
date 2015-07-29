@@ -115,6 +115,29 @@ function update () {
 				//Set items in pot
 				var potStr = generatePotStr(pot);
 				$('#pot').html(potStr);
+			} else if (pot.length < potCount) {
+				//Someone just now won, do some big animation
+				//For now, just sweetalert the winner
+				
+				potCount = pot.length;
+				
+				var prevGameID = mostRecentGame['prevGameID'],
+					winnerSteamInfo = mostRecentGame['winnerSteamInfo'],
+					userPutInPrice = parseInt(mostRecentGame['userPutInPrice']),
+					potPrice = parseInt(mostRecentGame['potPrice']),
+					allItems = mostRecentGame['allItems'],
+					paid = mostRecentGame['paid'];
+
+				var potPriceReal = '$' + (potPrice / 100) + ((potPrice % 1 === 0) ? '.00' : '');
+				var percentageChance = (userPutInPrice / potPrice * 100).toFixed(2);
+				var winnerSteamID = winnerSteamInfo['steamid'], winnerProfileName = winnerSteamInfo['personaname'];
+
+				if (winnerSteamID === mUserInfo['steamid']) {
+					var msg = 'You have won ' + potPriceReal + ', with a ' + percentageChance + '% chance! Expect a trade request from our bot shortly.';
+					swal('You Win!', msg, 'success');
+				} else {
+					swal('Round ended!', winnerProfileName + ' has won ' + potPriceReal + ', with a ' + percentageChance + ' chance!', 'success');
+				}
 			}
 
 			if (mostRecentGame !== null) {
@@ -125,11 +148,11 @@ function update () {
 					allItems = mostRecentGame['allItems'],
 					paid = mostRecentGame['paid'];
 
-				var percentageChange = (userPutInPrice / potPrice * 100).toFixed(2);
+				var percentageChance = (userPutInPrice / potPrice * 100).toFixed(2);
 				var profileName = winnerSteamInfo['personaname'];
 				var potPriceReal = '$' + (potPrice / 100) + ((potPrice % 1 === 0) ? '.00' : '');
 
-				var str = 'Previous Winner: ' + profileName + ' won ' + potPriceReal + ' with a ' + percentageChange + '% chance.';
+				var str = 'Previous Winner: ' + profileName + ' won ' + potPriceReal + ' with a ' + percentageChance + '% chance.';
 				$('#prev-game-info').html(str);
 				$('#prev-game-info').css('display', 'block');
 			}
