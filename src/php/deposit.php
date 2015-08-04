@@ -6,14 +6,154 @@ $db = getDB();
 
 $maxPotCount = 100;
 
-# Get owner steam ID and all deposit items
-$tradeOwnerSteamID = isset($_POST['owner']) ? $_POST['owner'] : null;
+# Get password, owner steam ID, and all deposit items
+$password = isset($_POST['password']) ? $_POST['password'] : null;
+$tradeOwnerSteamId = isset($_POST['owner']) ? $_POST['owner'] : null;
 $allItemsJson = isset($_POST['allItems']) ? $_POST['allItems'] : null;
 
-if (is_null($tradeOffer) || is_null($allItemsJson) || strlen($tradeOwner) === 0 || strlen($allItemsJson) === 0) {
+if (is_null($tradeOffer) || is_null($allItemsJson)  || is_null($password) || strlen($tradeOwner) === 0 || strlen($allItemsJson) === 0 || strlen($password) === 0) {
 	echo jsonErr('One of the required fields was not sent correctly or was left blank.');
 	return;
 }
+
+# Get the password from config file and make sure it matches
+$fileLoc = $_SERVER['DOCUMENT_ROOT'] . '/../../passwords.txt';
+if (file_exists($fileLoc)) {
+	$fh = fopen($fileLoc, 'r');
+	$jsonStr = fgets($fh);
+	$arr = json_decode($jsonStr, true);
+	$realPassword = $arr['default-password'];
+	fclose($fh);
+} else {
+	die('no file found');
+}
+
+if ($password !== $realPassword) {
+	echo jsonErr('The password was incorrect.');
+	return;
+}
+
+# Create all items array from json
+$allItems = json_decode($allItemsJson);
+
+# Get the depositor's inventory
+$depositorInventory = json_decode(file_get_contents("https://steamcommunity.com/profiles/$tradeOwnerSteamId/inventory/json/730/2"));
+
+if ($depositorInventory['success'] !== true) {
+	echo jsonErr('An error occured fetching the depositor\'s inventory.');
+	return;
+}
+
+$rgInventory = $allItems['rgInventory'];
+$rgDescriptions = $allItems['rgDescriptions'];
+
+$totalPrice = 0;
+$itemsArr = array();
+
+# Loop through each item and get their name and price
+foreach ($allItems as $item) {
+	$appId = $item['appid'];
+	$contextId = $item['contextid'];
+	$amount = $item['amount'];
+	$assetId = $item['assetid'];
+
+	# Check if any items are not for CSGO, just in case.
+	if ($appId !== 730) {
+		echo jsonErr('One of the items was not for CSGO.');
+		return;
+	}
+
+	$inventoryItem = $rgInventory[$assetId];
+	$classId = $inventoryItem['classid'];
+	$instanceId = $inventoryItem['instanceid'];
+
+	$descriptionItem = $rgDescriptions[$classId . '_' . $instanceId];
+	
+	$marketHashName = $descriptionItem['market_hash_name'];
+	$marketName = $descriptionItem['market_name'];
+	$iconUrl = $descriptionItem['icon_url'];
+
+	# Get rarity of item
+	$tags = $descriptionItem['tags'];
+	$rarityTag = $tags[5];
+	$rarityName = $rarityTag['name'];
+	$rarityColor = $rarityTag['color'];
+
+	# Get price of item from Steam market
+	$marketObj = json_decode(file_get_contents("http://steamcommunity.com/market/priceoverview/?currency=1&appid=730&market_hash_name=$marketHashName"));
+	if ($marketObj['success'] !== true) {
+		echo jsonErr('An error occured while fetching market price for an item.');
+		return;
+	}
+
+	$medianPrice = $marketObj['median_price'];
+	$lowestPrice = $marketObj['lowest_price'];
+
+	if (!isset($medianPrice) && !isset($lowestPrice)) {
+		echo jsonErr('One or more items was not found on the steam market place.');
+		return;
+	}
+
+	if (isset($medianPrice)) {
+		$price = intval(substr($medianPrice, 1)) * 100;
+	} else {
+		$price = intval(substr($lowestPrice, 1)) * 100;
+	}
+
+	$arr = array(
+		'contextId' => $contextId,
+		'assetId' => $assetId,
+		'marketName' => $marketName,
+		'rarityName' => $rarityName,
+		'rarityColor' => $rarityColor,
+		'price' => $price,
+		'iconUrl' => $iconUrl
+	);
+	array_push($itemsArr, $arr);
+
+	$totalPrice += $price;
+}
+
+# Check to see if they reached the minimum deposit
+if ($totalPrice < 100) {
+	echo jsonErr('The minimum deposit was not reached.');
+	return;
+}
+
+# Loop through all items again, adding them to the pot database
+foreach ($itemsArr as $item) {
+	$contextId = $item['contextId'];
+	$assetId = $item['assetId'];
+	$marketName = $item['marketName'];
+	$rarityName = $item['rarityName'];
+	$rarityColor = $item['rarityColor'];
+	$price = $item['price'];
+	$iconUrl = $item['iconUrl'];
+
+	$sql = 
+		'INSERT INTO currentPot
+		(contextId, assetId, ownerSteamId, itemName, itemPrice, itemRarityName, itemRarityColor, itemIcon)
+		VALUES
+		(:context, :asset, :owner, :itemname, :itemprice, :itemrarityname, :itemraritycolor, :itemicon)';
+	
+	$stmt = $db->prepare($sql);
+	$stmt->bindValue(':context', $contextId);
+	$stmt->bindValue(':asset', $assetId);
+	$stmt->bindValue(':owner', $tradeOwnerSteamId);
+	$stmt->bindValue(':itemname', $marketName);
+	$stmt->bindValue(':itemprice', $price);
+	$stmt->bindValue(':itemrarityname', $rarityName);
+	$stmt->bindValue(':itemraritycolor', $rarityColor);
+	$stmt->bindValue(':itemicon', $iconUrl);
+}
+
+
+
+
+
+
+
+
 
 # Get bot's inventory for getting item information
 $botInventory = json_decode(file_get_contents('https://steamcommunity.com/profiles/76561198238743988/inventory/json/730/2'));
@@ -49,7 +189,7 @@ foreach ($allItems as $item) {
 	$itemIconURL = "http://steamcommunity-a.akamaihd.net/economy/image/$itemIcon/360fx360f";
 
 	$stmt = $db->prepare("INSERT INTO $table (ownerSteamID, itemName, itemPrice, appId, contextId, assetId) VALUES (:steamid, :name, :price, :appid, :contextid, assetid)");
-	$stmt->bindValue(':steamid', $tradeOwnerSteamID);
+	$stmt->bindValue(':steamid', $tradeOwnerSteamId);
 	$stmt->bindValue(':name', $name);
 	$stmt->bindValue(':price', $price);
 	$stmt->bindValue(':appid', $appId);
