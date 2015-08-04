@@ -120,6 +120,14 @@ if ($totalPrice < 100) {
 	return;
 }
 
+# Check if pot items count is greater than limit
+# If it is greater, then these items will go into the next pot
+if ($currentPotCount >= $maxPotCount) {
+	$table = 'nextPot';
+} else {
+	$table = 'currentPot';
+}
+
 # Loop through all items again, adding them to the pot database
 foreach ($itemsArr as $item) {
 	$contextId = $item['contextId'];
@@ -135,7 +143,7 @@ foreach ($itemsArr as $item) {
 		(contextId, assetId, ownerSteamId, itemName, itemPrice, itemRarityName, itemRarityColor, itemIcon)
 		VALUES
 		(:context, :asset, :owner, :itemname, :itemprice, :itemrarityname, :itemraritycolor, :itemicon)';
-	
+
 	$stmt = $db->prepare($sql);
 	$stmt->bindValue(':context', $contextId);
 	$stmt->bindValue(':asset', $assetId);
@@ -145,11 +153,110 @@ foreach ($itemsArr as $item) {
 	$stmt->bindValue(':itemrarityname', $rarityName);
 	$stmt->bindValue(':itemraritycolor', $rarityColor);
 	$stmt->bindValue(':itemicon', $iconUrl);
+	$stmt->execute();
 }
 
+# Get count of all items in pot
+$stmt = $db->query('SELECT COUNT(*) FROM `currentPot`');
+$countRow = $stmt->fetch();
+$currentPotCount = $countRow['COUNT(*)'];
+
+# Check if this deposit put the pot over the top
+# If it did, generate the array of tickets and pick a winner
+if ($currentPotCount >= $maxPotCount) {
+	$stmt = $db->query('SELECT * FROM currentPot');
+	$allPotItems = $stmt->fetchAll();
+
+	$ticketsArr = array();
+	$totalPotPrice = 0;
+
+	foreach ($allPotItems as $item) {
+		$itemOwner = $item['ownerSteamID'];
+		$itemPrice = $item['itemPrice'];
+
+		$totalPotPrice += $itemPrice;
+
+		for ($i1=0; $i1 < $tickets; $i1++) { 
+			array_push($ticketsArr, $itemOwner);
+		}
+	}
+
+	$winnerSteamID = $ticketsArr[array_rand($ticketsArr)];
+
+	$stmt = $db->prepare('SELECT * FROM currentPot WHERE ownerSteamID = :id');
+	$stmt->bindValue(':id', $winnerSteamID);
+	$stmt->execute();
+
+	$winnerItems = $stmt->fetchAll();
+
+	$userPrice = 0;
+
+	foreach ($winnerItems as $item) {
+		$itemPrice = $item['itemPrice'];
+
+		$userPrice += $itemPrice;
+	}
+
+	# Calculate which items to keep and which to give to winner
+	# The site will take ~2%, but no more than 5%
+	$stmt = $db->query('SELECT * FROM currentPot ORDER BY itemPrice DESC');
+
+	$allItems = $stmt->fetchAll();
+	
+	$keepPercentage = 0;
+	$itemsToKeep = array();
+	$itemsToGive = array();
+	$give = false;
+
+	foreach ($allItems as $item) {
+		if ($give) {
+			array_push($itemsToGive, $item);
+			continue;
+		}
+
+		$itemPrice = intval($item['itemPrice']);
+		$itemPercentage = $itemPrice / $totalPotPrice;
+
+		if ($keepPercentage + $itemPercentage > 0.05) {
+			$give = true;
+			continue;
+		}
+
+		if ($keepPercentage + $itemPercentage >= 0.02 && $keepPercentage < 0.02) {
+			array_push($itemsToKeep, $item);
+			$give = true;
+			continue;
+		}
+
+		array_push($itemsToKeep, $item);
+	}
 
 
+	# Add this game to the past games database
+	$stmt = $db->prepare('INSERT INTO history (winnerSteamID, userPutInPrice, potPrice, allItems) VALUES (:id, :userprice, :potprice, :allitems)');
+	$stmt->bindValue(':id', $winnerSteamID);
+	$stmt->bindValue(':userprice', $userPrice);
+	$stmt->bindValue(':potprice', $totalPotPrice);
+	$stmt->bindValue(':allitems', $); # Add this later, once the bot is working and I can see what all I would need for it.
+	$stmt->execute();
 
+	# Clear the current pot
+	$stmt = $db->query('TRUNCATE TABLE currentPot');
+
+	# Get items from nextPot and put them in currentPot
+	$stmt = $db->query('INSERT INTO currentPot SELECT * FROM nextPot');
+
+	# Clear nextPot
+	$stmt = $db->query('TRUNCATE TABLE nextPot');
+
+	# Echo out jsonSuccess
+	$data = array('potOver' => 1, 'tradeItems' => $itemsToGive, 'profitItems' => $itemsToKeep);
+	echo jsonSuccess();
+	return;
+}
+
+# If the pot was not over the top, echo jsonSuccess with just a message
+echo jsonSuccess(array('potOver' => 0));
 
 
 
