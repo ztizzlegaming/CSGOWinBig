@@ -46,7 +46,7 @@ function jsonErr($errMsg) {
 	return json_encode(array('success' => 0, 'errMsg' => $errMsg));
 }
 
-function getSteamAPIKey($type) {
+function getSteamAPIKey() {
 	$fileLoc = $_SERVER['DOCUMENT_ROOT'] . '/../../passwords.txt';
 	if (file_exists($fileLoc)) {
 		$fh = fopen($fileLoc, 'r');
