@@ -3,10 +3,10 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jul 29, 2015 at 08:57 AM
+-- Generation Time: Aug 05, 2015 at 08:30 AM
 -- Server version: 5.5.42-37.1-log
 -- PHP Version: 5.4.23
-
+--
 -- Copyright (c) 2015 Jordan Turley, CSGO Win Big. All Rights Reserved.
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
@@ -17,7 +17,6 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8 */;
-
 
 -- --------------------------------------------------------
 
@@ -33,7 +32,7 @@ CREATE TABLE IF NOT EXISTS `chat` (
   `date` text COLLATE latin1_general_ci NOT NULL,
   `time` text COLLATE latin1_general_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=118 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=125 ;
 
 -- --------------------------------------------------------
 
@@ -44,12 +43,17 @@ CREATE TABLE IF NOT EXISTS `chat` (
 DROP TABLE IF EXISTS `currentPot`;
 CREATE TABLE IF NOT EXISTS `currentPot` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `ownerSteamID` bigint(11) NOT NULL,
+  `contextId` int(11) NOT NULL,
+  `assetId` int(11) NOT NULL,
+  `ownerSteamId` text NOT NULL,
+  `ownerSteamId32` text NOT NULL,
   `itemName` text NOT NULL,
   `itemPrice` int(11) NOT NULL,
+  `itemRarityName` text NOT NULL,
+  `itemRarityColor` varchar(6) NOT NULL,
   `itemIcon` text NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -63,38 +67,10 @@ CREATE TABLE IF NOT EXISTS `history` (
   `winnerSteamID` bigint(20) NOT NULL,
   `userPutInPrice` int(11) NOT NULL,
   `potPrice` int(11) NOT NULL,
-  `allItems` text NOT NULL,
+  `allItemsJson` text NOT NULL,
   `paid` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `nextPot`
---
-
-DROP TABLE IF EXISTS `nextPot`;
-CREATE TABLE IF NOT EXISTS `nextPot` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `ownerSteamID` bigint(11) NOT NULL,
-  `itemName` text NOT NULL,
-  `itemPrice` int(11) NOT NULL,
-  `itemIcon` text NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `users`
---
-
-DROP TABLE IF EXISTS `users`;
-CREATE TABLE IF NOT EXISTS `users` (
-  `steamUserID` bigint(20) NOT NULL,
-  `steamAvatarURL` text COLLATE latin1_general_ci NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
