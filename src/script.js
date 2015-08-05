@@ -252,7 +252,7 @@ function getFormattedDate() {
 	return date.getFullYear() + "-" + month + "-" + date.getDate();
 }
 
-function getFormattedTime (argument) {
+function getFormattedTime () {
 	var date = new Date();
 
 	return date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
