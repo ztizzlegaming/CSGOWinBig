@@ -105,10 +105,7 @@ function update () {
 				potCount = pot.length;
 
 				//Set pot price
-				var realPotPrice = potPrice / 100;
-				if (realPotPrice % 1 === 0) {
-					realPotPrice = realPotPrice + '.00';
-				}
+				var realPotPrice = getFormattedPrice(potPrice);
 				$('#pot-price').text(realPotPrice);
 
 				//Set number of pot items
@@ -130,7 +127,7 @@ function update () {
 					allItems = mostRecentGame['allItems'],
 					paid = mostRecentGame['paid'];
 
-				var potPriceReal = '$' + (potPrice / 100) + ((potPrice % 1 === 0) ? '.00' : '');
+				var potPriceReal = getFormattedPrice(potPrice);
 				var percentageChance = (userPutInPrice / potPrice * 100).toFixed(2);
 				var winnerSteamID = winnerSteamInfo['steamid'], winnerProfileName = winnerSteamInfo['personaname'];
 
@@ -152,7 +149,7 @@ function update () {
 
 				var percentageChance = (userPutInPrice / potPrice * 100).toFixed(2);
 				var profileName = winnerSteamInfo['personaname'];
-				var potPriceReal = '$' + (potPrice / 100) + ((potPrice % 1 === 0) ? '.00' : '');
+				var potPriceReal = getFormattedPrice(potPrice);
 
 				var str = 'Previous Winner: ' + profileName + ' won ' + potPriceReal + ' with a ' + percentageChance + '% chance.';
 				$('#prev-game-info').html(str);
@@ -215,15 +212,11 @@ function generatePotStr (pot) {
 			profileAvatar = itemOwnerSteamInfo['avatarfull'],
 			profileURL = itemOwnerSteamInfo['profileurl'];
 
-		var itemRealPrice = itemPrice / 100;
-
-		if (itemRealPrice % 1 === 0) {
-			itemRealPrice = itemRealPrice + '.00';
-		}
+		var itemRealPrice = getFormattedPrice(itemPrice);
 
 		str += '<div class="pot-item">'
 		str += '<a href="' + profileURL + '" target="_blank"><img src="' + profileAvatar + '" class="pot-item-profile-image">';
-		str += '<div class="pot-item-name">' + profileName + '</a>' + ': ' + itemName + ' - $' + itemRealPrice + '</div>';
+		str += '<div class="pot-item-name">' + profileName + '</a>' + ': ' + itemName + ' - ' + itemRealPrice + '</div>';
 		str += '<img src="' + itemIcon + '" class="pot-item-image">';
 		str += '</div>';
 	}
@@ -263,4 +256,16 @@ function getFormattedTime (argument) {
 	var date = new Date();
 
 	return date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+}
+
+function getFormattedPrice (cents) {
+	var price = cents / 100;
+	
+	if (cents % 100 === 0) { //If it is an even dollar, add the .00
+		price = price + '.00';
+	} else if (cents % 10 === 0) { //If it is like $3.40, add the trailing 0
+		price = price + '0';
+	}
+
+	return '$' + price;
 }
