@@ -60,7 +60,7 @@ for ($i1 = count($chatMessages) - 1; $i1 >= 0; $i1--) {
 }
 
 # Get the current pot
-$stmt = $db->query('SELECT * FROM `currentPot`');
+$stmt = $db->query('SELECT * FROM currentPot ORDER BY id DESC');
 $currentPotArr = $stmt->fetchAll();
 
 $currentPot = array();
@@ -72,10 +72,12 @@ foreach ($currentPotArr as $itemInPot) {
 	$itemPrice = $itemInPot['itemPrice'];
 	$itemIcon = $itemInPot['itemIcon'];
 
+	$itemIconUrl = "http://steamcommunity-a.akamaihd.net/economy/image/$itemIcon/360fx360f";
+
 	$itemOwnerSteamID = $itemInPot['ownerSteamId'];
 	$steamUserInfo = getSteamProfileInfoForSteamID($usersInfoStr, $itemOwnerSteamID);
 
-	$arr = array('itemID' => $itemID, 'itemSteamOwnerInfo' => $steamUserInfo, 'itemName' => $itemName, 'itemPrice' => $itemPrice, 'itemIcon' => $itemIcon);
+	$arr = array('itemID' => $itemID, 'itemSteamOwnerInfo' => $steamUserInfo, 'itemName' => $itemName, 'itemPrice' => $itemPrice, 'itemIcon' => $itemIconUrl);
 	array_push($currentPot, $arr);
 
 	$potPrice += $itemPrice;
@@ -85,7 +87,7 @@ foreach ($currentPotArr as $itemInPot) {
 $prevGameID = $prevPot['id'];
 $winnerSteamID = $prevPot['winnerSteamID'];
 $userPutInPrice = $prevPot['userPutInPrice'];
-$potPrice = $prevPot['potPrice'];
+$prevPotPrice = $prevPot['potPrice'];
 $allItems = $prevPot['allItems'];
 $paid = $prevPot['paid'];
 
@@ -95,7 +97,7 @@ $mostRecentGame = array(
 	'prevGameID' => $prevGameID,
 	'winnerSteamInfo' => $winnerSteamInfo,
 	'userPutInPrice' => $userPutInPrice,
-	'potPrice' => $potPrice,
+	'potPrice' => $prevPotPrice,
 	'allItems' => $allItems,
 	'paid' => $paid
 );
