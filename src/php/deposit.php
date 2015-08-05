@@ -9,12 +9,18 @@ $maxPotCount = 100;
 # Get password, owner steam ID, and all deposit items
 $password = isset($_POST['password']) ? $_POST['password'] : null;
 $tradeOwnerSteamId = isset($_POST['owner']) ? $_POST['owner'] : null;
-$allItemsJson = isset($_POST['allItems']) ? $_POST['allItems'] : null;
+$allItemsJson = isset($_POST['items']) ? $_POST['items'] : null;
 
-if (is_null($tradeOffer) || is_null($allItemsJson)  || is_null($password) || strlen($tradeOwner) === 0 || strlen($allItemsJson) === 0 || strlen($password) === 0) {
+if (is_null($password) || is_null($tradeOwnerSteamId) || is_null($allItemsJson) || strlen($password) === 0 || strlen($tradeOwnerSteamId) === 0 || strlen($allItemsJson) === 0) {
 	echo jsonErr('One of the required fields was not sent correctly or was left blank.');
 	return;
 }
+
+# Convert Steam ID to Steam64 ID
+$idParts = explode(':', $tradeOwnerSteamId);
+$authServer = intval($idParts[1]);
+$accountNumber = intval($idParts[2]);
+$tradeOwnerSteamId64 = $accountNumber * 2 + 76561197960265728 + $authServer;
 
 # Get the password from config file and make sure it matches
 $fileLoc = $_SERVER['DOCUMENT_ROOT'] . '/../../passwords.txt';
@@ -34,18 +40,18 @@ if ($password !== $realPassword) {
 }
 
 # Create all items array from json
-$allItems = json_decode($allItemsJson);
+$allItems = json_decode($allItemsJson, true);
 
 # Get the depositor's inventory
-$depositorInventory = json_decode(file_get_contents("https://steamcommunity.com/profiles/$tradeOwnerSteamId/inventory/json/730/2"));
+$depositorInventory = json_decode(file_get_contents("https://steamcommunity.com/profiles/$tradeOwnerSteamId64/inventory/json/730/2"), true);
 
 if ($depositorInventory['success'] !== true) {
 	echo jsonErr('An error occured fetching the depositor\'s inventory.');
 	return;
 }
 
-$rgInventory = $allItems['rgInventory'];
-$rgDescriptions = $allItems['rgDescriptions'];
+$rgInventory = $depositorInventory['rgInventory'];
+$rgDescriptions = $depositorInventory['rgDescriptions'];
 
 $totalPrice = 0;
 $itemsArr = array();
@@ -69,18 +75,18 @@ foreach ($allItems as $item) {
 
 	$descriptionItem = $rgDescriptions[$classId . '_' . $instanceId];
 	
-	$marketHashName = $descriptionItem['market_hash_name'];
+	$marketHashName = urlencode($descriptionItem['market_hash_name']);
 	$marketName = $descriptionItem['market_name'];
 	$iconUrl = $descriptionItem['icon_url'];
 
 	# Get rarity of item
 	$tags = $descriptionItem['tags'];
-	$rarityTag = $tags[5];
+	$rarityTag = $tags[4];
 	$rarityName = $rarityTag['name'];
 	$rarityColor = $rarityTag['color'];
 
 	# Get price of item from Steam market
-	$marketObj = json_decode(file_get_contents("http://steamcommunity.com/market/priceoverview/?currency=1&appid=730&market_hash_name=$marketHashName"));
+	$marketObj = json_decode(file_get_contents("http://steamcommunity.com/market/priceoverview/?currency=1&appid=730&market_hash_name=$marketHashName"), true);
 	if ($marketObj['success'] !== true) {
 		echo jsonErr('An error occured while fetching market price for an item.');
 		return;
@@ -95,9 +101,9 @@ foreach ($allItems as $item) {
 	}
 
 	if (isset($medianPrice)) {
-		$price = intval(substr($medianPrice, 1)) * 100;
+		$price = doubleval(substr($medianPrice, 1)) * 100;
 	} else {
-		$price = intval(substr($lowestPrice, 1)) * 100;
+		$price = doubleval(substr($lowestPrice, 1)) * 100;
 	}
 
 	$arr = array(
@@ -109,23 +115,19 @@ foreach ($allItems as $item) {
 		'price' => $price,
 		'iconUrl' => $iconUrl
 	);
-	array_push($itemsArr, $arr);
 
-	$totalPrice += $price;
+	# Just in case the SteamBot decides to have the amount more than 1
+	for ($i1=0; $i1 < $amount; $i1++) { 
+		array_push($itemsArr, $arr);
+		$totalPrice += $price;
+	}
 }
 
 # Check to see if they reached the minimum deposit
 if ($totalPrice < 100) {
-	echo jsonErr('The minimum deposit was not reached.');
+	$data = array('minDeposit' => 0);
+	echo jsonSuccess($data);
 	return;
-}
-
-# Check if pot items count is greater than limit
-# If it is greater, then these items will go into the next pot
-if ($currentPotCount >= $maxPotCount) {
-	$table = 'nextPot';
-} else {
-	$table = 'currentPot';
 }
 
 # Loop through all items again, adding them to the pot database
@@ -140,14 +142,15 @@ foreach ($itemsArr as $item) {
 
 	$sql = 
 		'INSERT INTO currentPot
-		(contextId, assetId, ownerSteamId, itemName, itemPrice, itemRarityName, itemRarityColor, itemIcon)
+		(contextId, assetId, ownerSteamId, ownerSteamId32, itemName, itemPrice, itemRarityName, itemRarityColor, itemIcon)
 		VALUES
-		(:context, :asset, :owner, :itemname, :itemprice, :itemrarityname, :itemraritycolor, :itemicon)';
+		(:context, :asset, :owner, :owner32, :itemname, :itemprice, :itemrarityname, :itemraritycolor, :itemicon)';
 
 	$stmt = $db->prepare($sql);
 	$stmt->bindValue(':context', $contextId);
 	$stmt->bindValue(':asset', $assetId);
-	$stmt->bindValue(':owner', $tradeOwnerSteamId);
+	$stmt->bindValue(':owner', $tradeOwnerSteamId64);
+	$stmt->bindValue(':owner32', $tradeOwnerSteamId);
 	$stmt->bindValue(':itemname', $marketName);
 	$stmt->bindValue(':itemprice', $price);
 	$stmt->bindValue(':itemrarityname', $rarityName);
@@ -171,7 +174,7 @@ if ($currentPotCount >= $maxPotCount) {
 	$totalPotPrice = 0;
 
 	foreach ($allPotItems as $item) {
-		$itemOwner = $item['ownerSteamID'];
+		$itemOwner = $item['ownerSteamID32'];
 		$itemPrice = $item['itemPrice'];
 
 		$totalPotPrice += $itemPrice;
@@ -181,8 +184,10 @@ if ($currentPotCount >= $maxPotCount) {
 		}
 	}
 
+	# Pick a winner randomly
 	$winnerSteamID = $ticketsArr[array_rand($ticketsArr)];
 
+	# Check what the winner put in, to get their odds
 	$stmt = $db->prepare('SELECT * FROM currentPot WHERE ownerSteamID = :id');
 	$stmt->bindValue(':id', $winnerSteamID);
 	$stmt->execute();
@@ -231,30 +236,26 @@ if ($currentPotCount >= $maxPotCount) {
 		array_push($itemsToKeep, $item);
 	}
 
+	$allItemsJsonForDB = json_encode($allItems);
 
 	# Add this game to the past games database
 	$stmt = $db->prepare('INSERT INTO history (winnerSteamID, userPutInPrice, potPrice, allItems) VALUES (:id, :userprice, :potprice, :allitems)');
 	$stmt->bindValue(':id', $winnerSteamID);
 	$stmt->bindValue(':userprice', $userPrice);
 	$stmt->bindValue(':potprice', $totalPotPrice);
-	$stmt->bindValue(':allitems', $); # Add this later, once the bot is working and I can see what all I would need for it.
+	$stmt->bindValue(':allitemsJson', $allItemsJsonForDB);
 	$stmt->execute();
 
 	# Clear the current pot
 	$stmt = $db->query('TRUNCATE TABLE currentPot');
 
-	# Get items from nextPot and put them in currentPot
-	$stmt = $db->query('INSERT INTO currentPot SELECT * FROM nextPot');
-
-	# Clear nextPot
-	$stmt = $db->query('TRUNCATE TABLE nextPot');
-
-	# Echo out jsonSuccess
-	$data = array('potOver' => 1, 'tradeItems' => $itemsToGive, 'profitItems' => $itemsToKeep);
-	echo jsonSuccess();
+	# Echo out jsonSuccess with potOver = 1 and all of the items
+	$data = array('minDeposit' => 1, 'potOver' => 1, 'winnerSteamID' => $winnerSteamID, 'tradeItems' => $itemsToGive, 'profitItems' => $itemsToKeep);
+	echo jsonSuccess($data);
 	return;
 }
 
-# If the pot was not over the top, echo jsonSuccess with just a message
-echo jsonSuccess(array('potOver' => 0));
+# If the pot was not over the top, potOver = 0
+$data = array('minDeposit' => 1, 'potOver' => 0);
+echo jsonSuccess($data);
 ?>
