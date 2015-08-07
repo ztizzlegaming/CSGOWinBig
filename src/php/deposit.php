@@ -4,7 +4,7 @@
 include 'default.php';
 $db = getDB();
 
-$maxPotCount = 10;
+$maxPotCount = 100;
 
 # Get password, owner steam ID, and all deposit items
 $password = isset($_POST['password']) ? $_POST['password'] : null;
