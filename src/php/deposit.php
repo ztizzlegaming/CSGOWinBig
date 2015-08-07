@@ -4,20 +4,20 @@
 include 'default.php';
 $db = getDB();
 
-$maxPotCount = 100;
+$maxPotCount = 10;
 
 # Get password, owner steam ID, and all deposit items
 $password = isset($_POST['password']) ? $_POST['password'] : null;
-$tradeOwnerSteamId = isset($_POST['owner']) ? $_POST['owner'] : null;
+$tradeOwnerSteamId32 = isset($_POST['owner']) ? $_POST['owner'] : null;
 $allItemsJson = isset($_POST['items']) ? $_POST['items'] : null;
 
-if (is_null($password) || is_null($tradeOwnerSteamId) || is_null($allItemsJson) || strlen($password) === 0 || strlen($tradeOwnerSteamId) === 0 || strlen($allItemsJson) === 0) {
+if (is_null($password) || is_null($tradeOwnerSteamId32) || is_null($allItemsJson) || strlen($password) === 0 || strlen($tradeOwnerSteamId32) === 0 || strlen($allItemsJson) === 0) {
 	echo jsonErr('One of the required fields was not sent correctly or was left blank.');
 	return;
 }
 
 # Convert Steam ID to Steam64 ID
-$idParts = explode(':', $tradeOwnerSteamId);
+$idParts = explode(':', $tradeOwnerSteamId32);
 $authServer = intval($idParts[1]);
 $accountNumber = intval($idParts[2]);
 $tradeOwnerSteamId64 = $accountNumber * 2 + 76561197960265728 + $authServer;
@@ -64,7 +64,7 @@ foreach ($allItems as $item) {
 	$assetId = $item['assetid'];
 
 	# Check if any items are not for CSGO, just in case.
-	if ($appId !== 730) {
+	if ($appId !== 730 || $contextId !== 2) {
 		echo jsonErr('One of the items was not for CSGO.');
 		return;
 	}
@@ -107,8 +107,8 @@ foreach ($allItems as $item) {
 	}
 
 	$arr = array(
-		'contextId' => $contextId,
-		'assetId' => $assetId,
+		'classId' => $classId,
+		'instanceId' => $instanceId,
 		'marketName' => $marketName,
 		'rarityName' => $rarityName,
 		'rarityColor' => $rarityColor,
@@ -132,8 +132,8 @@ if ($totalPrice < 100) {
 
 # Loop through all items again, adding them to the pot database
 foreach ($itemsArr as $item) {
-	$contextId = $item['contextId'];
-	$assetId = $item['assetId'];
+	$classId = $item['classId'];
+	$instanceId = $item['instanceId'];
 	$marketName = $item['marketName'];
 	$rarityName = $item['rarityName'];
 	$rarityColor = $item['rarityColor'];
@@ -142,15 +142,15 @@ foreach ($itemsArr as $item) {
 
 	$sql = 
 		'INSERT INTO currentPot
-		(contextId, assetId, ownerSteamId, ownerSteamId32, itemName, itemPrice, itemRarityName, itemRarityColor, itemIcon)
+		(classId, instanceId, ownerSteamId64, ownerSteamId32, itemName, itemPrice, itemRarityName, itemRarityColor, itemIcon)
 		VALUES
-		(:context, :asset, :owner, :owner32, :itemname, :itemprice, :itemrarityname, :itemraritycolor, :itemicon)';
+		(:class, :instance, :owner64, :owner32, :itemname, :itemprice, :itemrarityname, :itemraritycolor, :itemicon)';
 
 	$stmt = $db->prepare($sql);
-	$stmt->bindValue(':context', $contextId);
-	$stmt->bindValue(':asset', $assetId);
-	$stmt->bindValue(':owner', $tradeOwnerSteamId64);
-	$stmt->bindValue(':owner32', $tradeOwnerSteamId);
+	$stmt->bindValue(':class', $classId);
+	$stmt->bindValue(':instance', $instanceId);
+	$stmt->bindValue(':owner64', $tradeOwnerSteamId64);
+	$stmt->bindValue(':owner32', $tradeOwnerSteamId32);
 	$stmt->bindValue(':itemname', $marketName);
 	$stmt->bindValue(':itemprice', $price);
 	$stmt->bindValue(':itemrarityname', $rarityName);
@@ -174,22 +174,34 @@ if ($currentPotCount >= $maxPotCount) {
 	$totalPotPrice = 0;
 
 	foreach ($allPotItems as $item) {
-		$itemOwner = $item['ownerSteamID32'];
+		$itemOwnerId32 = $item['ownerSteamId32'];
+		$itemOwnerId64 = $item['ownerSteamId64'];
 		$itemPrice = $item['itemPrice'];
 
 		$totalPotPrice += $itemPrice;
 
-		for ($i1=0; $i1 < $tickets; $i1++) { 
-			array_push($ticketsArr, $itemOwner);
+		for ($i1=0; $i1 < $itemPrice; $i1++) {
+			array_push($ticketsArr, array('32' => $itemOwnerId32, '64' => $itemOwnerId64));
 		}
 	}
 
 	# Pick a winner randomly
-	$winnerSteamID = $ticketsArr[array_rand($ticketsArr)];
+	$winner = $ticketsArr[array_rand($ticketsArr)];
+	$winnerSteamId32 = $winner['32'];
+	$winnerSteamId64 = $winner['64'];
 
-	# Check what the winner put in, to get their odds
-	$stmt = $db->prepare('SELECT * FROM currentPot WHERE ownerSteamID = :id');
-	$stmt->bindValue(':id', $winnerSteamID);
+	# Get trade token for winner
+	$stmt = $db->prepare('SELECT * FROM users WHERE steamId32 = :id');
+	$stmt->bindValue(':id', $winnerSteamId32);
+	$stmt->execute();
+
+	$userRow = $stmt->fetch();
+
+	$winnerTradeToken = $userRow['tradeToken'];
+
+	# Check the price of what the winner put in, to get their odds
+	$stmt = $db->prepare('SELECT * FROM currentPot WHERE ownerSteamId32 = :id');
+	$stmt->bindValue(':id', $winnerSteamId32);
 	$stmt->execute();
 
 	$winnerItems = $stmt->fetchAll();
@@ -204,7 +216,7 @@ if ($currentPotCount >= $maxPotCount) {
 
 	# Calculate which items to keep and which to give to winner
 	# The site will take ~2%, but no more than 5%
-	$stmt = $db->query('SELECT * FROM currentPot ORDER BY itemPrice DESC');
+	$stmt = $db->query('SELECT * FROM currentPot ORDER BY itemPrice ASC');
 
 	$allItems = $stmt->fetchAll();
 	
@@ -239,18 +251,26 @@ if ($currentPotCount >= $maxPotCount) {
 	$allItemsJsonForDB = json_encode($allItems);
 
 	# Add this game to the past games database
-	$stmt = $db->prepare('INSERT INTO history (winnerSteamID, userPutInPrice, potPrice, allItems) VALUES (:id, :userprice, :potprice, :allitems)');
-	$stmt->bindValue(':id', $winnerSteamID);
+	$stmt = $db->prepare('INSERT INTO history (winnerSteamId32, winnerSteamId64, userPutInPrice, potPrice, allItemsJson) VALUES (:id32, :id64, :userprice, :potprice, :allitemsjson)');
+	$stmt->bindValue(':id32', $winnerSteamId32);
+	$stmt->bindValue(':id64', $winnerSteamId64);
 	$stmt->bindValue(':userprice', $userPrice);
 	$stmt->bindValue(':potprice', $totalPotPrice);
-	$stmt->bindValue(':allitemsJson', $allItemsJsonForDB);
+	$stmt->bindValue(':allitemsjson', $allItemsJsonForDB);
 	$stmt->execute();
 
 	# Clear the current pot
 	$stmt = $db->query('TRUNCATE TABLE currentPot');
 
 	# Echo out jsonSuccess with potOver = 1 and all of the items
-	$data = array('minDeposit' => 1, 'potOver' => 1, 'winnerSteamID' => $winnerSteamID, 'tradeItems' => $itemsToGive, 'profitItems' => $itemsToKeep);
+	$data = array(
+		'minDeposit' => 1,
+		'potOver' => 1,
+		'winnerSteamId' => $winnerSteamId32,
+		'winnerTradeToken' => $winnerTradeToken,
+		'tradeItems' => $itemsToGive,
+		'profitItems' => $itemsToKeep
+	);
 	echo jsonSuccess($data);
 	return;
 }

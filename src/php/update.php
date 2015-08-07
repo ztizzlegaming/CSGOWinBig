@@ -23,7 +23,7 @@ $currentPotArr = $stmt->fetchAll();
 $allUserIDsPot = array();
 
 foreach ($currentPotArr as $item) {
-	$steamUserID = $item['ownerSteamID'];
+	$steamUserID = $item['ownerSteamID64'];
 	array_push($allUserIDsPot, $steamUserID);
 }
 
@@ -74,7 +74,7 @@ foreach ($currentPotArr as $itemInPot) {
 
 	$itemIconUrl = "http://steamcommunity-a.akamaihd.net/economy/image/$itemIcon/360fx360f";
 
-	$itemOwnerSteamID = $itemInPot['ownerSteamId'];
+	$itemOwnerSteamID = $itemInPot['ownerSteamId64'];
 	$steamUserInfo = getSteamProfileInfoForSteamID($usersInfoStr, $itemOwnerSteamID);
 
 	$arr = array('itemID' => $itemID, 'itemSteamOwnerInfo' => $steamUserInfo, 'itemName' => $itemName, 'itemPrice' => $itemPrice, 'itemIcon' => $itemIconUrl);
@@ -85,13 +85,14 @@ foreach ($currentPotArr as $itemInPot) {
 
 # Get the past pot and check if someone just now won
 $prevGameID = $prevPot['id'];
-$winnerSteamID = $prevPot['winnerSteamID'];
+$winnerSteamId = $prevPot['winnerSteamId'];
+$winnerSteamId64 = $prevPot['winnerSteamId64'];
 $userPutInPrice = $prevPot['userPutInPrice'];
 $prevPotPrice = $prevPot['potPrice'];
 $allItems = $prevPot['allItems'];
 $paid = $prevPot['paid'];
 
-$winnerSteamInfo = getSteamProfileInfoForSteamID($usersInfoStr, $winnerSteamID);
+$winnerSteamInfo = getSteamProfileInfoForSteamID($usersInfoStr, $winnerSteamId64);
 
 $mostRecentGame = array(
 	'prevGameID' => $prevGameID,
