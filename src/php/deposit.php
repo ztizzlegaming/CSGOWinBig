@@ -235,6 +235,7 @@ if ($currentPotCount >= $maxPotCount) {
 		$itemPercentage = $itemPrice / $totalPotPrice;
 
 		if ($keepPercentage + $itemPercentage > 0.05) {
+			array_push($itemsToGive, $item);
 			$give = true;
 			continue;
 		}
@@ -246,6 +247,7 @@ if ($currentPotCount >= $maxPotCount) {
 		}
 
 		array_push($itemsToKeep, $item);
+		$keepPercentage += $itemPercentage;
 	}
 
 	$allItemsJsonForDB = json_encode($allItems);
