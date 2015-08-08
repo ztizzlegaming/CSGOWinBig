@@ -134,7 +134,7 @@ function update () {
 			}
 
 			//Check for new items in the pot
-			if (pot.length > potCount) {
+			if (pot.length !== potCount) {
 				console.log('New items in pot!');
 				potCount = pot.length;
 
@@ -148,29 +148,6 @@ function update () {
 				//Set items in pot
 				var potStr = generatePotStr(pot);
 				$('#pot').html(potStr);
-			} else if (pot.length < potCount) {
-				//Someone just now won, do some big animation
-				//For now, just sweetalert the winner
-				
-				potCount = pot.length;
-				
-				var prevGameID = mostRecentGame['prevGameID'],
-					winnerSteamInfo = mostRecentGame['winnerSteamInfo'],
-					userPutInPrice = parseInt(mostRecentGame['userPutInPrice']),
-					potPrice = parseInt(mostRecentGame['potPrice']),
-					allItems = mostRecentGame['allItems'],
-					paid = mostRecentGame['paid'];
-
-				var potPriceReal = getFormattedPrice(potPrice);
-				var percentageChance = (userPutInPrice / potPrice * 100).toFixed(2);
-				var winnerSteamID = winnerSteamInfo['steamid'], winnerProfileName = winnerSteamInfo['personaname'];
-
-				if (winnerSteamID === mUserInfo['steamid']) {
-					var msg = 'You have won ' + potPriceReal + ', with a ' + percentageChance + '% chance! Expect a trade request from our bot shortly.';
-					swal('You Win!', msg, 'success');
-				} else {
-					swal('Round ended!', winnerProfileName + ' has won ' + potPriceReal + ', with a ' + percentageChance + ' chance!', 'success');
-				}
 			}
 
 			if (mostRecentGame !== null) {
@@ -180,6 +157,24 @@ function update () {
 					potPrice = parseInt(mostRecentGame['potPrice']),
 					allItems = mostRecentGame['allItems'],
 					paid = mostRecentGame['paid'];
+
+				if (prevGameID < lastGameID && lastGameID !== 0) {
+					//A round just ended and someone just now won. For now, just sweetalert the winner.
+					lastGameID = prevGameID;
+
+					var potPriceReal = getFormattedPrice(potPrice);
+					var percentageChance = (userPutInPrice / potPrice * 100).toFixed(2);
+					var winnerSteamID = winnerSteamInfo['steamid'], winnerProfileName = winnerSteamInfo['personaname'];
+
+					if (winnerSteamID === mUserInfo['steamid']) {
+						var msg = 'You have won ' + potPriceReal + ', with a ' + percentageChance + '% chance! Expect a trade request from our bot shortly.';
+						swal('You Win!', msg, 'success');
+					} else {
+						swal('Round ended!', winnerProfileName + ' has won ' + potPriceReal + ', with a ' + percentageChance + ' chance!', 'success');
+					}
+				} else if (lastGameID === 0) {
+					lastGameID = prevGameID;
+				}
 
 				var percentageChance = (userPutInPrice / potPrice * 100).toFixed(2);
 				var profileName = winnerSteamInfo['personaname'];
