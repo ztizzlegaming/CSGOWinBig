@@ -35,12 +35,12 @@ $(function () {
 					//They have not entered their trade URL, prompt them to enter it
 					swal({
 						title: 'Trade URL',
-						text: 'Please enter your trade url for payouts. NOTE: Make sure your url is correct; otherwise, you will not receive your winnings.',
+						text: 'Please enter your trade url for payouts.<br>NOTE: Make sure your url is correct; otherwise, you will not receive your winnings. You can find your trade url <a href="http://steamcommunity.com/id/me/tradeoffers/privacy" target="_blank">here</a>.',
 						type: 'input',
 						showCancelButton: false,
 						closeOnConfirm: false,
 						showLoaderOnConfirm: true,
-						animation: 'slide-from-top',
+						html: true,
 						inputPlaceholder: 'trade url'
 					}, function (inputValue) {
 						if (inputValue === false) {
@@ -53,13 +53,16 @@ $(function () {
 						}
 
 						$.post('php/save-trade-token.php', {tradeUrl: inputValue}, function (jsonObj) {
+							console.log(jsonObj);
 							handleJsonResponse(jsonObj, function (data) {
 								if (data['valid'] === 0) {
-									swal.showInputError('The url was not legitimate.');
+									swal.showInputError(data['errMsg']);
 									return false;
+								} else {
+									swal('Success!', 'Your trade url was successfully saved.', 'success');
 								}
 							});
-						});
+						}, 'json');
 					});
 				}
 
