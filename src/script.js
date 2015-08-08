@@ -1,7 +1,7 @@
 //Copyright (c) 2015 Jordan Turley, CSGO Win Big. All Rights Reserved.
 
-//The most recent ID for the chat
-var localMostRecentID = 0, potCount = 0;
+//The most recent ID for the chat, pot count, and last game ID
+var localMostRecentID = 0, potCount = 0, lastGameID = 0;
 
 //Whether or not the call of update() is the first call
 var firstUpdate = true;
@@ -29,6 +29,40 @@ $(function () {
 				$('#chat-input').css('display', 'block');
 
 				loggedIn = true;
+
+				var tradeTokenEntered = data['tradeTokenEntered'];
+				if (tradeTokenEntered === 0) {
+					//They have not entered their trade URL, prompt them to enter it
+					swal({
+						title: 'Trade URL',
+						text: 'Please enter your trade url for payouts. NOTE: Make sure your url is correct; otherwise, you will not receive your winnings.',
+						type: 'input',
+						showCancelButton: false,
+						closeOnConfirm: false,
+						showLoaderOnConfirm: true,
+						animation: 'slide-from-top',
+						inputPlaceholder: 'trade url'
+					}, function (inputValue) {
+						if (inputValue === false) {
+							return false;
+						}
+
+						if (inputValue.length === 0) {
+							swal.showInputError('You must enter your trade url.');
+							return false;
+						}
+
+						$.post('php/save-trade-token.php', {tradeUrl: inputValue}, function (jsonObj) {
+							handleJsonResponse(jsonObj, function (data) {
+								if (data['valid'] === 0) {
+									swal.showInputError('The url was not legitimate.');
+									return false;
+								}
+							});
+						});
+					});
+				}
+
 			} else {
 				//They are not logged in
 				$('.login').css('display', 'inline');
