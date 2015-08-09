@@ -73,7 +73,11 @@ $(function () {
 
 			$('#loading-menubar').css('display', 'none');
 
-			setTimeout(update, 200);
+			//Check if the page is the home page
+			var page = location.pathname.substring(location.pathname.lastIndexOf("/") + 1);
+			if (page === '' || page === 'index.html') {
+				setTimeout(update, 200);
+			}
 		});
 	});
 
