@@ -23,14 +23,14 @@ $currentPotArr = $stmt->fetchAll();
 $allUserIDsPot = array();
 
 foreach ($currentPotArr as $item) {
-	$steamUserID = $item['ownerSteamID64'];
+	$steamUserID = $item['ownerSteamId64'];
 	array_push($allUserIDsPot, $steamUserID);
 }
 
 # Get previous winner's steam ID
 $stmt = $db->query('SELECT * FROM history ORDER BY id DESC');
 $prevPot = $stmt->fetch();
-$prevWinner = $prevPot['winnerSteamID'];
+$prevWinner = $prevPot['winnerSteamId64'];
 
 $prevWinnerArr = array($prevWinner);
 
