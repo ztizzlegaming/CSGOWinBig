@@ -59,7 +59,7 @@ $(function () {
 									swal.showInputError(data['errMsg']);
 									return false;
 								} else {
-									swal('Success!', 'Your trade url was successfully saved.', 'success');
+									successMsg('Your trade url was successfully saved.');
 								}
 							});
 						}, 'json');
@@ -106,6 +106,44 @@ $(function () {
 
 			$.post('php/send-chat-message.php', {text: text});
 		}
+	});
+
+	$('#change-trade-url').on('click', function () {
+		if (!loggedIn) {
+			return;
+		}
+
+		swal({
+			title: 'Change Trade URL',
+			text: 'Enter your updated trade url here.',
+			type: 'input',
+			showCancelButton: true,
+			closeOnConfirm: false,
+			showLoaderOnConfirm: true,
+			html: true,
+			inputPlaceholder: 'trade url'
+		}, function (inputValue) {
+			if (inputValue === false) {
+				return false;
+			}
+
+			if (inputValue.length === 0) {
+				swal.showInputError('You must enter your trade url.');
+				return false;
+			}
+
+			$.post('php/update-trade-token.php', {tradeUrl: inputValue}, function (jsonObj) {
+				console.log(jsonObj);
+				handleJsonResponse(jsonObj, function (data) {
+					if (data['valid'] === 0) {
+						swal.showInputError(data['errMsg']);
+						return false;
+					} else {
+						successMsg('Your new trade url was successfully saved.');
+					}
+				});
+			}, 'json');
+		});
 	});
 });
 
@@ -271,6 +309,10 @@ function errMsg (message) {
 		message = 'An unknown error has occured. Please refresh the page and try again.';
 	}
 	swal('Hmm, something went wrong', message, 'error');
+}
+
+function successMsg (message) {
+	swal('Success!', message, 'success');
 }
 
 function getFormattedDate() {
