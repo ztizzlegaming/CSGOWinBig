@@ -192,14 +192,14 @@ function update () {
 			}
 
 			if (mostRecentGame !== null) {
-				var prevGameID = mostRecentGame['prevGameID'],
+				var prevGameID = parseInt(mostRecentGame['prevGameID']),
 					winnerSteamInfo = mostRecentGame['winnerSteamInfo'],
 					userPutInPrice = parseInt(mostRecentGame['userPutInPrice']),
 					potPrice = parseInt(mostRecentGame['potPrice']),
 					allItems = mostRecentGame['allItems'],
 					paid = mostRecentGame['paid'];
 
-				if (prevGameID < lastGameID && lastGameID !== 0) {
+				if (prevGameID > lastGameID && lastGameID !== 0) {
 					//A round just ended and someone just now won. For now, just sweetalert the winner.
 					lastGameID = prevGameID;
 
