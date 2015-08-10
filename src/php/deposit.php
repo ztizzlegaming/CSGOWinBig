@@ -79,11 +79,26 @@ foreach ($allItems as $item) {
 	$marketName = $descriptionItem['market_name'];
 	$iconUrl = $descriptionItem['icon_url'];
 
-	# Get rarity of item
+	# Get all item tags
 	$tags = $descriptionItem['tags'];
-	$rarityTag = $tags[4];
-	$rarityName = $rarityTag['name'];
-	$rarityColor = $rarityTag['color'];
+
+	# Loop through all tags and find the rarity tag
+	$tagFound = false;
+	foreach ($tags as $tag) {
+		$tagCategory = $tag['category'];
+		if ($tagCategory === 'Rarity') {
+			$tagFound = true;
+
+			$rarityName = $tag['name'];
+			$rarityColor = $tag['color'];
+		}
+	}
+
+	# Just in case for some reason the rarity couldn't be found
+	if (!$tagFound) {
+		$rarityName = '';
+		$rarityColor = '';
+	}
 
 	# Get price of item from Steam market
 	$marketObj = json_decode(file_get_contents("http://steamcommunity.com/market/priceoverview/?currency=1&appid=730&market_hash_name=$marketHashName"), true);
