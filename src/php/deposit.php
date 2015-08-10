@@ -268,7 +268,13 @@ if ($currentPotCount >= $maxPotCount) {
 	$allItemsJsonForDB = json_encode($allItems);
 
 	# Add this game to the past games database
-	$stmt = $db->prepare('INSERT INTO history (winnerSteamId32, winnerSteamId64, userPutInPrice, potPrice, allItemsJson) VALUES (:id32, :id64, :userprice, :potprice, :allitemsjson)');
+	$sql =
+		'INSERT INTO history
+		(winnerSteamId32, winnerSteamId64, userPutInPrice, potPrice, allItemsJson, datetime)
+		VALUES
+		(:id32, :id64, :userprice, :potprice, :allitemsjson, NOW())';
+
+	$stmt = $db->prepare($sql);
 	$stmt->bindValue(':id32', $winnerSteamId32);
 	$stmt->bindValue(':id64', $winnerSteamId64);
 	$stmt->bindValue(':userprice', $userPrice);
