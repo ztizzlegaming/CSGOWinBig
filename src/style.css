@@ -1,11 +1,40 @@
 /* Copyright (c) 2015 Jordan Turley, CSGO Win Big. All Rights Reserved. */
 
+html {
+	height: 100%;
+}
+
+body {
+	background-image: url(images/background.jpg);
+	background-color: black;
+	background-repeat: no-repeat;
+	background-position: center top;
+	height: 100%;
+	width: 100%;
+	font-family: Arial;
+}
+
+a {
+	color: blue;
+}
+
+.bg {
+	background-color: #999FA1;
+	border-radius: 5px;
+}
+
+#deposit-link {
+	background-color: #F6E444;
+	border-radius: 5px;
+	padding: 5px 10px;
+	height: 100%;
+}
+
 #chatbox {
 	overflow: none;
 	position: relative;
 	height: 400px;
 	padding: 0px;
-	border: 1px solid black;
 }
 
 #chatmessages {
@@ -20,8 +49,8 @@
 	background-color: #AAA;
 }
 
-.chat-messge-odd {
-	background-color: #FFF;
+.chat-message-odd {
+	background-color: #888;
 }
 
 .chat-message {

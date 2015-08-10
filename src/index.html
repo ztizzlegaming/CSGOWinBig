@@ -19,9 +19,9 @@
 	<script src="script.js"></script>
 </head>
 <body>
-	<div class="navbar navbar-default navbar-static-top">
+	<div class="navbar navbar-inverse navbar-static-top">
 		<div class="container">
-			<a href="/" class="navbar-brand">CSGO Win Big</a>
+			<a href="/" class="navbar-brand">CSGO WIN BIG</a>
 
 			<button class="navbar-toggle" data-toggle="collapse" data-target=".navHeaderCollapse">
 				<span class="icon-bar"></span>
@@ -40,40 +40,64 @@
 						</a>
 					</li>
 					<li class="logout" style="display: none;">
-						<a href="https://steamcommunity.com/tradeoffer/new/?partner=278478260&token=s8MZ56C5" target="_blank">Deposit skins</a>
+						<p class="navbar-btn" style="margin-right: 10px;">
+							<a href="https://steamcommunity.com/tradeoffer/new/?partner=278478260&token=s8MZ56C5" target="_blank" class="btn btn-success">
+								Deposit skins
+							</a>
+						</p>
 					</li>
 					<li class="logout" style="display: none;">
-						<a href="javascript:void(0);" id="change-trade-url">Change Trade URL</a>
+						<p class="navbar-btn" style="margin-right: 10px;">
+							<a href="javascript:void(0);" class="btn btn-warning" id="change-trade-url">Change Trade URL</a>
+						</p>
 					</li>
 					<li class="logout" style="display: none;">
-						<a href="php/SteamAuthentication/steamauth/logout.php">Logout</a>
+						<p class="navbar-btn" style="margin-right: 10px;">
+							<a href="php/SteamAuthentication/steamauth/logout.php" class="btn btn-danger">Logout</a>
+						</p>
 					</li>
 					<li>
-						<a href="javascript:void(0);" data-toggle="modal" data-target="#about-modal">About/How it works</a>
+						<p class="navbar-btn" style="margin-right: 10px;">
+							<button class="btn btn-info" data-toggle="modal" data-target="#about-modal">About/How it works</button>
+						</p>
 					</li>
 					<li>
-						<a href="support.html">Support</a>
+						<p class="navbar-btn">
+							<a href="support.html" class="btn btn-primary">Support</a>
+						</p>
 					</li>
 				</ul>
 			</div>
 		</div>
 	</div>
 
-	<div class="container">
-		<h1>NOTE: This site is not functional yet. Deposits will not work yet. We expect to be functional by the end of the summer. Stay tuned!</h1>
-		<div class="col-sm-4">
-			<div id="chatbox">
-				<div id="chatmessages">Loading chat, please wait&hellip;</div>
+	<div class="container" style="background-color: rgba(0, 0, 0, 0.75); height: 100%; border-radius: 10px;">
+		<div class="row">
+			<div class="col-sm-12">
+				<h2 class="bg" style="padding: 10px;">
+					Welcome to CSGO Win Big! Try your luck and deposit items, and see if you can win big! Good luck and have fun!
+				</h2>
 			</div>
-			<input id="chat-input" style="width: 100%; display: none;" placeholder="Send message (press 'Enter' to send)">
 		</div>
-		<div class="col-sm-8">
-			<div id="pot-items-price" style="display: none;">
-				Items: <span id="pot-items"></span>/100 | Total Pot Price: <span id="pot-price"></span>
+		<div class="row" style="height: 100%;">
+			<div class="col-sm-4">
+				<div class="bg" style="padding: 5px 0px;">
+					<div id="chatbox">
+						<div id="chatmessages">Loading chat, please wait&hellip;</div>
+					</div>
+					<input id="chat-input" style="width: 100%; display: none;" placeholder="Send message (press 'Enter' to send)">
+				</div>
 			</div>
-			<div id="pot"></div>
-			<hr>
-			<div id="prev-game-info" style="display: none;"></div>
+			<div class="col-sm-8">
+				<div class="bg" style="padding: 5px;">
+					<div id="pot-items-price" style="display: none;">
+						Items: <span id="pot-items"></span>/100 | Total Pot Price: <span id="pot-price"></span>
+					</div>
+					<div id="pot">loading&hellip;</div>
+					<br>
+					<div id="prev-game-info" style="display: none;"></div>
+				</div>
+			</div>
 		</div>
 	</div>
 
@@ -116,6 +140,10 @@
 						<li>The site will keep about 2% of the skins in every pot, but no more than 5%. The amount taken will be as close to 2% as it can be, depending on the items in the pot, but will never be more than 5%. This is so that the staff of CSGO Win Big can keep the site running as best as it can, without having any annoying ads on the site.</li>
 						<li>If you experience any lost items, such as depositing an item but not seeing it in the pot, or winning a pot but not receiving a trade offer, please submit a <a href="support.html">support ticket</a> and we will get back to you as soon as possible.</li>
 					</ul>
+
+					<hr>
+
+					Copyright &copy; 2015 Jordan Turley, CSGO Win Big. All Rights Reserved. Background image is from Steam, and can be found <a href="http://cdn.akamai.steamstatic.com/steamcommunity/public/images/items/730/ef7cb44d312df5038cba0f69a0901da427900645.jpg">here</a>.
 				</div>
 				<div class="modal-footer">
 					<button class="btn btn-default" data-dismiss="modal">Close</button>
