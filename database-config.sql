@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Aug 05, 2015 at 08:30 AM
+-- Generation Time: Aug 10, 2015 at 01:57 AM
 -- Server version: 5.5.42-37.1-log
 -- PHP Version: 5.4.23
 --
@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS `chat` (
   `date` text COLLATE latin1_general_ci NOT NULL,
   `time` text COLLATE latin1_general_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=125 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=139 ;
 
 -- --------------------------------------------------------
 
@@ -43,9 +43,9 @@ CREATE TABLE IF NOT EXISTS `chat` (
 DROP TABLE IF EXISTS `currentPot`;
 CREATE TABLE IF NOT EXISTS `currentPot` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `contextId` int(11) NOT NULL,
-  `assetId` int(11) NOT NULL,
-  `ownerSteamId` text NOT NULL,
+  `classId` bigint(20) NOT NULL,
+  `instanceId` bigint(20) NOT NULL,
+  `ownerSteamId64` text NOT NULL,
   `ownerSteamId32` text NOT NULL,
   `itemName` text NOT NULL,
   `itemPrice` int(11) NOT NULL,
@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS `currentPot` (
   `itemRarityColor` varchar(6) NOT NULL,
   `itemIcon` text NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -64,13 +64,27 @@ CREATE TABLE IF NOT EXISTS `currentPot` (
 DROP TABLE IF EXISTS `history`;
 CREATE TABLE IF NOT EXISTS `history` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `winnerSteamID` bigint(20) NOT NULL,
+  `winnerSteamId32` text NOT NULL,
+  `winnerSteamId64` bigint(20) NOT NULL,
   `userPutInPrice` int(11) NOT NULL,
   `potPrice` int(11) NOT NULL,
   `allItemsJson` text NOT NULL,
   `paid` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `users`
+--
+
+DROP TABLE IF EXISTS `users`;
+CREATE TABLE IF NOT EXISTS `users` (
+  `steamId32` text NOT NULL,
+  `steamId64` bigint(20) NOT NULL,
+  `tradeToken` text NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
