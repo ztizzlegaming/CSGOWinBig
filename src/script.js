@@ -76,6 +76,31 @@ $(function () {
 			//Check if the page is the home page
 			var page = location.pathname.substring(location.pathname.lastIndexOf("/") + 1);
 			if (page === '' || page === 'index.html') {
+				//Get info and put it on the home page
+				var info = data['info'];
+				var gamesPlayedToday = info['gamesPlayedToday'],
+					moneyWonToday = info['moneyWonToday'],
+					biggestPotToday = info['biggestPotToday'],
+					biggestPotEver = info['biggestPotEver'];
+
+				if (gamesPlayedToday === 0) {
+					moneyWonToday = 'N/A';
+					biggestPotToday = 'N/A';
+				} else {
+					moneyWonToday = getFormattedPrice(moneyWonToday);
+					biggestPotToday = getFormattedPrice(biggestPotToday);
+				}
+
+				if (biggestPotEver === null) {
+					biggestPotEver = 'N/A';
+				}
+
+				$('#games-played-today').text(gamesPlayedToday);
+				$('#money-won-today').text(moneyWonToday);
+				$('#biggest-pot-today').text(biggestPotToday);
+				$('#biggest-pot-ever').text(biggestPotEver);
+
+				//Start updating
 				setTimeout(update, 200);
 			}
 		});
@@ -260,7 +285,7 @@ function generateChatMsgStr (msg) {
 	var colorClass = id % 2 === 0 ? 'chat-message-even' : 'chat-message-odd';
 
 	var str = '<div class="chat-message ' + colorClass + '">';
-	str += '<a href="' + profileURL + '" target="_blank">';
+	str += '<a href="' + profileURL + '" target="_blank" class="link">';
 	str += '<img src="' + profilePicSmall + '" class="chat-profile-pic">';
 	str += '<div class="chat-profile-name">' + profileName + '</div>';
 	str += '</a>';
@@ -289,7 +314,7 @@ function generatePotStr (pot) {
 		var itemRealPrice = getFormattedPrice(itemPrice);
 
 		str += '<div class="pot-item">'
-		str += '<a href="' + profileURL + '" target="_blank"><img src="' + profileAvatar + '" class="pot-item-profile-image">';
+		str += '<a href="' + profileURL + '" target="_blank" class="link"><img src="' + profileAvatar + '" class="pot-item-profile-image">';
 		str += '<div class="pot-item-name">' + profileName + '</a>' + ': ' + itemName + ' - ' + itemRealPrice + '</div>';
 		str += '<img src="' + itemIcon + '" class="pot-item-image">';
 		str += '</div>';

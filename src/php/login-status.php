@@ -39,6 +39,42 @@ if ($loginStatus === 1) {
 	$tradeTokenEntered = null;
 }
 
-$data = array('loginStatus' => $loginStatus, 'userInfo' => $loginStatus === 1 ? $steamprofile : null, 'tradeTokenEntered' => $tradeTokenEntered);
+# Get all games from the past 24 hours for home page info shit
+$stmt = $db->query('SELECT * FROM history WHERE date > DATE_SUB(NOW(), INTERVAL 24 HOUR) AND date <= NOW()');
+
+$gamesPlayedToday = $stmt->rowCount();
+
+$allFromPastDay = $stmt->fetchAll();
+$moneyWonToday = 0;
+$biggestPotToday = 0;
+
+foreach ($allFromPastDay as $pot) {
+	$potPrice = $pot['potPrice'];
+
+	$moneyWonToday += $potPrice;
+
+	if ($potPrice > $biggestPotToday) {
+		$biggestPotToday = $potPrice;
+	}
+}
+
+# Get the max pot price ever
+$stmt = $db->query('SELECT MAX(potPrice) FROM history');
+$row = $stmt->fetch();
+$biggestPotEver = $row['MAX(potPrice)'];
+
+$infoArr = array(
+	'gamesPlayedToday' => $gamesPlayedToday,
+	'moneyWonToday' => $moneyWonToday,
+	'biggestPotToday' => $biggestPotToday,
+	'biggestPotEver' => $biggestPotEver
+);
+
+$data = array(
+	'loginStatus' => $loginStatus,
+	'userInfo' => $loginStatus === 1 ? $steamprofile : null,
+	'tradeTokenEntered' => $tradeTokenEntered,
+	'info' => $infoArr
+);
 echo jsonSuccess($data);
 ?>

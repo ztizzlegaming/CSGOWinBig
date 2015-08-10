@@ -12,15 +12,33 @@ body {
 	height: 100%;
 	width: 100%;
 	font-family: Arial;
+	color: white;
 }
 
-a {
-	color: blue;
+.modal {
+	color: black;
+}
+
+.link {
+	color: white;
+	text-decoration: underline;
+}
+.link:hover {
+	color: white;
+	text-decoration: none;
+}
+.link:active, .link:visited {
+	color: white;
 }
 
 .bg {
-	background-color: #999FA1;
+	background-color: #4A636B;
 	border-radius: 5px;
+}
+
+.info {
+	font-size: 30px;
+	color: #33FF00;
 }
 
 #deposit-link {
@@ -35,6 +53,7 @@ a {
 	position: relative;
 	height: 400px;
 	padding: 0px;
+	color: black;
 }
 
 #chatmessages {
@@ -113,4 +132,8 @@ a {
 .pot-item-image {
 	display: inline;
 	height: 100%;
+}
+
+.pot-item, #pot-items-price, #prev-game-info {
+	font-size: 18px;
 }
