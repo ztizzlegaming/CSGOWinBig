@@ -59,4 +59,24 @@ function getSteamAPIKey() {
 		die('no file found');
 	}
 }
+
+function postVar($varName) {
+	$var = isset($_POST[$varName]) ? $_POST[$varName] : null;
+
+	if (is_null($var) || strlen($var) === 0) {
+		return null;
+	} else {
+		return $var;
+	}
+}
+
+function getVar($varName) {
+	$var = isset($_GET[$varName]) ? $_GET[$varName] : null;
+
+	if (is_null($var) || strlen($var) === 0) {
+		return null;
+	} else {
+		return $var;
+	}
+}
 ?>
