@@ -35,15 +35,16 @@ $(function () {
 					//They have not entered their trade URL, prompt them to enter it
 					swal({
 						title: 'Trade URL',
-						text: 'Please enter your trade url for payouts.<br>NOTE: Make sure your url is correct; otherwise, you will not receive your winnings. You can find your trade url <a href="http://steamcommunity.com/id/me/tradeoffers/privacy" target="_blank">here</a>.',
+						text: 'Please enter your trade url for payouts.<br>NOTE: Make sure your url is correct; otherwise, you will not receive your winnings. You can find your trade url <a href="http://steamcommunity.com/id/me/tradeoffers/privacy" target="_blank">here</a>, and cancelling will log you out.',
 						type: 'input',
-						showCancelButton: false,
+						showCancelButton: true,
 						closeOnConfirm: false,
 						showLoaderOnConfirm: true,
 						html: true,
 						inputPlaceholder: 'trade url'
 					}, function (inputValue) {
 						if (inputValue === false) {
+							window.location = 'php/SteamAuthentication/steamauth/logout.php';
 							return false;
 						}
 
@@ -220,7 +221,8 @@ function update () {
 				$('#pot').html(potStr);
 			}
 
-			if (mostRecentGame !== null) {
+			//This will only be null when the current round is the first one ever
+			if (mostRecentGame['prevGameID'] !== null) {
 				var prevGameID = parseInt(mostRecentGame['prevGameID']),
 					winnerSteamInfo = mostRecentGame['winnerSteamInfo'],
 					userPutInPrice = parseInt(mostRecentGame['userPutInPrice']),
@@ -250,7 +252,7 @@ function update () {
 				var profileName = winnerSteamInfo['personaname'];
 				var potPriceReal = getFormattedPrice(potPrice);
 
-				var str = 'Previous Winner: ' + profileName + ' won ' + potPriceReal + ' with a ' + percentageChance + '% chance.';
+				var str = '<br>Previous Winner: ' + profileName + ' won ' + potPriceReal + ' with a ' + percentageChance + '% chance.';
 				$('#prev-game-info').html(str);
 				$('#prev-game-info').css('display', 'block');
 			}
