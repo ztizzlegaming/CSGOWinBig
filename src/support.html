@@ -16,6 +16,59 @@
 
 	<link rel="stylesheet" type="text/css" href="style.css">
 	<script src="script.js"></script>
+
+	<script>
+	$(function () {
+		var loading = false;
+		$('#support-form').on('submit', function () {
+			var name = $('#name').val(),
+				email = $('#email').val(),
+				steamProfileLink = $('#steam-profile').val(),
+				desc = $('#desc').val();
+
+			var shouldReturnEarly = false;
+
+			$('.field').each(function (key, value) {
+				var $field = $(value);
+
+				if ($field.val().length === 0) {
+					$field.css('border', '1px solid red');
+				} else {
+					$field.css('border', '1px solid rgb(204, 204, 204)');
+				}
+			});
+
+			if (shouldReturnEarly) {
+				return false;
+			}
+
+			if (loading) {
+				return false;
+			}
+
+			$('#submit-button').html('Loading&hellip;');
+			loading = true;
+
+			$.post('php/support-ticket.php', {
+				name: name,
+				email: email,
+				steamProfileLink: steamProfileLink,
+				desc: desc
+			}, function (jsonObj) {
+				handleJsonResponse(jsonObj, function (data) {
+					loading = false;
+					$('#submit-button').html('Submit');
+
+					var message = data['message'];
+
+					successMsg(message);
+				});
+			}, 'json');
+
+			return false;
+		});
+	});
+	</script>
 </head>
 <body>
 	<div class="navbar navbar-inverse navbar-static-top">
@@ -39,21 +92,64 @@
 						</a>
 					</li>
 					<li class="logout" style="display: none;">
-						<a href="https://steamcommunity.com/tradeoffer/new/?partner=278478260&token=s8MZ56C5" target="_blank">Deposit skins</a>
+						<p class="navbar-btn" style="margin-right: 10px;">
+							<a href="https://steamcommunity.com/tradeoffer/new/?partner=278478260&token=s8MZ56C5" target="_blank" class="btn btn-success">
+								Deposit skins
+							</a>
+						</p>
 					</li>
 					<li class="logout" style="display: none;">
-						<a href="javascript:void(0);" id="change-trade-url">Change Trade URL</a>
+						<p class="navbar-btn" style="margin-right: 10px;">
+							<a href="javascript:void(0);" class="btn btn-warning" id="change-trade-url">Change Trade URL</a>
+						</p>
 					</li>
 					<li class="logout" style="display: none;">
-						<a href="php/SteamAuthentication/steamauth/logout.php">Logout</a>
+						<p class="navbar-btn" style="margin-right: 10px;">
+							<a href="php/SteamAuthentication/steamauth/logout.php" class="btn btn-danger">Logout</a>
+						</p>
 					</li>
 					<li>
-						<a href="javascript:void(0);" data-toggle="modal" data-target="#about-modal">About/How it works</a>
+						<p class="navbar-btn" style="margin-right: 10px;">
+							<button class="btn btn-info" data-toggle="modal" data-target="#about-modal">About/How it works</button>
+						</p>
 					</li>
-					<li class="active">
-						<a href="support.html">Support</a>
+					<li>
+						<p class="navbar-btn">
+							<a href="support.html" class="btn btn-primary">Support</a>
+						</p>
 					</li>
 				</ul>
+			</div>
+		</div>
+	</div>
+
+	<div class="container" style="background-color: rgba(0, 0, 0, 0.75); height: 100%; border-radius: 10px;">
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="bg" style="padding: 10px;">
+					<div style="text-align: center; font-size: 50px;">Support</div>
+					If you have experienced some sort of problem, such as your item not showing up in the pot, or not receiving your payout after you have won, then submit a support ticket here, and we will work to fix your problem. After submitting a ticket, you can expect a response within 24 to 48 hours.
+					<br><br>
+					<form id="support-form">
+						<div class="form-group">
+							<label for="name">Your Name</label>
+							<input class="form-control field" id="name" placeholder="name">
+						</div>
+						<div class="form-group">
+							<label for="email">Your Email Address</label>
+							<input type="email" class="form-control field" id="email" placeholder="email">
+						</div>
+						<div class="form-group">
+							<label for="steam-profile">Link to your Steam Profile</label>
+							<input class="form-control field" id="steam-profile" placeholder="steam profile url">
+						</div>
+						<div class="form-group">
+							<label for="desc">Please describe your issue in detail (if you are missing items, please list them here in detail, with the name, quality, any stickers, etc&hellip;):</label>
+							<textarea class="form-control field" id="desc" style="height: 100px;" placeholder="your issue"></textarea>
+						</div>
+						<button type="submit" class="btn btn-success btn-lg" id="submit-button">Submit</button>
+					</form>
+				</div>
 			</div>
 		</div>
 	</div>
