@@ -191,6 +191,7 @@ function update () {
 			//Check if this is the first time update has been called
 			if (firstUpdate) {
 				$('#pot-items-price').css('display', 'block');
+				firstUpdate = false;
 			}
 
 			//Check for new messages
@@ -219,6 +220,10 @@ function update () {
 				//Set items in pot
 				var potStr = generatePotStr(pot);
 				$('#pot').html(potStr);
+			} else if (pot.length === 0) {
+				$('#pot-price').text('$0.00');
+				$('#pot-items').text('0');
+				$('#pot').text('');
 			}
 
 			//This will only be null when the current round is the first one ever
