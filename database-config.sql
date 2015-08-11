@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Aug 10, 2015 at 01:57 AM
+-- Generation Time: Aug 11, 2015 at 08:57 AM
 -- Server version: 5.5.42-37.1-log
 -- PHP Version: 5.4.23
 --
@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS `chat` (
   `date` text COLLATE latin1_general_ci NOT NULL,
   `time` text COLLATE latin1_general_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=139 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -69,9 +69,9 @@ CREATE TABLE IF NOT EXISTS `history` (
   `userPutInPrice` int(11) NOT NULL,
   `potPrice` int(11) NOT NULL,
   `allItemsJson` text NOT NULL,
-  `paid` int(11) NOT NULL,
+  `date` date NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
