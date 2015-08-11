@@ -379,3 +379,9 @@ function getFormattedPrice (cents) {
 
 	return '$' + price;
 }
+
+function playSound (soundId) {
+	var player = $('#' + soundId)[0];
+	player.currentTime = 0;
+	player.play();
+}
