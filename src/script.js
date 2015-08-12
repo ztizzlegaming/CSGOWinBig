@@ -94,6 +94,8 @@ $(function () {
 
 				if (biggestPotEver === null) {
 					biggestPotEver = 'N/A';
+				} else {
+					biggestPotEver = getFormattedPrice(biggestPotEver);
 				}
 
 				$('#games-played-today').text(gamesPlayedToday);
