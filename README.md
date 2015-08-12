@@ -1,6 +1,6 @@
 # CSGO Win Big
 
-### What is CSGO Win Big?
+### What is this?
 CSGO Win Big is a Counter-Strike: Global Offensive jackpot skin betting website, created by me, Jordan Turley. It is hosted through Bluehost at http://csgowinbig.jordanturley.com/.
 
 ### How does CSGO Win Big work?
