@@ -270,7 +270,7 @@ if ($currentPotCount >= $maxPotCount) {
 	# Add this game to the past games database
 	$sql =
 		'INSERT INTO history
-		(winnerSteamId32, winnerSteamId64, userPutInPrice, potPrice, allItemsJson, datetime)
+		(winnerSteamId32, winnerSteamId64, userPutInPrice, potPrice, allItemsJson, date)
 		VALUES
 		(:id32, :id64, :userprice, :potprice, :allitemsjson, NOW())';
 
