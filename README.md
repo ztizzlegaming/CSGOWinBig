@@ -19,6 +19,10 @@ If you would like to setup this project for your own project, there are a couple
 
 * In src/php/default.php, you must configure your own database credentials. The way I have it setup is I have a file outside of the web root with my passwords in it, called 'passwords.txt', which I read and get the password for the database from, instead of writing my password directly in the code. Then, import database-config.sql to your MySQL database.  If you want to use a database other than MySQL, you will have to set it up on your own.
 * Also, because you login through Steam for this site, you must have a Steam API Key. You can request a key for yourself [here](https://steamcommunity.com/dev/apikey). Like the database password, I also have this key stored outside of the web root in passwords.txt.
+* You will also have to put in your own website url and database stuff in some places, instead of mine. These places are:
+  * [Lines 5, 6, and 7 of default.php](https://github.com/ztizzlegaming/CSGOWinBig/blob/master/src/php/default.php#L5)
+  * [Line 14 of settings.php](https://github.com/ztizzlegaming/CSGOWinBig/blob/master/src/php/SteamAuthentication/steamauth/settings.php#L14)
+  * [Line 30 of support-ticket.php](https://github.com/ztizzlegaming/CSGOWinBig/blob/master/src/php/support-ticket.php#L30)
 * Here is an example of my passwords.txt:  
 {"default-password":"YOUR DATABASE PASSWORD","steamAPIKey":"YOUR STEAM API KEY"}
 
