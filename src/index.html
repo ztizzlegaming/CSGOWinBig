@@ -41,29 +41,7 @@
 					</li>
 					<li class="logout" style="display: none;">
 						<p class="navbar-btn" style="margin-right: 10px;">
-							<a href="https://steamcommunity.com/tradeoffer/new/?partner=278478260&token=s8MZ56C5" target="_blank" class="btn btn-success">
-								Deposit skins
-							</a>
-						</p>
-					</li>
-					<li class="logout" style="display: none;">
-						<p class="navbar-btn" style="margin-right: 10px;">
-							<a href="javascript:void(0);" class="btn btn-warning" id="change-trade-url">Change Trade URL</a>
-						</p>
-					</li>
-					<li class="logout" style="display: none;">
-						<p class="navbar-btn" style="margin-right: 10px;">
 							<a href="php/SteamAuthentication/steamauth/logout.php" class="btn btn-danger">Logout</a>
-						</p>
-					</li>
-					<li>
-						<p class="navbar-btn" style="margin-right: 10px;">
-							<button class="btn btn-info" data-toggle="modal" data-target="#about-modal">About/How it works</button>
-						</p>
-					</li>
-					<li>
-						<p class="navbar-btn">
-							<a href="support.html" class="btn btn-primary">Support</a>
 						</p>
 					</li>
 				</ul>
@@ -78,9 +56,32 @@
 
 	<div class="container" style="background-color: rgba(0, 0, 0, 0.75); height: 100%; border-radius: 10px;">
 		<div class="row">
-			<div class="col-sm-12">
-				<h2 class="bg" style="padding: 25px;">
+			<div class="col-sm-4">
+				<div style="padding: 25px;">
+					<div id="topleft-menu">Menu</div>
+					<div class="topleft-link-wrapper">
+						<a href="" class="topleft-link link logout">Deposit Skins</a>
+					</div>
+					<div class="topleft-link-wrapper">
+						<a href="" class="topleft-link link logout">Change Trade URL</a>
+					</div>
+					<div class="topleft-link-wrapper">
+						<a href="" class="topleft-link link">About/How it Works</a>
+					</div>
+					<div class="topleft-link-wrapper">
+						<a href="" class="topleft-link link">Support</a>
+					</div>
+					<div class="topleft-link-wrapper">
+						<a href="" class="topleft-link link logout">Logout</a>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-8">
+				<h2 class="bg" style="padding: 25px; margin-top: 25px; height: 100%;">
 					Welcome to <span style="font-weight: bold; color: yellow;">CSGO Win Big</span>! Try your luck and deposit items, and see if you can win big! Good luck and have fun!
+					<br><br>
+					<a href="https://steamcommunity.com/openid/login?openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.mode=checkid_setup&openid.return_to=http%3A%2F%2Fcsgowinbig.jordanturley.com%2Fphp%2Fsteam-login-handle.php&openid.realm=http%3A%2F%2Fcsgowinbig.jordanturley.com&openid.ns.sreg=http%3A%2F%2Fopenid.net%2Fextensions%2Fsreg%2F1.1&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select" class="btn btn-lg btn-success" id="login-main" style="display: none;" target="_blank">Login for your chance to win!</a>
+					<a href="https://steamcommunity.com/tradeoffer/new/?partner=278478260&token=s8MZ56C5" class="btn btn-lg btn-success" id="deposit-main" style="display: none;" target="_blank">Deposit skins for your chance to win!</a>
 				</h2>
 			</div>
 		</div>

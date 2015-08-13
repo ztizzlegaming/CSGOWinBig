@@ -27,6 +27,7 @@ $(function () {
 				//They are logged in
 				$('.logout').css('display', 'inline');
 				$('#chat-input').css('display', 'block');
+				$('#deposit-main').css('display', 'block');
 
 				loggedIn = true;
 
@@ -70,6 +71,7 @@ $(function () {
 			} else {
 				//They are not logged in
 				$('.login').css('display', 'inline');
+				$('#login-main').css('display', 'block');
 			}
 
 			$('#loading-menubar').css('display', 'none');
