@@ -25,7 +25,7 @@ $(function () {
 
 			if (loginStatus === 1) {
 				//They are logged in
-				$('.logout').css('display', 'inline');
+				$('.logout').css('display', 'block');
 				$('#chat-input').css('display', 'block');
 				$('#deposit-main').css('display', 'block');
 
@@ -70,7 +70,7 @@ $(function () {
 
 			} else {
 				//They are not logged in
-				$('.login').css('display', 'inline');
+				$('.login').css('display', 'block');
 				$('#login-main').css('display', 'block');
 			}
 

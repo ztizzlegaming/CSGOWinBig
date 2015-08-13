@@ -57,35 +57,39 @@
 	<div class="container" style="background-color: rgba(0, 0, 0, 0.75); height: 100%; border-radius: 10px;">
 		<div class="row">
 			<div class="col-sm-4">
-				<div style="padding: 25px;">
+				<div style="padding: 10px; padding-bottom: 0px;">
 					<div id="topleft-menu">Menu</div>
-					<div class="topleft-link-wrapper">
-						<a href="" class="topleft-link link logout">Deposit Skins</a>
+					<div class="topleft-link-wrapper logout" style="display: none;">
+						<button class="topleft-link btn btn-success btn-block"><span class="glyphicon glyphicon-plus"></span> Deposit Skins</button>
+					</div>
+					<div class="topleft-link-wrapper logout" style="display: none;">
+						<button class="topleft-link btn btn-success btn-block"><span class="glyphicon glyphicon-pencil"></span> Change Trade URL</button>
 					</div>
 					<div class="topleft-link-wrapper">
-						<a href="" class="topleft-link link logout">Change Trade URL</a>
+						<button class="topleft-link btn btn-success btn-block"><span class="glyphicon glyphicon-list-alt"></span> About/How it Works</button>
 					</div>
 					<div class="topleft-link-wrapper">
-						<a href="" class="topleft-link link">About/How it Works</a>
+						<button class="topleft-link btn btn-success btn-block"><span class="glyphicon glyphicon-question-sign"></span> Support</button>
 					</div>
-					<div class="topleft-link-wrapper">
-						<a href="" class="topleft-link link">Support</a>
-					</div>
-					<div class="topleft-link-wrapper">
-						<a href="" class="topleft-link link logout">Logout</a>
+					<div class="topleft-link-wrapper logout" style="display: none;">
+						<button class="topleft-link btn btn-success btn-block"><span class="glyphicon glyphicon-log-out"></span> Logout</button>
 					</div>
 				</div>
 			</div>
 			<div class="col-sm-8">
-				<h2 class="bg" style="padding: 25px; margin-top: 25px; height: 100%;">
+				<h2 class="bg" style="padding: 10px; padding-bottom: 0px; margin-top: 10px; height: 100%;">
 					Welcome to <span style="font-weight: bold; color: yellow;">CSGO Win Big</span>! Try your luck and deposit items, and see if you can win big! Good luck and have fun!
 					<br><br>
-					<a href="https://steamcommunity.com/openid/login?openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.mode=checkid_setup&openid.return_to=http%3A%2F%2Fcsgowinbig.jordanturley.com%2Fphp%2Fsteam-login-handle.php&openid.realm=http%3A%2F%2Fcsgowinbig.jordanturley.com&openid.ns.sreg=http%3A%2F%2Fopenid.net%2Fextensions%2Fsreg%2F1.1&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select" class="btn btn-lg btn-success" id="login-main" style="display: none;" target="_blank">Login for your chance to win!</a>
-					<a href="https://steamcommunity.com/tradeoffer/new/?partner=278478260&token=s8MZ56C5" class="btn btn-lg btn-success" id="deposit-main" style="display: none;" target="_blank">Deposit skins for your chance to win!</a>
+					<a href="https://steamcommunity.com/openid/login?openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.mode=checkid_setup&openid.return_to=http%3A%2F%2Fcsgowinbig.jordanturley.com%2Fphp%2Fsteam-login-handle.php&openid.realm=http%3A%2F%2Fcsgowinbig.jordanturley.com&openid.ns.sreg=http%3A%2F%2Fopenid.net%2Fextensions%2Fsreg%2F1.1&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select" class="btn btn-lg btn-success" id="login-main" style="display: none; margin-bottom: 10px;" target="_blank">
+						<img src="images/steam-logo.png" style="height: 1em;"> Login for your chance to win!
+					</a>
+					<a href="https://steamcommunity.com/tradeoffer/new/?partner=278478260&token=s8MZ56C5" class="btn btn-lg btn-success" id="deposit-main" style="display: none; margin-bottom: 10px;" target="_blank">
+						<img src="images/steam-logo.png" style="height: 1em;"> Deposit skins for your chance to win!
+					</a>
 				</h2>
 			</div>
 		</div>
-		<div class="row">
+		<div class="row" style="margin-top: 1.5em; margin-bottom: 1.5em;">
 			<div class="col-sm-3">
 				<div class="bg" style="padding: 25px;">
 					Games played today:
@@ -115,7 +119,6 @@
 				</div>
 			</div>
 		</div>
-		<br>
 		<div class="row">
 			<div class="col-sm-4">
 				<div class="bg" style="padding: 5px 0px;">
