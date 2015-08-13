@@ -142,7 +142,19 @@ $(function () {
 		}
 	});
 
-	$('#change-trade-url').on('click', function () {
+	$('#deposit-btn').on('click', function () {
+		window.location = 'https://steamcommunity.com/tradeoffer/new/?partner=278478260&token=s8MZ56C5';
+	});
+
+	$('#support-btn').on('click', function () {
+		window.location = 'support.html';
+	});
+
+	$('#logout-btn').on('click', function () {
+		window.location = 'php/SteamAuthentication/steamauth/logout.php';
+	});
+
+	$('#change-trade-url-btn').on('click', function () {
 		if (!loggedIn) {
 			return;
 		}
