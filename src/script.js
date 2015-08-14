@@ -143,7 +143,7 @@ $(function () {
 	});
 
 	$('#deposit-btn').on('click', function () {
-		window.location = 'https://steamcommunity.com/tradeoffer/new/?partner=278478260&token=s8MZ56C5';
+		$('<a>').attr('href', 'https://steamcommunity.com/tradeoffer/new/?partner=278478260&token=s8MZ56C5').attr('target', '_blank')[0].click();
 	});
 
 	$('#support-btn').on('click', function () {
