@@ -23,6 +23,7 @@ If you would like to setup this project for your own project, there are a couple
   * [Lines 5, 6, and 7 of default.php](https://github.com/ztizzlegaming/CSGOWinBig/blob/master/src/php/default.php#L5)
   * [Line 14 of settings.php](https://github.com/ztizzlegaming/CSGOWinBig/blob/master/src/php/SteamAuthentication/steamauth/settings.php#L14)
   * [Line 30 of support-ticket.php](https://github.com/ztizzlegaming/CSGOWinBig/blob/master/src/php/support-ticket.php#L30)
+  * [Line 6 of bot-withdraw.php](https://github.com/ztizzlegaming/CSGOWinBig/blob/master/src/php/bot-withdraw.php#L6). For this, you will need to enter the 64bit ID of your Steam bot. You can find this in the bot's profile url, or on websites such as http://steamrep.com.
 * Here is an example of my passwords.txt:  
 {"default-password":"YOUR DATABASE PASSWORD","steamAPIKey":"YOUR STEAM API KEY"}
 
