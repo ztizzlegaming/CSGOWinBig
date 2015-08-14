@@ -3,7 +3,8 @@ include 'default.php';
 $db = getDB();
 
 # Get bot inventory
-$botInventory = json_decode(file_get_contents('https://steamcommunity.com/profiles/76561198238743988/inventory/json/730/2'), true);
+$bot64Id = '76561198238743988';
+$botInventory = json_decode(file_get_contents("https://steamcommunity.com/profiles/$bot64Id/inventory/json/730/2"), true);
 $rgInventory = $botInventory['rgInventory'];
 
 # Get current pot
