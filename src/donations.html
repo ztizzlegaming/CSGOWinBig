@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Support</title>
+
+	<!-- jQuery -->
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+	
+	<!-- Bootstrap -->
+	<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">
+	<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+
+	<!-- SweetAlert -->
+	<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/sweetalert/1.0.1/sweetalert.min.css">
+	<script src="//cdnjs.cloudflare.com/ajax/libs/sweetalert/1.0.1/sweetalert.min.js"></script>
+
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<script src="script.js"></script>
+</head>
+<body>
+	<div class="navbar navbar-inverse navbar-static-top">
+		<div class="container">
+			<a href="/" class="navbar-brand">CSGO Win Big</a>
+
+			<button class="navbar-toggle" data-toggle="collapse" data-target=".navHeaderCollapse">
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+
+			<div class="collapse navbar-collapse navHeaderCollapse">
+				<ul class="nav navbar-nav navbar-right">
+					<li id="loading-menubar">
+						<a>loading&hellip;</a>
+					</li>
+					<li class="login" style="display: none;">
+						<a href="https://steamcommunity.com/openid/login?openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.mode=checkid_setup&openid.return_to=http%3A%2F%2Fcsgowinbig.jordanturley.com%2Fphp%2Fsteam-login-handle.php&openid.realm=http%3A%2F%2Fcsgowinbig.jordanturley.com&openid.ns.sreg=http%3A%2F%2Fopenid.net%2Fextensions%2Fsreg%2F1.1&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select">
+							<img src="http://cdn.steamcommunity.com/public/images/signinthroughsteam/sits_small.png">
+						</a>
+					</li>
+					<li class="logout" style="display: none;">
+						<p class="navbar-btn" style="margin-right: 10px;">
+							<a href="https://steamcommunity.com/tradeoffer/new/?partner=278478260&token=s8MZ56C5" target="_blank" class="btn btn-success">
+								Deposit skins
+							</a>
+						</p>
+					</li>
+					<li class="logout" style="display: none;">
+						<p class="navbar-btn" style="margin-right: 10px;">
+							<a href="javascript:void(0);" class="btn btn-warning" id="change-trade-url">Change Trade URL</a>
+						</p>
+					</li>
+					<li>
+						<p class="navbar-btn" style="margin-right: 10px;">
+							<button class="btn btn-info" data-toggle="modal" data-target="#about-modal">About/How it works</button>
+						</p>
+					</li>
+					<li>
+						<p class="navbar-btn" style="margin-right: 10px;">
+							<a href="support.html" class="btn btn-primary">Support</a>
+						</p>
+					</li>
+					<li class="logout" style="display: none;">
+						<p class="navbar-btn">
+							<a href="php/SteamAuthentication/steamauth/logout.php" class="btn btn-danger">Logout</a>
+						</p>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+
+	<div class="container" style="background-color: rgba(0, 0, 0, 0.75); height: 100%; border-radius: 10px;">
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="bg" style="padding: 10px;">
+					<div style="text-align: center; font-size: 50px;">Donations</div>
+					Donations are not necessary, but are greatly appreciated and help us out a lot. There are four ways you can donate:
+					<ul>
+						<li>
+							Send a trade offer <a href="https://steamcommunity.com/tradeoffer/new/?partner=60354605&token=gxN5u_IK" class="link">here</a> with skin donations.
+						</li>
+						<li>
+							Send actual money through PayPal <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=SKL49QJVZGKXC" class="link">here</a>.
+						</li>
+						<li>
+							Send Bitcoin donations to this address: 1GqszRekcjuUTARfXiroMnPoytRJWdk66A
+						</li>
+						<li>
+							Send Dogecoin donations to this address: DMWd9PLkDyQqEaQnoCWHi8EFDv2biD4AcS
+						</li>
+					</ul>
+					If you are sending skins or money through PayPal, and would like to be recognized for your donation below, please add your name to the trade offer message or field on PayPal.
+					<br><hr><br>
+					Donations:
+					<br>
+					<ol>
+						<li>
+							No donations yet :(
+						</li>
+					</ol>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
