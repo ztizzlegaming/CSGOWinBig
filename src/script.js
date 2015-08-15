@@ -243,6 +243,30 @@ function update () {
 				//Set items in pot
 				var potStr = generatePotStr(pot);
 				$('#pot').html(potStr);
+
+				//Get all items that are put in by the user logged in
+				var loggedInSteamID = mUserInfo['steamid'], loggedInUserItems = [];
+				for (var i1 = 0; i1 < pot.length; i1++) {
+					var item = pot[i1];
+					var itemOwner = item['itemSteamOwnerInfo'];
+					var ownerSteamID = itemOwner['steamid'];
+
+					if (ownerSteamID === loggedInSteamID) {
+						loggedInUserItems.push(item);
+					}
+				}
+
+				var loggedInUserPrice = 0;
+
+				for (var i1 = 0; i1 < loggedInUserItems.length; i1++) {
+					var item = loggedInUserItems[i1];
+					var itemPrice = parseInt(item['itemPrice'], 10);
+					loggedInUserPrice += itemPrice;
+				}
+
+				$('#items-deposited-count').text(loggedInUserItems.length);
+				$('#items-deposited-price').text(getFormattedPrice(loggedInUserPrice));
+				$('#items-deposited-chance').text(loggedInUserPrice / potPrice * 100);
 			} else if (pot.length === 0) {
 				$('#pot-price').text('$0.00');
 				$('#pot-items').text('0');
@@ -317,8 +341,12 @@ function generateChatMsgStr (msg) {
 	var str = '<div class="chat-message ' + colorClass + '">';
 	str += '<a href="' + profileURL + '" target="_blank" class="link">';
 	str += '<img src="' + profilePicSmall + '" class="chat-profile-pic">';
-	str += '<div class="chat-profile-name">' + profileName + '</div>';
 	str += '</a>';
+	str += '<div class="chat-profile-name"><a href="' + profileURL + '" target="_blank" class="link">' + profileName + '</a>';
+	if (steamID === '76561198020620333') {
+		str += ' (Owner)';
+	}
+	str += '</div>';
 	str += '<div class="chat-date-time">' + date + ' at ' + time + '</div>';
 	str += '<div class="chat-text">' + text + '</div>';
 	str += '</div>';
