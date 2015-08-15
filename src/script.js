@@ -16,6 +16,8 @@ var loggedIn = false;
 //The user's information
 var mUserInfo = null;
 
+var mTradeToken = null;
+
 $(function () {
 	$.getJSON('php/login-status.php', function (jsonObj) {
 		handleJsonResponse(jsonObj, function (data) {
@@ -31,42 +33,7 @@ $(function () {
 
 				loggedIn = true;
 
-				var tradeTokenEntered = data['tradeTokenEntered'];
-				if (tradeTokenEntered === 0) {
-					//They have not entered their trade URL, prompt them to enter it
-					swal({
-						title: 'Trade URL',
-						text: 'Please enter your trade url for payouts.<br>NOTE: Make sure your url is correct; otherwise, you will not receive your winnings. You can find your trade url <a href="http://steamcommunity.com/id/me/tradeoffers/privacy" target="_blank">here</a>, and cancelling will log you out.',
-						type: 'input',
-						showCancelButton: true,
-						closeOnConfirm: false,
-						showLoaderOnConfirm: true,
-						html: true,
-						inputPlaceholder: 'trade url'
-					}, function (inputValue) {
-						if (inputValue === false) {
-							window.location = 'php/SteamAuthentication/steamauth/logout.php';
-							return false;
-						}
-
-						if (inputValue.length === 0) {
-							swal.showInputError('You must enter your trade url.');
-							return false;
-						}
-
-						$.post('php/save-trade-token.php', {tradeUrl: inputValue}, function (jsonObj) {
-							console.log(jsonObj);
-							handleJsonResponse(jsonObj, function (data) {
-								if (data['valid'] === 0) {
-									swal.showInputError(data['errMsg']);
-									return false;
-								} else {
-									successMsg('Your trade url was successfully saved.');
-								}
-							});
-						}, 'json');
-					});
-				}
+				mTradeToken = data['tradeToken'];
 
 			} else {
 				//They are not logged in
@@ -143,7 +110,43 @@ $(function () {
 	});
 
 	$('#deposit-btn').on('click', function () {
-		$('<a>').attr('href', 'https://steamcommunity.com/tradeoffer/new/?partner=278478260&token=s8MZ56C5').attr('target', '_blank')[0].click();
+		if (mTradeToken === null) {
+			var swalText = 'Please enter your trade url for payouts.<br><br>NOTE: Make sure your url is correct; otherwise, you will not receive your winnings. You can find your trade url <a href="http://steamcommunity.com/id/me/tradeoffers/privacy" target="_blank">here</a>. Also, be sure to make your inventory public, this can be done <a href="http://steamcommunity.com/id/me/edit/settings/" target="_blank">here</a>.';
+			swal({
+				title: 'Trade URL',
+				text: swalText,
+				type: 'input',
+				showCancelButton: true,
+				closeOnConfirm: false,
+				showLoaderOnConfirm: true,
+				html: true,
+				inputPlaceholder: 'trade url'
+			}, function (inputValue) {
+				if (inputValue === false) {
+					return false;
+				}
+
+				if (inputValue.length === 0) {
+					swal.showInputError('You must enter your trade url.');
+					return false;
+				}
+
+				$.post('php/save-trade-token.php', {tradeUrl: inputValue}, function (jsonObj) {
+					console.log(jsonObj);
+					handleJsonResponse(jsonObj, function (data) {
+						if (data['valid'] === 0) {
+							swal.showInputError(data['errMsg']);
+							return false;
+						} else {
+							mTradeToken = data['tradeToken'];
+							successMsg('Your trade url was successfully saved. Click OK then Deposit Skins again to deposit.');
+						}
+					});
+				}, 'json');
+			});
+		} else {
+			$('<a>').attr('href', 'https://steamcommunity.com/tradeoffer/new/?partner=278478260&token=s8MZ56C5').attr('target', '_blank')[0].click();
+		}
 	});
 
 	$('#support-btn').on('click', function () {

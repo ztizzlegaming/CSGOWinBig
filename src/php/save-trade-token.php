@@ -48,5 +48,5 @@ $stmt->bindValue(':id64', $steamUserId);
 $stmt->bindValue(':token', $tradeToken);
 $stmt->execute();
 
-echo jsonSuccess(array('valid' => 1));
+echo jsonSuccess(array('valid' => 1, 'tradeToken' => $tradeToken));
 ?>
