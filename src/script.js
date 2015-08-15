@@ -150,6 +150,10 @@ $(function () {
 		window.location = 'support.html';
 	});
 
+	$('#donate-btn').on('click', function () {
+		window.location = 'donations.html';
+	});
+
 	$('#logout-btn').on('click', function () {
 		window.location = 'php/SteamAuthentication/steamauth/logout.php';
 	});
