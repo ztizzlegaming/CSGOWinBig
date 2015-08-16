@@ -245,28 +245,31 @@ function update () {
 				$('#pot').html(potStr);
 
 				//Get all items that are put in by the user logged in
-				var loggedInSteamID = mUserInfo['steamid'], loggedInUserItems = [];
-				for (var i1 = 0; i1 < pot.length; i1++) {
-					var item = pot[i1];
-					var itemOwner = item['itemSteamOwnerInfo'];
-					var ownerSteamID = itemOwner['steamid'];
+				if (loggedIn) {
+					var loggedInSteamID = mUserInfo['steamid'];
+					var loggedInUserItems = [];
+					for (var i1 = 0; i1 < pot.length; i1++) {
+						var item = pot[i1];
+						var itemOwner = item['itemSteamOwnerInfo'];
+						var ownerSteamID = itemOwner['steamid'];
 
-					if (ownerSteamID === loggedInSteamID) {
-						loggedInUserItems.push(item);
+						if (ownerSteamID === loggedInSteamID) {
+							loggedInUserItems.push(item);
+						}
 					}
+
+					var loggedInUserPrice = 0;
+
+					for (var i1 = 0; i1 < loggedInUserItems.length; i1++) {
+						var item = loggedInUserItems[i1];
+						var itemPrice = parseInt(item['itemPrice'], 10);
+						loggedInUserPrice += itemPrice;
+					}
+
+					$('#items-deposited-count').text(loggedInUserItems.length);
+					$('#items-deposited-price').text(getFormattedPrice(loggedInUserPrice));
+					$('#items-deposited-chance').text(loggedInUserPrice / potPrice * 100);
 				}
-
-				var loggedInUserPrice = 0;
-
-				for (var i1 = 0; i1 < loggedInUserItems.length; i1++) {
-					var item = loggedInUserItems[i1];
-					var itemPrice = parseInt(item['itemPrice'], 10);
-					loggedInUserPrice += itemPrice;
-				}
-
-				$('#items-deposited-count').text(loggedInUserItems.length);
-				$('#items-deposited-price').text(getFormattedPrice(loggedInUserPrice));
-				$('#items-deposited-chance').text(loggedInUserPrice / potPrice * 100);
 			} else if (pot.length === 0) {
 				$('#pot-price').text('$0.00');
 				$('#pot-items').text('0');
@@ -302,11 +305,13 @@ function update () {
 
 				var percentageChance = (userPutInPrice / potPrice * 100).toFixed(2);
 				var profileName = winnerSteamInfo['personaname'];
+				var profileAvatar = winnerSteamInfo['avatarfull'];
 				var potPriceReal = getFormattedPrice(potPrice);
 
-				var str = '<br>Previous Winner: ' + profileName + ' won ' + potPriceReal + ' with a ' + percentageChance + '% chance.';
-				$('#prev-game-info').html(str);
-				$('#prev-game-info').css('display', 'block');
+				$('#prev-winner-pic').attr('src', profileAvatar);
+				$('#prev-winner-name').text(profileName);
+				$('#prev-winner-amnt').text(potPriceReal);
+				$('#prev-winner-chance').text(percentageChance);
 			}
 
 			setTimeout(update, 2000); //Call update again after 2 seconds
@@ -338,6 +343,8 @@ function generateChatMsgStr (msg) {
 
 	var colorClass = id % 2 === 0 ? 'chat-message-even' : 'chat-message-odd';
 
+	var moderators = ['76561198026845481', '76561198058039750', '76561198079439072', '76561198202339448'];
+
 	var str = '<div class="chat-message ' + colorClass + '">';
 	str += '<a href="' + profileURL + '" target="_blank" class="link">';
 	str += '<img src="' + profilePicSmall + '" class="chat-profile-pic">';
@@ -345,6 +352,8 @@ function generateChatMsgStr (msg) {
 	str += '<div class="chat-profile-name"><a href="' + profileURL + '" target="_blank" class="link">' + profileName + '</a>';
 	if (steamID === '76561198020620333') {
 		str += ' (Owner)';
+	} else if ($.inArray(steamID, moderators) !== -1) {
+		str += ' (Moderator)';
 	}
 	str += '</div>';
 	str += '<div class="chat-date-time">' + date + ' at ' + time + '</div>';
