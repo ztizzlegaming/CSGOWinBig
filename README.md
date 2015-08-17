@@ -36,4 +36,5 @@ Donations are not necessary, but are greatly appreciated and help us out a lot. 
 * Send actual money through PayPal  [here](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=SKL49QJVZGKXC).
 * Send Bitcoin to this address: 1GqszRekcjuUTARfXiroMnPoytRJWdk66A
 * Send Dogecoin to this address: DMWd9PLkDyQqEaQnoCWHi8EFDv2biD4AcS
+
 If you are sending skins or money through PayPal, and would like to be recognized for your donation on our [donations page](http://csgowinbig.jordanturley.com/donations.html), please add your name to the trade offer message or field on PayPal. 
