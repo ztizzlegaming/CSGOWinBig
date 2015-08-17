@@ -75,7 +75,7 @@ foreach ($allItems as $item) {
 
 	$descriptionItem = $rgDescriptions[$classId . '_' . $instanceId];
 	
-	$marketHashName = urlencode($descriptionItem['market_hash_name']);
+	$marketName = $descriptionItem['market_name'];
 	$marketName = $descriptionItem['market_name'];
 	$iconUrl = $descriptionItem['icon_url'];
 
@@ -100,25 +100,69 @@ foreach ($allItems as $item) {
 		$rarityColor = '';
 	}
 
-	# Get price of item from Steam market
-	$marketObj = json_decode(file_get_contents("http://steamcommunity.com/market/priceoverview/?currency=1&appid=730&market_hash_name=$marketHashName"), true);
-	if ($marketObj['success'] !== true) {
-		echo jsonErr('An error occured while fetching market price for an item.');
-		return;
-	}
+	# Get price of item from database
+	$stmt = $db->prepare('SELECT * FROM items WHERE marketName = :name');
+	$stmt->bindValue(':name', $marketName);
+	$stmt->execute();
 
-	$medianPrice = $marketObj['median_price'];
-	$lowestPrice = $marketObj['lowest_price'];
+	if ($stmt->rowCount() === 0) {
+		# If for some reason the item isn't in the database, get the price from the Steam marketplace
+		$marketObj = json_decode(file_get_contents("http://steamcommunity.com/market/priceoverview/?currency=1&appid=730&market_hash_name=$marketHashName"), true);
+		if ($marketObj['success'] !== true) {
+			echo jsonErr('An error occured while fetching market price for an item.');
+			return;
+		}
 
-	if (!isset($medianPrice) && !isset($lowestPrice)) {
-		echo jsonErr('One or more items was not found on the steam market place.');
-		return;
-	}
+		$medianPrice = $marketObj['median_price'];
+		$lowestPrice = $marketObj['lowest_price'];
 
-	if (isset($medianPrice)) {
-		$price = doubleval(substr($medianPrice, 1)) * 100;
+		if (!isset($medianPrice) && !isset($lowestPrice)) {
+			echo jsonErr('One or more items was not found on the steam market place.');
+			return;
+		}
+
+		if (isset($medianPrice)) {
+			$price = doubleval(substr($medianPrice, 1)) * 100;
+		} else {
+			$price = doubleval(substr($lowestPrice, 1)) * 100;
+		}
 	} else {
-		$price = doubleval(substr($lowestPrice, 1)) * 100;
+		$itemRow = $stmt->fetch();
+
+		$price = $itemRow['avgPrice30Days'];
+
+		# If the 30 day average is 0, set it to the 7 day average
+		if ($price === 0) {
+			$price = $itemRow['avgPrice7Days'];
+		}
+
+		# If the 7 day average is 0 again, set it to the current price
+		if ($price === 0) {
+			$price = $itemRow['currentPrice'];
+		}
+
+		# If all of those are 0, set it to the Steam market price
+		if ($price === 0) {
+			$marketObj = json_decode(file_get_contents("http://steamcommunity.com/market/priceoverview/?currency=1&appid=730&market_hash_name=$marketHashName"), true);
+			if ($marketObj['success'] !== true) {
+				echo jsonErr('An error occured while fetching market price for an item.');
+				return;
+			}
+
+			$medianPrice = $marketObj['median_price'];
+			$lowestPrice = $marketObj['lowest_price'];
+
+			if (!isset($medianPrice) && !isset($lowestPrice)) {
+				echo jsonErr('One or more items was not found on the steam market place.');
+				return;
+			}
+
+			if (isset($medianPrice)) {
+				$price = doubleval(substr($medianPrice, 1)) * 100;
+			} else {
+				$price = doubleval(substr($lowestPrice, 1)) * 100;
+			}
+		}
 	}
 
 	$arr = array(

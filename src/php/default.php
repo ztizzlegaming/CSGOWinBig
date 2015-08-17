@@ -18,7 +18,7 @@ function getDB() {
 		die('no file found');
 	}
 
-	$db = new PDO("mysql:host=$dbHost;dbname=$db;charset=utf8", $dbUser, $dbPass);
+	$db = new PDO("mysql:host=$dbHost;dbname=$db;charset=utf8mb4", $dbUser, $dbPass);
 	return $db;
 }
 
