@@ -76,7 +76,6 @@ foreach ($allItems as $item) {
 	$descriptionItem = $rgDescriptions[$classId . '_' . $instanceId];
 	
 	$marketName = $descriptionItem['market_name'];
-	$marketName = $descriptionItem['market_name'];
 	$iconUrl = $descriptionItem['icon_url'];
 
 	# Get all item tags
@@ -105,9 +104,28 @@ foreach ($allItems as $item) {
 	$stmt->bindValue(':name', $marketName);
 	$stmt->execute();
 
-	if ($stmt->rowCount() === 0) {
-		# If for some reason the item isn't in the database, get the price from the Steam marketplace
-		$marketObj = json_decode(file_get_contents("http://steamcommunity.com/market/priceoverview/?currency=1&appid=730&market_hash_name=$marketHashName"), true);
+	$item = $stmt->fetch();
+
+	$price = intval($item['avgPrice30Days']);
+
+	# If the 30 day average is 0, set it to the 7 day average
+	if ($price === 0) {
+		$price = intval($item['avgPrice7Days']);
+	}
+
+	# If the 7 day average is 0 again, set it to the current price
+	if ($price === 0) {
+		$price = intval($item['currentPrice']);
+	}
+
+	if ($price === 0) {
+		$price = intval($item['suggestedPriceMin']);
+	}
+
+	# If all of those are 0, set it to the Steam market price
+	if ($price === 0) {
+		$hash = urlencode($marketName);
+		$marketObj = json_decode(file_get_contents("http://steamcommunity.com/market/priceoverview/?currency=1&appid=730&market_hash_name=$hash"), true);
 		if ($marketObj['success'] !== true) {
 			echo jsonErr('An error occured while fetching market price for an item.');
 			return;
@@ -125,43 +143,6 @@ foreach ($allItems as $item) {
 			$price = doubleval(substr($medianPrice, 1)) * 100;
 		} else {
 			$price = doubleval(substr($lowestPrice, 1)) * 100;
-		}
-	} else {
-		$itemRow = $stmt->fetch();
-
-		$price = $itemRow['avgPrice30Days'];
-
-		# If the 30 day average is 0, set it to the 7 day average
-		if ($price === 0) {
-			$price = $itemRow['avgPrice7Days'];
-		}
-
-		# If the 7 day average is 0 again, set it to the current price
-		if ($price === 0) {
-			$price = $itemRow['currentPrice'];
-		}
-
-		# If all of those are 0, set it to the Steam market price
-		if ($price === 0) {
-			$marketObj = json_decode(file_get_contents("http://steamcommunity.com/market/priceoverview/?currency=1&appid=730&market_hash_name=$marketHashName"), true);
-			if ($marketObj['success'] !== true) {
-				echo jsonErr('An error occured while fetching market price for an item.');
-				return;
-			}
-
-			$medianPrice = $marketObj['median_price'];
-			$lowestPrice = $marketObj['lowest_price'];
-
-			if (!isset($medianPrice) && !isset($lowestPrice)) {
-				echo jsonErr('One or more items was not found on the steam market place.');
-				return;
-			}
-
-			if (isset($medianPrice)) {
-				$price = doubleval(substr($medianPrice, 1)) * 100;
-			} else {
-				$price = doubleval(substr($lowestPrice, 1)) * 100;
-			}
 		}
 	}
 
