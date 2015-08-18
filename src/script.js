@@ -1,7 +1,7 @@
 //Copyright (c) 2015 Jordan Turley, CSGO Win Big. All Rights Reserved.
 
 //The most recent ID for the chat, pot count, and last game ID
-var localMostRecentID = 0, potCount = 0, lastGameID = 0;
+var localMostRecentID = 0, potCount = 0, mLastGameID = 0;
 
 //Whether or not the call of update() is the first call
 var firstUpdate = true;
@@ -17,6 +17,8 @@ var loggedIn = false;
 var mUserInfo = null;
 
 var mTradeToken = null;
+
+var updateWaitTime = 1000;
 
 $(function () {
 	$.getJSON('php/login-status.php', function (jsonObj) {
@@ -109,9 +111,9 @@ $(function () {
 		}
 	});
 
-	$('#deposit-btn').on('click', function () {
+	$('.deposit-btn').on('click', function () {
 		if (mTradeToken === null) {
-			var swalText = 'Please enter your trade url for payouts.<br><br>NOTE: Make sure your url is correct; otherwise, you will not receive your winnings. You can find your trade url <a href="http://steamcommunity.com/id/me/tradeoffers/privacy" target="_blank">here</a>. Also, be sure to make your inventory public, this can be done <a href="http://steamcommunity.com/id/me/edit/settings/" target="_blank">here</a>.';
+			var swalText = 'Please enter your trade url for payouts.<br><br>NOTE: Make sure your url is correct; otherwise, you will not receive your winnings. You can find your trade url <a href="http://steamcommunity.com/id/me/tradeoffers/privacy" target="_blank">here</a>. Also, be sure to make your inventory public; this can be done <a href="http://steamcommunity.com/id/me/edit/settings/" target="_blank">here</a>.';
 			swal({
 				title: 'Trade URL',
 				text: swalText,
@@ -132,7 +134,6 @@ $(function () {
 				}
 
 				$.post('php/save-trade-token.php', {tradeUrl: inputValue}, function (jsonObj) {
-					console.log(jsonObj);
 					handleJsonResponse(jsonObj, function (data) {
 						if (data['valid'] === 0) {
 							swal.showInputError(data['errMsg']);
@@ -168,7 +169,7 @@ $(function () {
 
 		swal({
 			title: 'Change Trade URL',
-			text: 'Enter your updated trade url here.',
+			text: 'Enter your updated trade url here.<br><br>You can find your trade url <a href="http://steamcommunity.com/id/me/tradeoffers/privacy" target="_blank">here</a>.',
 			type: 'input',
 			showCancelButton: true,
 			closeOnConfirm: false,
@@ -186,7 +187,6 @@ $(function () {
 			}
 
 			$.post('php/update-trade-token.php', {tradeUrl: inputValue}, function (jsonObj) {
-				console.log(jsonObj);
 				handleJsonResponse(jsonObj, function (data) {
 					if (data['valid'] === 0) {
 						swal.showInputError(data['errMsg']);
@@ -202,8 +202,8 @@ $(function () {
 
 function update () {
 	$.getJSON('php/update.php', function (jsonObj) {
+		//console.log(JSON.stringify(jsonObj));
 		handleJsonResponse(jsonObj, function (data) {
-			console.log('Response received.');
 			var chat = data['chat'],
 				pot = data['pot'],
 				potPrice = data['potPrice'],
@@ -219,7 +219,6 @@ function update () {
 
 			//Check for new messages
 			if (serverMostRecentID > localMostRecentID) {
-				console.log('New messages!');
 				localMostRecentID = serverMostRecentID;
 				localChatIDForColor = serverMostRecentID;
 
@@ -228,9 +227,119 @@ function update () {
 				$('#chatmessages').scrollTop($('#chatmessages')[0].scrollHeight);
 			}
 
+			var shouldUpdate = true;
+
+			//First, check if a round just ended
+			//This will only be null when the current round is the first one ever
+			if (mostRecentGame['prevGameID'] !== null) {
+				var prevGameID = parseInt(mostRecentGame['prevGameID']),
+					winnerSteamInfo = mostRecentGame['winnerSteamInfo'],
+					userPutInPrice = parseInt(mostRecentGame['userPutInPrice']),
+					potPricePrevGame = parseInt(mostRecentGame['potPrice']),
+					allItems = JSON.parse(mostRecentGame['allItems']),
+					paid = mostRecentGame['paid'];
+
+				if (prevGameID > mLastGameID && mLastGameID !== 0) {
+					//A round just ended and someone just now won. For now, just sweetalert the winner.
+					mLastGameID = prevGameID;
+
+					//Do some fancy stuff
+					var potStr = generatePotStr(allItems);
+					$('#pot').html(potStr);
+					console.log('Pot updated after round end.');
+					$('#pot-price').text(getFormattedPrice(potPricePrevGame));
+					$('#pot-items').text(allItems.length);
+
+					if (loggedIn) {
+						var loggedInSteamID = mUserInfo['steamid'];
+						var loggedInUserItems = [];
+						for (var i1 = 0; i1 < allItems.length; i1++) {
+							var item = allItems[i1];
+							var itemOwner = item['itemSteamOwnerInfo'];
+							var ownerSteamID = itemOwner['steamid'];
+
+							if (ownerSteamID === loggedInSteamID) {
+								loggedInUserItems.push(item);
+							}
+						}
+
+						var loggedInUserPrice = 0;
+
+						for (var i1 = 0; i1 < loggedInUserItems.length; i1++) {
+							var item = loggedInUserItems[i1];
+							var itemPrice = parseInt(item['itemPrice'], 10);
+							loggedInUserPrice += itemPrice;
+						}
+
+						$('#items-deposited-count').text(loggedInUserItems.length);
+						$('#items-deposited-price').text(getFormattedPrice(loggedInUserPrice));
+						var chance = loggedInUserPrice / potPricePrevGame * 100;
+						chance = Math.round(chance * 100) / 100;
+						$('#items-deposited-chance').text(chance);
+					}
+
+					console.log('About to show popup.');
+
+					setTimeout(function () {
+						var potPriceReal = getFormattedPrice(potPricePrevGame);
+						var percentageChance = (userPutInPrice / potPricePrevGame * 100).toFixed(2);
+						var winnerSteamID = winnerSteamInfo['steamid'], winnerProfileName = winnerSteamInfo['personaname'];
+
+						//Set stuff in previous game box on the left of the screen
+						var percentageChance = (userPutInPrice / potPricePrevGame * 100).toFixed(2);
+						var profileName = winnerSteamInfo['personaname'];
+						var profileAvatar = winnerSteamInfo['avatarfull'];
+						var potPriceReal = getFormattedPrice(potPricePrevGame);
+
+						$('#prev-winner-pic').attr('src', profileAvatar);
+						$('#prev-winner-name').text(profileName);
+						$('#prev-winner-amnt').text(potPriceReal);
+						$('#prev-winner-chance').text(percentageChance + '%');
+
+						if (mUserInfo !== null && winnerSteamID === mUserInfo['steamid']) {
+							var msg = 'You have won ' + potPriceReal + ', with a ' + percentageChance + '% chance! Expect a trade request from our bot shortly. <b>Make sure that you are only receiving items. Our bot will never try to take any items from you.</b><br><br>Round ID: ' + prevGameID + '<br><br>If you do not receive a trade request shortly, please open a <a href="support.html">support ticket</a>, including the round id, your steam id, and any items that you can remember being in the pot.';
+
+							swal({
+								title: 'You win!',
+								text: msg,
+								closeOnConfirm: true,
+								html: true,
+							});
+						} else {
+							swal('Round ended!', winnerProfileName + ' has won ' + potPriceReal + ', with a ' + percentageChance + ' chance!', 'success');
+						}
+
+						potCount = 0;
+						$('#pot-price').text('$0.00');
+						$('#pot-items').text('0');
+						$('#pot').text('');
+
+						$('#items-deposited-count').text(0);
+						$('#items-deposited-price').text(getFormattedPrice(0));
+						$('#items-deposited-chance').text('0%');
+
+						setTimeout(update, updateWaitTime);
+					}, 5000);
+
+					return;
+				} else if (mLastGameID === 0) {
+					mLastGameID = prevGameID;
+				} else {
+					//Set stuff in previous game box on the left of the screen
+					var percentageChance = (userPutInPrice / potPricePrevGame * 100).toFixed(2);
+					var profileName = winnerSteamInfo['personaname'];
+					var profileAvatar = winnerSteamInfo['avatarfull'];
+					var potPriceReal = getFormattedPrice(potPricePrevGame);
+
+					$('#prev-winner-pic').attr('src', profileAvatar);
+					$('#prev-winner-name').text(profileName);
+					$('#prev-winner-amnt').text(potPriceReal);
+					$('#prev-winner-chance').text(percentageChance + '%');
+				}
+			}
+
 			//Check for new items in the pot
-			if (pot.length !== potCount) {
-				console.log('New items in pot!');
+			if (pot.length > potCount || (pot.length < potCount && prevGameID !== mLastGameID)) {
 				potCount = pot.length;
 
 				//Set pot price
@@ -242,6 +351,7 @@ function update () {
 
 				//Set items in pot
 				var potStr = generatePotStr(pot);
+				console.log('Pot updated for new items.');
 				$('#pot').html(potStr);
 
 				//Get all items that are put in by the user logged in
@@ -268,53 +378,16 @@ function update () {
 
 					$('#items-deposited-count').text(loggedInUserItems.length);
 					$('#items-deposited-price').text(getFormattedPrice(loggedInUserPrice));
-					$('#items-deposited-chance').text(loggedInUserPrice / potPrice * 100);
+
+					var chance = loggedInUserPrice / potPrice * 100;
+					chance = Math.round(chance * 100) / 100;
+					$('#items-deposited-chance').text(chance);
 				}
-			} else if (pot.length === 0) {
-				$('#pot-price').text('$0.00');
-				$('#pot-items').text('0');
-				$('#pot').text('');
 			}
 
-			//This will only be null when the current round is the first one ever
-			if (mostRecentGame['prevGameID'] !== null) {
-				var prevGameID = parseInt(mostRecentGame['prevGameID']),
-					winnerSteamInfo = mostRecentGame['winnerSteamInfo'],
-					userPutInPrice = parseInt(mostRecentGame['userPutInPrice']),
-					potPrice = parseInt(mostRecentGame['potPrice']),
-					allItems = mostRecentGame['allItems'],
-					paid = mostRecentGame['paid'];
-
-				if (prevGameID > lastGameID && lastGameID !== 0) {
-					//A round just ended and someone just now won. For now, just sweetalert the winner.
-					lastGameID = prevGameID;
-
-					var potPriceReal = getFormattedPrice(potPrice);
-					var percentageChance = (userPutInPrice / potPrice * 100).toFixed(2);
-					var winnerSteamID = winnerSteamInfo['steamid'], winnerProfileName = winnerSteamInfo['personaname'];
-
-					if (winnerSteamID === mUserInfo['steamid']) {
-						var msg = 'You have won ' + potPriceReal + ', with a ' + percentageChance + '% chance! Expect a trade request from our bot shortly.';
-						swal('You Win!', msg, 'success');
-					} else {
-						swal('Round ended!', winnerProfileName + ' has won ' + potPriceReal + ', with a ' + percentageChance + ' chance!', 'success');
-					}
-				} else if (lastGameID === 0) {
-					lastGameID = prevGameID;
-				}
-
-				var percentageChance = (userPutInPrice / potPrice * 100).toFixed(2);
-				var profileName = winnerSteamInfo['personaname'];
-				var profileAvatar = winnerSteamInfo['avatarfull'];
-				var potPriceReal = getFormattedPrice(potPrice);
-
-				$('#prev-winner-pic').attr('src', profileAvatar);
-				$('#prev-winner-name').text(profileName);
-				$('#prev-winner-amnt').text(potPriceReal);
-				$('#prev-winner-chance').text(percentageChance);
+			if (shouldUpdate) {
+				setTimeout(update, updateWaitTime); //Call update again after 2 seconds
 			}
-
-			setTimeout(update, 2000); //Call update again after 2 seconds
 		});
 	});
 }
@@ -373,6 +446,8 @@ function generatePotStr (pot) {
 			itemName = item['itemName'],
 			itemPrice = item['itemPrice'],
 			itemIcon = item['itemIcon'];
+
+		itemIcon = 'http://steamcommunity-a.akamaihd.net/economy/image/' + itemIcon + '/360fx360f';
 
 		var profileName = itemOwnerSteamInfo['personaname'],
 			profileAvatar = itemOwnerSteamInfo['avatarfull'],

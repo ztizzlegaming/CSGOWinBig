@@ -72,12 +72,10 @@ foreach ($currentPotArr as $itemInPot) {
 	$itemPrice = $itemInPot['itemPrice'];
 	$itemIcon = $itemInPot['itemIcon'];
 
-	$itemIconUrl = "http://steamcommunity-a.akamaihd.net/economy/image/$itemIcon/360fx360f";
-
 	$itemOwnerSteamID = $itemInPot['ownerSteamId64'];
 	$steamUserInfo = getSteamProfileInfoForSteamID($usersInfoStr, $itemOwnerSteamID);
 
-	$arr = array('itemID' => $itemID, 'itemSteamOwnerInfo' => $steamUserInfo, 'itemName' => $itemName, 'itemPrice' => $itemPrice, 'itemIcon' => $itemIconUrl);
+	$arr = array('itemID' => $itemID, 'itemSteamOwnerInfo' => $steamUserInfo, 'itemName' => $itemName, 'itemPrice' => $itemPrice, 'itemIcon' => $itemIcon);
 	array_push($currentPot, $arr);
 
 	$potPrice += $itemPrice;
@@ -89,8 +87,7 @@ $winnerSteamId = $prevPot['winnerSteamId'];
 $winnerSteamId64 = $prevPot['winnerSteamId64'];
 $userPutInPrice = $prevPot['userPutInPrice'];
 $prevPotPrice = $prevPot['potPrice'];
-$allItems = $prevPot['allItems'];
-$paid = $prevPot['paid'];
+$allItems = $prevPot['allItemsJson'];
 
 $winnerSteamInfo = getSteamProfileInfoForSteamID($usersInfoStr, $winnerSteamId64);
 
@@ -99,8 +96,7 @@ $mostRecentGame = array(
 	'winnerSteamInfo' => $winnerSteamInfo,
 	'userPutInPrice' => $userPutInPrice,
 	'potPrice' => $prevPotPrice,
-	'allItems' => $allItems,
-	'paid' => $paid
+	'allItems' => $allItems
 );
 
 $data = array(

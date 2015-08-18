@@ -290,7 +290,33 @@ if ($currentPotCount >= $maxPotCount) {
 		$keepPercentage += $itemPercentage;
 	}
 
-	$allItemsJsonForDB = json_encode($allItems);
+	# Generate JSON string for all items for database
+	$allUsersArr = array();
+	foreach ($allItems as $item) {
+		array_push($allUsersArr, $item['ownerSteamId64']);
+	}
+	$allUserIDsStr = join(',', $allUsersArr);
+
+	# Get all user info for the steam user IDs
+	$key = getSteamAPIKey();
+	$usersInfoStr = file_get_contents("http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=$key&steamids=$allUserIDsStr");
+
+	$allItemsInPrevGame = array();
+
+	foreach ($allItems as $item) {
+		$id = $item['id'];
+		$itemName = $item['itemName'];
+		$itemPrice = $item['itemPrice'];
+		$itemIcon = $item['itemIcon'];
+
+		$itemOwnerId64 = $item['ownerSteamId64'];
+		$steamUserInfo = getSteamProfileInfoForSteamID($usersInfoStr, $itemOwnerId64);
+
+		$arr = array('itemID' => $id, 'itemSteamOwnerInfo' => $steamUserInfo, 'itemName' => $itemName, 'itemPrice' => $itemPrice, 'itemIcon' => $itemIcon);
+		array_push($allItemsInPrevGame, $arr);
+	}
+
+	$allItemsJsonForDB = json_encode($allItemsInPrevGame);
 
 	# Add this game to the past games database
 	$sql =
