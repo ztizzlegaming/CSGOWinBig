@@ -1,7 +1,7 @@
 //Copyright (c) 2015 Jordan Turley, CSGO Win Big. All Rights Reserved.
 
 //The most recent ID for the chat, pot count, and last game ID
-var localMostRecentID = 0, potCount = 0, mLastGameID = 0;
+var localMostRecentID = 0, potCount = -1, mLastGameID = 0;
 
 //Whether or not the call of update() is the first call
 var firstUpdate = true;
@@ -309,7 +309,7 @@ function update () {
 							swal('Round ended!', winnerProfileName + ' has won ' + potPriceReal + ', with a ' + percentageChance + ' chance!', 'success');
 						}
 
-						potCount = 0;
+						potCount = -1;
 						$('#pot-price').text('$0.00');
 						$('#pot-items').text('0');
 						$('#pot').text('');
@@ -379,8 +379,13 @@ function update () {
 					$('#items-deposited-count').text(loggedInUserItems.length);
 					$('#items-deposited-price').text(getFormattedPrice(loggedInUserPrice));
 
-					var chance = loggedInUserPrice / potPrice * 100;
-					chance = Math.round(chance * 100) / 100;
+					var chance;
+					if (potPrice === 0) {
+						chance = 0;
+					} else {
+						chance = loggedInUserPrice / potPrice * 100;
+						chance = Math.round(chance * 100) / 100;
+					}
 					$('#items-deposited-chance').text(chance);
 				}
 			}
