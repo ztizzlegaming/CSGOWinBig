@@ -31,11 +31,7 @@ If you would like to setup this project for your own project, there are a couple
 
 ### Troubleshooting
 * If you are trying to get this website set up and encounter any errors, please send me an email at csgowinbig@jordanturley.com. DO NOT submit an issue, only submit an issue if there is something legitimately wrong with the code. Also, please try something on your own before messaging me, and if you cannot fix it on your own, send me an email and list off what you have tried. If you haven't tried anything, I will not respond.
-* One very common error people have been getting is their site being stuck at "loading...". If this is the case, go to the /php/login-status.php file on your server, and see what it says. If it says "file not found", this means that the passwords.txt file cannot be found on your server. You may have it in the wrong location; it is supossed to be located outside of the web root, one level up from the public_html folder on your server. It is possible, however, that your hosting doesn't allow access outside of the web root, so if this is the case, you will just have to hard code in your API Key and password, in these 4 locations:
- * Password here: https://github.com/ztizzlegaming/CSGOWinBig/blob/master/src/php/default.php#L9
- * API Key here: https://github.com/ztizzlegaming/CSGOWinBig/blob/master/src/php/default.php#L50
- * Password here: https://github.com/ztizzlegaming/CSGOWinBig/blob/master/src/php/deposit.php#L26
- * API Key here: https://github.com/ztizzlegaming/CSGOWinBig/blob/master/src/php/SteamAuthentication/steamauth/settings.php#L2
+* One very common error people have been getting is their site being stuck at "loading...". If this is the case, go to the /php/login-status.php file on your server, and see what it says. If it says "file not found", this means that the passwords.txt file cannot be found on your server. You may have it in the wrong location; it is supossed to be located outside of the web root, one level up from the public_html folder on your server. It is possible, however, that your hosting doesn't allow access outside of the web root, so if this is the case, you will just have to hard code in your API Key and password. To hard code in your password, follow these steps: http://pastebin.com/8ZCNq7f8
 
 ### How can I contribute to this project?
 Please read [CONTRIBUTING.md](https://github.com/ztizzlegaming/csgo-win-big/blob/master/CONTRIBUTING.md).
