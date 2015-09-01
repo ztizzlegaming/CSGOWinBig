@@ -509,6 +509,10 @@ function getFormattedTime () {
 }
 
 function getFormattedPrice (cents) {
+	if (typeof cents !== 'number') {
+		cents = parseInt(cents);
+	}
+
 	var price = cents / 100;
 	
 	if (cents % 100 === 0) { //If it is an even dollar, add the .00
