@@ -16,6 +16,45 @@
 
 	<link rel="stylesheet" type="text/css" href="style.css">
 	<script src="script.js"></script>
+
+	<script>
+	$(function () {
+		$.getJSON('php/get-donations.php', function (jsonObj) {
+			handleJsonResponse(jsonObj, function (data) {
+				var donations = data['donations'];
+
+				var str = '';
+
+				for (var i1 = 0; i1 < donations.length; i1++) {
+					str += '<li>';
+
+					var donation = donations[i1];
+
+					var name = donation['name'],
+						link = donation['link'],
+						desc = donation['desc'],
+						price = donation['price'];
+
+					if (link.length > 0) {
+						str += '<a href="' + link + '" class="link">' + name + '</a>';
+					} else {
+						str += name;
+					}
+
+					if (desc.length > 0) {
+						str += ' - ' + desc;
+					}
+
+					str += ' - ' + getFormattedPrice(price);
+
+					str += '</li>';
+				}
+
+				$('#donations').html(str);
+			});
+		});
+	});
+	</script>
 </head>
 <body>
 	<div class="navbar navbar-inverse navbar-static-top">
@@ -94,11 +133,8 @@
 					<hr>
 					Donations:
 					<br>
-					<ol>
-						<li>
-							<a href="http://steamcommunity.com/profiles/76561197964150063/" class="link">Death&trade;</a> - $50.00
-						</li>
-						<li>Celluloid - $25</li>
+					<ol id="donations">
+						<li>loading&hellip;</li>
 					</ol>
 				</div>
 			</div>

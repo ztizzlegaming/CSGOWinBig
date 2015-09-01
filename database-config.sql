@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS chat (
   `date` text COLLATE latin1_general_ci NOT NULL,
   `time` text COLLATE latin1_general_ci NOT NULL,
   PRIMARY KEY (id)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS currentPot (
   itemRarityColor varchar(6) NOT NULL,
   itemIcon text NOT NULL,
   PRIMARY KEY (id)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -71,7 +71,7 @@ CREATE TABLE IF NOT EXISTS history (
   allItemsJson text NOT NULL,
   `date` date NOT NULL,
   PRIMARY KEY (id)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -5126,7 +5126,19 @@ CREATE TABLE IF NOT EXISTS users (
   steamId32 text NOT NULL,
   steamId64 bigint(20) NOT NULL,
   tradeToken text NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Table structure for table `donations`
+--
+
+DROP TABLE IF EXISTS `donations`;
+CREATE TABLE IF NOT EXISTS `donations` (
+  `name` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `link` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `desc` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `price` int(11) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
