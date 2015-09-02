@@ -25,7 +25,7 @@ If you would like to setup this project for your own project, there are a couple
   * [Line 30 of support-ticket.php](https://github.com/ztizzlegaming/CSGOWinBig/blob/master/src/php/support-ticket.php#L30)
   * [Line 6 of bot-withdraw.php](https://github.com/ztizzlegaming/CSGOWinBig/blob/master/src/php/bot-withdraw.php#L6). For this, you will need to enter the 64bit ID of your Steam bot. You can find this in the bot's profile url, or on websites such as http://steamrep.com.
   * [Lines 38](https://github.com/ztizzlegaming/CSGOWinBig/blob/master/src/index.html#L38) and [86](https://github.com/ztizzlegaming/CSGOWinBig/blob/master/src/index.html#L86) of index.html, [line 90 of support.html](https://github.com/ztizzlegaming/CSGOWinBig/blob/master/src/support.html#L90), [line 37 of donations.html](https://github.com/ztizzlegaming/CSGOWinBig/blob/master/src/donations.html#L37), and [line 142 of prices.html](https://github.com/ztizzlegaming/CSGOWinBig/blob/master/src/prices.html#L142). Here, you must modify the sign in url to have your own website's url. You must change where it says 'openid.return_to=' and 'openid.realm=' to be your own website's url.
-  * [Line 89 of index.html](https://github.com/ztizzlegaming/CSGOWinBig/blob/master/src/index.html#L89) and [line 148 of script.js](https://github.com/ztizzlegaming/CSGOWinBig/blob/master/src/script.js#L148). Here, you must put in the trade url of your own bot.
+  * [Line 149 of script.js](https://github.com/ztizzlegaming/CSGOWinBig/blob/master/src/script.js#L149). Here, you must put in the trade url of your own bot.
 * Here is an example of my passwords.txt:  
 {"default-password":"YOUR DATABASE PASSWORD","steamAPIKey":"YOUR STEAM API KEY"}
 
