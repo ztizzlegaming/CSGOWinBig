@@ -407,6 +407,12 @@ function generateChatStr (chat) {
 	return str;
 }
 
+function smileyReplace(text){
+    return text.replace(/:tag1:/g, '<img src="images/chat/picture.png" style="max-height:32px;" title=":smiley1:">')
+	.replace(/:tag2:/g, '<img src="images/chat/picture.png" style="max-height:32px;" title=":smiley2:">')
+	.replace(/:tag3:/g, '<img src="images/chat/picture.png" style="max-height:32px;" title=":smiley3:">');
+}
+
 function generateChatMsgStr (msg) {
 	var id = parseInt(msg['id'], 10),
 		text = msg['text'],
