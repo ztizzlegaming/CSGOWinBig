@@ -3,11 +3,11 @@
 
 function getDB() {
 	$dbHost = 'localhost';
-	$db     = 'jordantu_csgowinbig';
-	$dbUser = "jordantu_ztizzle";
+	$db     = 'csgowinb_default';
+	$dbUser = 'csgowinb_ztizzle';
 
 	# Get database password from outside of web root
-	$fileLoc = $_SERVER['DOCUMENT_ROOT'] . '/../../passwords.txt';
+	$fileLoc = $_SERVER['DOCUMENT_ROOT'] . '/../passwords.txt';
 	if (file_exists($fileLoc)) {
 		$fh = fopen($fileLoc, 'r');
 		$jsonStr = fgets($fh);
@@ -47,7 +47,7 @@ function jsonErr($errMsg) {
 }
 
 function getSteamAPIKey() {
-	$fileLoc = $_SERVER['DOCUMENT_ROOT'] . '/../../passwords.txt';
+	$fileLoc = $_SERVER['DOCUMENT_ROOT'] . '/../passwords.txt';
 	if (file_exists($fileLoc)) {
 		$fh = fopen($fileLoc, 'r');
 		$jsonStr = fgets($fh);

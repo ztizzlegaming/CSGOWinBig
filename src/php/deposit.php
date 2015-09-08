@@ -23,7 +23,7 @@ $accountNumber = intval($idParts[2]);
 $tradeOwnerSteamId64 = $accountNumber * 2 + 76561197960265728 + $authServer;
 
 # Get the password from config file and make sure it matches
-$fileLoc = $_SERVER['DOCUMENT_ROOT'] . '/../../passwords.txt';
+$fileLoc = $_SERVER['DOCUMENT_ROOT'] . '/../passwords.txt';
 if (file_exists($fileLoc)) {
 	$fh = fopen($fileLoc, 'r');
 	$jsonStr = fgets($fh);

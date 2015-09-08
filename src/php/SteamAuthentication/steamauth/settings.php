@@ -1,5 +1,5 @@
 <?php
-$fileLoc = $_SERVER['DOCUMENT_ROOT'] . '/../../passwords.txt';
+$fileLoc = $_SERVER['DOCUMENT_ROOT'] . '/../passwords.txt';
 if (file_exists($fileLoc)) {
 	$fh = fopen($fileLoc, 'r');
 	$jsonStr = fgets($fh);
@@ -11,7 +11,7 @@ if (file_exists($fileLoc)) {
 }
 
 $steamauth['apikey'] = $apiKey; // Your Steam WebAPI-Key found at http://steamcommunity.com/dev/apikey
-$steamauth['domainname'] = "http://csgowinbig.jordanturley.com/"; // The main URL of your website displayed in the login page
+$steamauth['domainname'] = "http://www.csgowinbig.com/"; // The main URL of your website displayed in the login page
 $steamauth['buttonstyle'] = "large_no"; // Style of the login button [small|large_no|large]
 $steamauth['logoutpage'] = "../example.php"; // Page to redirect to after a successfull logout (from the directory the SteamAuth-folder is located in) - NO slash at the beginning!
 $steamauth['loginpage'] = "../example.php"; // Page to redirect to after a successfull login (from the directory the SteamAuth-folder is located in) - NO slash at the beginning!
