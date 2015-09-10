@@ -42,136 +42,22 @@ if ($password !== $realPassword) {
 # Create all items array from json
 $allItems = json_decode($allItemsJson, true);
 
-# Get the depositor's inventory
-$depositorInventory = json_decode(file_get_contents("https://steamcommunity.com/profiles/$tradeOwnerSteamId64/inventory/json/730/2"), true);
-
-if ($depositorInventory['success'] !== true) {
-	echo jsonErr('An error occured fetching the depositor\'s inventory.');
-	return;
-}
-
-$rgInventory = $depositorInventory['rgInventory'];
-$rgDescriptions = $depositorInventory['rgDescriptions'];
-
 $totalPrice = 0;
 $itemsArr = array();
 
-# Loop through each item and get their name and price
-foreach ($allItems as $item) {
-	$appId = $item['appid'];
-	$contextId = $item['contextid'];
-	$amount = $item['amount'];
-	$assetId = $item['assetid'];
+# Get the bot's inventory
+$botInventory = json_decode(file_get_contents("https://steamcommunity.com/profiles/76561198238743988/inventory/json/730/2"), true);
 
-	# Check if any items are not for CSGO, just in case.
-	if ($appId !== 730 || $contextId !== 2) {
-		echo jsonErr('One of the items was not for CSGO.');
-		return;
-	}
-
-	$inventoryItem = $rgInventory[$assetId];
-	$classId = $inventoryItem['classid'];
-	$instanceId = $inventoryItem['instanceid'];
-
-	$descriptionItem = $rgDescriptions[$classId . '_' . $instanceId];
-	
-	$marketName = $descriptionItem['market_name'];
-	$iconUrl = $descriptionItem['icon_url'];
-
-	# Get all item tags
-	$tags = $descriptionItem['tags'];
-
-	# Loop through all tags and find the rarity tag
-	$tagFound = false;
-	foreach ($tags as $tag) {
-		$tagCategory = $tag['category'];
-		if ($tagCategory === 'Rarity') {
-			$tagFound = true;
-
-			$rarityName = $tag['name'];
-			$rarityColor = $tag['color'];
-		}
-	}
-
-	# Just in case for some reason the rarity couldn't be found
-	if (!$tagFound) {
-		$rarityName = '';
-		$rarityColor = '';
-	}
-
-	# Get price of item from database
-	$stmt = $db->prepare('SELECT * FROM items WHERE marketName = :name');
-	$stmt->bindValue(':name', $marketName);
-	$stmt->execute();
-
-	$item = $stmt->fetch();
-
-	$price = intval($item['avgPrice30Days']);
-
-	# If the 30 day average is 0, set it to the 7 day average
-	if ($price === 0) {
-		$price = intval($item['avgPrice7Days']);
-	}
-
-	# If the 7 day average is 0 again, set it to the current price
-	if ($price === 0) {
-		$price = intval($item['currentPrice']);
-	}
-
-	if ($price === 0) {
-		$price = intval($item['suggestedPriceMin']);
-	}
-
-	# If all of those are 0, set it to the Steam market price
-	if ($price === 0) {
-		$hash = urlencode($marketName);
-		$marketObj = json_decode(file_get_contents("http://steamcommunity.com/market/priceoverview/?currency=1&appid=730&market_hash_name=$hash"), true);
-		if ($marketObj['success'] !== true) {
-			echo jsonErr('An error occured while fetching market price for an item.');
-			return;
-		}
-
-		$medianPrice = $marketObj['median_price'];
-		$lowestPrice = $marketObj['lowest_price'];
-
-		if (!isset($medianPrice) && !isset($lowestPrice)) {
-			echo jsonErr('One or more items was not found on the steam market place.');
-			return;
-		}
-
-		if (isset($medianPrice)) {
-			$price = doubleval(substr($medianPrice, 1)) * 100;
-		} else {
-			$price = doubleval(substr($lowestPrice, 1)) * 100;
-		}
-	}
-
-	$arr = array(
-		'classId' => $classId,
-		'instanceId' => $instanceId,
-		'marketName' => $marketName,
-		'rarityName' => $rarityName,
-		'rarityColor' => $rarityColor,
-		'price' => $price,
-		'iconUrl' => $iconUrl
-	);
-
-	# Just in case the SteamBot decides to have the amount more than 1
-	for ($i1=0; $i1 < $amount; $i1++) { 
-		array_push($itemsArr, $arr);
-		$totalPrice += $price;
-	}
-}
-
-# Check to see if they reached the minimum deposit
-if ($totalPrice < 100) {
-	$data = array('minDeposit' => 0);
-	echo jsonSuccess($data);
+if ($botInventory['success'] !== true) {
+	echo jsonErr('An error occured fetching the bot\'s inventory.');
 	return;
 }
 
-# Loop through all items again, adding them to the pot database
-foreach ($itemsArr as $item) {
+$rgInventory = $botInventory['rgInventory'];
+$rgDescriptions = $botInventory['rgDescriptions'];
+
+# Loop through each item and get their name and price, and add them to the database
+foreach ($allItems as $item) {
 	$classId = $item['classId'];
 	$instanceId = $item['instanceId'];
 	$marketName = $item['marketName'];
