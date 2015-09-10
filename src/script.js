@@ -208,6 +208,7 @@ function update () {
 				pot = data['pot'],
 				potPrice = data['potPrice'],
 				mostRecentGame = data['mostRecentGame'];
+				document.title = "$"+(parseInt(potPrice)/100).toFixed(2)+" CSGOWinBig";
 
 			var serverMostRecentID = parseInt(chat[chat.length - 1]['id'], 10);
 
