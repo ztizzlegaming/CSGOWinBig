@@ -460,10 +460,16 @@ function generatePotStr (pot) {
 
 		var itemRealPrice = getFormattedPrice(itemPrice);
 
-		str += '<div class="pot-item">'
-		str += '<a href="' + profileURL + '" target="_blank" class="link"><img src="' + profileAvatar + '" class="pot-item-profile-image">';
-		str += '<div class="pot-item-name">' + profileName + '</a>' + ': ' + itemName + ' - ' + itemRealPrice + '</div>';
-		str += '<img src="' + itemIcon + '" class="pot-item-image">';
+		str += '<div class="pot-item container" style="padding: 0px;">';
+
+		str += '<div class="col-sm-1 pot-item-inner-container">';
+		str += '<a href="' + profileURL + '" target="_blank" class="link"><img src="' + profileAvatar + '" class="pot-image">';
+		str += '</a></div>';
+
+		str += '<div class="col-sm-10 pot-item-inner-container" style="text-align: center;"><a href="' + profileURL + '" target="_blank" class="link">' + profileName + '</a>' + ': ' + itemName + ' - ' + itemRealPrice + '</div>';
+
+		str += '<div class="col-sm-1 pot-item-inner-container"><img src="' + itemIcon + '" class="pot-image" style="border: 1px solid white;"></div>';
+
 		str += '</div>';
 	}
 

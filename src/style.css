@@ -151,26 +151,25 @@ input {
 
 .pot-item {
 	width: 100%;
-	height: 75px;
+	/* height: 75px; */
 	/* border: 1px solid black; */
 	margin-bottom: 5px;
+}
+
+.pot-item-inner-container {
+	height: 100%;
+	padding: 0px;
+	margin: 0px;
 }
 
 .pot-item:last-child {
 	margin-bottom: 0px;
 }
 
-.pot-item-profile-image {
-	display: inline;
+.pot-image {
 	height: 100%;
-}
-
-.pot-item-name {
-	display: inline;
-	max-width: 90%;
-	margin-left: 10px;
-	margin-right: 10px;
-	word-wrap: break-word;
+	width: 100%;
+	border-radius: 5px;
 }
 
 .pot-item-image {
