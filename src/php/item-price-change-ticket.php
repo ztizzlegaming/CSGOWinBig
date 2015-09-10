@@ -9,7 +9,7 @@ if (is_null($name) || is_null($price)) {
 	return;
 }
 
-$to = 'csgowinbig@jordanturley.com';
+$to = 'items@csgowinbig.com';
 $subject = 'Item Price Change Ticket';
 $message = "An item price change ticket has been submitted.\nName: $name\nPrice: $price";
 mail($to, $subject, $message);

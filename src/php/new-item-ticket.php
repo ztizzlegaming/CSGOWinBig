@@ -10,7 +10,7 @@ if (is_null($name) || is_null($price) || is_null($link)) {
 	return;
 }
 
-$to = 'csgowinbig@jordanturley.com';
+$to = 'items@csgowinbig.com';
 $subject = 'New Item Ticket';
 $message = "A new item ticket has been submitted.\nName: $name\nPrice: $price\nLink: $link\n";
 
