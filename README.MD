@@ -1,4 +1,4 @@
-###All Edit are from this Release
+###All Edit's are from this Release
 https://github.com/ztizzlegaming/CSGOWinBig
 
 ###Pot Price in Browser Title
