@@ -9,7 +9,7 @@ Default.php -> https://github.com/RatexIndex/CSGOWinBig/commit/007b5e279f0ed3e3d
 Update.php -> https://github.com/RatexIndex/CSGOWinBig/commit/e25bd5cc0c4e28f41201d194e70805a40c2d9cfa
 
 ###Add Smileys to Chatbox
-All what you need to do is Create a new folder in images/chat and put in your images than open the script.js and put this in.
+All what you need to do is Create a new folder in images with the name Chat and put in your images (32x32) than open the script.js and this code in.
 https://github.com/RatexIndex/CSGOWinBig/commit/1ea269802df54f4e5edc78269258f8db1fcbf08e
 
 ###Contact
