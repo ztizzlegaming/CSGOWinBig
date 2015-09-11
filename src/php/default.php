@@ -28,6 +28,7 @@ function getSteamProfileInfoForSteamID($allUsersInfoStr, $steamIDToFind) {
 	
 	foreach ($players as $player) {
 		$steamID = $player['steamid'];
+		$player['personaname'] = htmlentities($player['personaname']);
 		
 		if ($steamIDToFind === $steamID) {
 			return $player;
