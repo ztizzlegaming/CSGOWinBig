@@ -398,6 +398,12 @@ function update () {
 	});
 }
 
+function smileyReplace(text){
+    return text
+	.replace(/:smileycode:/g, '<img src="images/chat/yourpic.png" style="max-height:32px;" title=":smileycode:">')
+	.replace(/:smileycode:/g, '<img src="images/chat/yourpic.png" style="max-height:32px;" title=":smileycode:">');
+}
+
 function generateChatStr (chat) {
 	var str = '';
 	for (var i1 = 0; i1 < chat.length; i1++) {
