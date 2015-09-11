@@ -90,6 +90,7 @@ $prevPotPrice = $prevPot['potPrice'];
 $allItems = $prevPot['allItemsJson'];
 
 $winnerSteamInfo = getSteamProfileInfoForSteamID($usersInfoStr, $winnerSteamId64);
+$winnerSteamInfo['personaname'] = html_entity_decode($winnerSteamInfo['personaname']);
 
 $mostRecentGame = array(
 	'prevGameID' => $prevGameID,
