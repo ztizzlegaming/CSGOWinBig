@@ -1,7 +1,7 @@
 # CSGO Win Big
 
 ### What is this?
-CSGO Win Big is a Counter-Strike: Global Offensive jackpot skin betting website, created by me, Jordan Turley. It is hosted through Bluehost at http://csgowinbig.jordanturley.com/.
+CSGO Win Big is a Counter-Strike: Global Offensive jackpot skin betting website, created by me, Jordan Turley. It is hosted through Bluehost at http://www.csgowinbig.com
 
 ### How does CSGO Win Big work?
 This is the repository for the website for CSGO Win Big. It is written in HTML/CSS/JavaScript for the client-side, and PHP for the server-side.  
@@ -44,4 +44,4 @@ Donations are not necessary, but are greatly appreciated and help us out a lot. 
 * Send Bitcoin to this address: 1GqszRekcjuUTARfXiroMnPoytRJWdk66A
 * Send Dogecoin to this address: DMWd9PLkDyQqEaQnoCWHi8EFDv2biD4AcS
 
-If you are sending skins or money through PayPal, and would like to be recognized for your donation on our [donations page](http://csgowinbig.jordanturley.com/donations.html), please add your name to the trade offer message or field on PayPal. 
+If you are sending skins or money through PayPal, and would like to be recognized for your donation on our [donations page](http://www.csgowinbig.com/donations.html), please add your name to the trade offer message or field on PayPal. 
