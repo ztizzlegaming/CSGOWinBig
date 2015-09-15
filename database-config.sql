@@ -68,7 +68,7 @@ CREATE TABLE IF NOT EXISTS history (
   winnerSteamId64 bigint(20) NOT NULL,
   userPutInPrice int(11) NOT NULL,
   potPrice int(11) NOT NULL,
-  allItemsJson text NOT NULL,
+  allItemsJson longtext NOT NULL,
   `date` date NOT NULL,
   PRIMARY KEY (id)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
