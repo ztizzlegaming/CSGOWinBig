@@ -12,5 +12,9 @@ Update.php -> https://github.com/RatexIndex/CSGOWinBig/commit/e25bd5cc0c4e28f412
 All what you need to do is Create a new folder in images with the name Chat and put in your images (32x32) than open the script.js and this code in.
 https://github.com/RatexIndex/CSGOWinBig/commit/1ea269802df54f4e5edc78269258f8db1fcbf08e
 
+###Automatic Chat Url Delete
+
+
+
 ###Contact
 webmaster@ratexindex.de
