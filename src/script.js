@@ -247,8 +247,9 @@ function update () {
 					var potStr = generatePotStr(allItems);
 					$('#pot').html(potStr);
 					console.log('Pot updated after round end.');
-					$('#pot-price').text(getFormattedPrice(potPricePrevGame));
-					document.title = getFormattedPrice(potPricePrevGame) + ' | CSGO Win Big';
+					var formattedPrevPotPrice = getFormattedPrice(potPricePrevGame);
+					$('#pot-price').text(formattedPrevPotPrice);
+					document.title = formattedPrevPotPrice + ' | CSGO Win Big';
 					$('#pot-items').text(allItems.length);
 
 					if (loggedIn) {
@@ -346,7 +347,7 @@ function update () {
 				//Set pot price
 				var realPotPrice = getFormattedPrice(potPrice);
 				$('#pot-price').text(realPotPrice);
-				document.title = getFormattedPrice(potPricePrevGame) + ' | CSGO Win Big';
+				document.title = realPotPrice + ' | CSGO Win Big';
 
 				//Set number of pot items
 				$('#pot-items').text(potCount);
