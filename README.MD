@@ -19,3 +19,7 @@ https://github.com/RatexIndex/CSGOWinBig/commit/dc3233ee5799a634dccd24b2f216de93
 
 ###Contact
 webmaster@ratexindex.de
+
+Donations
+
+Skin Donations: https://steamcommunity.com/tradeoffer/new/?partner=57861049&token=1-BGiCjb
