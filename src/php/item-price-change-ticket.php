@@ -24,6 +24,4 @@ if ($loginStatus == 1) {
 } else {
 	echo jsonErr('You are not logged in.');
 }
-
-echo jsonSuccess(array('message' => 'Your ticket has successfully been submitted. Thank you!'));
 ?>
