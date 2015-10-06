@@ -4,7 +4,7 @@ https://github.com/RatexIndex/CSGOWinBig/commit/b48c6be0086df5c9277d46d8a8834324
 
 ###Automatic Chat Url Delete
 Only Add, nothink to remove, so stay tune!
-
+https://github.com/RatexIndex/CSGOWinBig/commit/5d4ddab9dd9e650102ddf65d5b9e3b93eeedc1f9
 
 
 
@@ -15,5 +15,6 @@ Only Add, nothink to remove, so stay tune!
 webmaster@ratexindex.de
 
 ###Credits
-TheAnthonyNL https://github.com/theanthonynl
-Jordan Turley https://github.com/ztizzlegaming
+RatexIndex = https://github.com/RatexIndex
+TheAnthonyNL = https://github.com/theanthonynl
+Jordan Turley = https://github.com/ztizzlegaming
