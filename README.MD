@@ -12,7 +12,13 @@ Only a Add! Nothink to remove, so stay tune.
 https://github.com/RatexIndex/CSGOWinBig/commit/5d4ddab9dd9e650102ddf65d5b9e3b93eeedc1f9
 
 
+Informations about how it works, click on a link from this Adds or Fixes.
+*Green is a line Add
+*Red is a line Delete
 
+
+
+Any Questions so Contact Us
 
 ###Contact
 webmaster@ratexindex.de
