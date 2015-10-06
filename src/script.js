@@ -358,6 +358,18 @@ function update () {
 
 				//Set number of pot items
 				$('#pot-items').text(potCount);
+				
+				//Progressbar can edit here
+				if($('#progress').html()) {
+					$('#progress').html('');
+				}
+				
+				$('#progress').goalProgress({
+				goalAmount: 20,
+				currentAmount: potCount,
+				textBefore: '',
+				textAfter: ' / 20 Items Placed.'
+				});
 
 				//Set items in pot
 				var potStr = generatePotStr(pot);
