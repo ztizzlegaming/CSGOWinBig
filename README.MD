@@ -24,8 +24,6 @@ Any Questions so Contact Us
 webmaster@ratexindex.de
 
 ###Credits
-RatexIndex = https://github.com/RatexIndex
-
-TheAnthonyNL = https://github.com/theanthonynl
-
-Jordan Turley = https://github.com/ztizzlegaming
+* RatexIndex = https://github.com/RatexIndex
+* TheAnthonyNL = https://github.com/theanthonynl
+* Jordan Turley = https://github.com/ztizzlegaming
