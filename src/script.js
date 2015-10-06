@@ -208,7 +208,6 @@ function update () {
 				pot = data['pot'],
 				potPrice = data['potPrice'],
 				mostRecentGame = data['mostRecentGame'];
-				document.title = "$"+(parseInt(potPrice)/100).toFixed(2)+" CSGOWinBig";
 
 			var serverMostRecentID = parseInt(chat[chat.length - 1]['id'], 10);
 
@@ -248,7 +247,9 @@ function update () {
 					var potStr = generatePotStr(allItems);
 					$('#pot').html(potStr);
 					console.log('Pot updated after round end.');
-					$('#pot-price').text(getFormattedPrice(potPricePrevGame));
+					var formattedPrevPotPrice = getFormattedPrice(potPricePrevGame);
+					$('#pot-price').text(formattedPrevPotPrice);
+					document.title = formattedPrevPotPrice + ' | CSGO Win Big';
 					$('#pot-items').text(allItems.length);
 
 					if (loggedIn) {
@@ -346,6 +347,7 @@ function update () {
 				//Set pot price
 				var realPotPrice = getFormattedPrice(potPrice);
 				$('#pot-price').text(realPotPrice);
+				document.title = realPotPrice + ' | CSGO Win Big';
 
 				//Set number of pot items
 				$('#pot-items').text(potCount);
@@ -396,12 +398,6 @@ function update () {
 			}
 		});
 	});
-}
-
-function smileyReplace(text){
-    return text
-	.replace(/:smileycode:/g, '<img src="images/chat/yourpic.png" style="max-height:32px;" title=":smileycode:">')
-	.replace(/:smileycode:/g, '<img src="images/chat/yourpic.png" style="max-height:32px;" title=":smileycode:">');
 }
 
 function generateChatStr (chat) {

@@ -13,9 +13,6 @@ if (!isset($_SESSION['steamid'])) {
 
 $text = isset($_POST['text']) ? $_POST['text'] : null;
 
-$text = preg_replace('@((https?://)?([-\w]+\.[-\w\.]+)+\w(:\d+)?(/([-\w/_\.]*(\?\S+)?)?)*)@', '*Link Deleted*', $text);
-echo $text;
-
 if (is_null($text) || strlen($text) === 0) {
 	echo jsonErr('The required text for the message was not sent correctly or was left blank. Please refresh and try again.');
 	return;
