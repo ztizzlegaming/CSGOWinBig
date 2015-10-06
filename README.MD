@@ -18,10 +18,14 @@ Informations about how it works, click on a link from this Adds or Fixes.
 
 
 
-Any Questions so Contact Us
+
+
 
 ###Contact
-webmaster@ratexindex.de
+If you have any questions so contact us, or tell us any issues please! 
+
+Ratexindex = webmaster@ratexindex.de
+TheAnthonyNL =  theanthonynl@gmail.com
 
 ###Credits
 * RatexIndex = https://github.com/RatexIndex
