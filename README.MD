@@ -11,6 +11,8 @@ https://github.com/RatexIndex/CSGOWinBig/commit/b48c6be0086df5c9277d46d8a8834324
 Only a Add! Nothink to remove, so stay tune.
 https://github.com/RatexIndex/CSGOWinBig/commit/5d4ddab9dd9e650102ddf65d5b9e3b93eeedc1f9
 
+###Progressbar
+Its under construction not ready!!!
 
 Informations about how it works, click on a link from this Adds or Fixes.
 * Green is a line Add

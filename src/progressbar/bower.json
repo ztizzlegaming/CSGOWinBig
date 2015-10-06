@@ -1,0 +1,17 @@
+{
+  "name": "goalProgress.js",
+  "description": "Animated progress bar using jQuery to show how close you are to reaching your goal.",
+  "version": "1.0",
+  "main": [
+    "goalProgress.js",
+    "goalProgress.css"
+  ],
+  "ignore": [
+    "index.html",
+    "readme.md",
+    "screenshot.png"
+  ],
+  "dependencies": {
+    "jquery": ">=1.10.1"
+  }
+}

@@ -18,7 +18,13 @@
 	<!-- Favicon -->
 	<link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
 	<link rel="icon" href="images/favicon.ico" type="image/x-icon">
+	
+	<!-- Progressbar -->
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="progressbar/goalProgress.css" />
+	<script type="text/javascript" src="progressbar/goalProgress.js"></script>
 
+	<!-- Others -->
 	<link rel="stylesheet" type="text/css" href="style.css">
 	<script src="script.js"></script>
 </head>
@@ -156,6 +162,8 @@
 				<div class="bg" style="padding: 5px;">
 					<div id="pot-items-price" style="display: none;">
 						Items: <span id="pot-items"></span>/60 | Total Pot Price: <span id="pot-price"></span>
+						<br>
+						<div id="progress"></div>
 						<br>
 						You have deposited <span id="items-deposited-count">0</span> items worth <span id="items-deposited-price">$0.00</span> for a <span id="items-deposited-chance">0</span>% chance.
 					</div>
