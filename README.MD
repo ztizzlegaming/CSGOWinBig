@@ -12,13 +12,13 @@ Only a Add! Nothink to remove, so stay tune.
 https://github.com/RatexIndex/CSGOWinBig/commit/5d4ddab9dd9e650102ddf65d5b9e3b93eeedc1f9
 
 ###Progressbar
-Its under construction not ready! Please watch the Comits to see all adds / Changes!
+Its under construction not ready! Please watch the Comits to see all adds / Changes! If you have Questions use my email to contact me.
 
+
+###Other Informations
 Informations about how it works, click on a link from this Adds or Fixes.
 * Green is a line Add
 * Red is a line Delete
-
-
 
 
 
