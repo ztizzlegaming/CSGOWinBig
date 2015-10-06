@@ -1,7 +1,7 @@
-*************************************************
-*			UPDATES ONLY FOR DEVELOPER			*
-*			GREATINGS	-   RATEXINDEX			*
-*************************************************
+'''''''''''''''''''''''''''''''''''''''''''''''''
+'			UPDATES ONLY FOR DEVELOPER			'
+'			GREATINGS	-   RATEXINDEX			'
+'''''''''''''''''''''''''''''''''''''''''''''''''
 
 ###Add Smileys to Chatbox
 All what you need to do is Create a new folder in images with the name Chat and put in your images (32x32) than open the script.js and this code in.
