@@ -13,6 +13,7 @@ if (!isset($_SESSION['steamid'])) {
 
 $text = isset($_POST['text']) ? $_POST['text'] : null;
 $text = preg_replace('@((https?://)?([-\w]+\.[-\w\.]+)+\w(:\d+)?(/([-\w/_\.]*(\?\S+)?)?)*)@', '*Link Deleted*', $text);
+$text = preg_replace('@(CSGOPUT)@', '*Word Deleted*', $text);
 echo $text;
 
 if (is_null($text) || strlen($text) === 0) {
