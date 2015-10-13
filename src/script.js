@@ -419,12 +419,6 @@ function update () {
 	});
 }
 
-function smileyReplace(text){
-	return text
-	.replace(/:emo:/g, '<img src="images/chat/emo.png" style="max-height:32px;" title=":emo:">')
-	.replace(/:smileycode:/g, '<img src="images/chat/yourpic.png" style="max-height:32px;" title=":smileycode:">');
-	}
-	
 function generateChatStr (chat) {
 	var str = '';
 	for (var i1 = 0; i1 < chat.length; i1++) {
@@ -435,9 +429,16 @@ function generateChatStr (chat) {
 	return str;
 }
 
+function smileyReplace(text){
+	return text
+	.replace(/:emo:/g, '<img src="images/chat/emo.png" style="max-height:32px;" title=":emo:">')
+	.replace(/:smileycode:/g, '<img src="images/chat/yourpic.png" style="max-height:32px;" title=":smileycode:">');
+}
+
 function generateChatMsgStr (msg) {
 	var id = parseInt(msg['id'], 10),
 		text = msg['text'],
+		text = smileyReplace(msg['text']),
 		date = msg['date'],
 		time = msg['time'],
 		userInfo = msg['steamUserInfo'];
