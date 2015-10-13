@@ -8,7 +8,7 @@ https://github.com/RatexIndex/CSGOWinBig/commit/b4f7f242e082a0c1b39b31d445ffbf51
 
 ###Add Smileys to Chatbox
 Change the Path /yourpic.png and Names :smileycode: to your smiley name / word. Make sure you upload your pics with the name if you need.
-Example: .replace(/:kappa:/g, '<img src="images/chat/kappa.png" style="max-height:32px;" title=":kappa:">')
+You can make so mutch lines if you need on the end make sure you add a ;
 https://github.com/RatexIndex/CSGOWinBig/commit/b48c6be0086df5c9277d46d8a8834324b240a3b2
 
 ###Automatic Chat Url Delete
