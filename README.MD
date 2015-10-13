@@ -7,7 +7,8 @@ Its under construction not ready! Please watch the Comits to see all adds / Chan
 https://github.com/RatexIndex/CSGOWinBig/commit/b4f7f242e082a0c1b39b31d445ffbf510a3ae19c
 
 ###Add Smileys to Chatbox
-All what you need to do is Create a new folder in images with the name Chat and put in your images (32x32) than open the script.js and put this code on the right lines in.
+Change the Path /yourpic.png and Names :smileycode: to your smiley name / word. Make sure you upload your pics with the name if you need.
+Example: .replace(/:kappa:/g, '<img src="images/chat/kappa.png" style="max-height:32px;" title=":kappa:">')
 https://github.com/RatexIndex/CSGOWinBig/commit/b48c6be0086df5c9277d46d8a8834324b240a3b2
 
 ###Automatic Chat Url Delete
