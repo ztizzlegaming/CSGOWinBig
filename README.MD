@@ -1,10 +1,10 @@
 UPDATES ONLY FOR DEVELOPER GREATINGS - RATEXINDEX!
 
 ###History
-*Firefox Fix
-*Add Progressbar
-*Chat Url Delete
-*Add Smileys to Chatbox
+* Firefox Fix
+* Add Progressbar
+* Chat Url Delete
+* Add Smileys to Chatbox
 Change the Path /yourpic.png and Names :smileycode: to your smiley name / word. Make sure you upload your pics with the name if you need.
 
 ###Other Informations / Help
