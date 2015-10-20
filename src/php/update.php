@@ -83,7 +83,6 @@ foreach ($currentPotArr as $itemInPot) {
 
 # Get the past pot and check if someone just now won
 $prevGameID = $prevPot['id'];
-$winnerSteamId = $prevPot['winnerSteamId'];
 $winnerSteamId64 = $prevPot['winnerSteamId64'];
 $userPutInPrice = $prevPot['userPutInPrice'];
 $prevPotPrice = $prevPot['potPrice'];
