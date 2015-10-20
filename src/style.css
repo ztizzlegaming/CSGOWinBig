@@ -180,3 +180,8 @@ input {
 .pot-item, #pot-items-price, #prev-game-info {
 	font-size: 18px;
 }
+
+.col-sm-3 {
+	margin-top: 1.5em; 
+	margin-bottom: 1.5em;
+}
