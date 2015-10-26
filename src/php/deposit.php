@@ -97,25 +97,29 @@ if (strlen($mostRecentItems) > 0) {
 	$startTimer = 0;
 }
 
-# If there is already a round going, then check to see if there are multiple people in the round
-if (strlen($mostRecentItems) === 0) {
-	$stmt = $db->query('SELECT * FROM currentPot');
-	$allItemsCurPot = $stmt->fetchAll();
-	$steamId = $allItemsCurPot[0]['ownerSteamId64'];
+# If there is already a round going but the timer hasn't started yet, then check to see if there are multiple people in the round
+if ($mostRecentHistory['endTime'] === '0') {
+	if (strlen($mostRecentItems) === 0) {
+		$stmt = $db->query('SELECT * FROM currentPot');
+		$allItemsCurPot = $stmt->fetchAll();
+		$steamId = $allItemsCurPot[0]['ownerSteamId64'];
 
-	$startTimer = 0;
+		$startTimer = 0;
 
-	foreach ($allItemsCurPot as $item) {
-		if ($steamId !== $item['ownerSteamId64']) {
-			# There are multiple people in the pot, start the timer
-			$endTime = round(microtime(true) * 1000 + 120000.0);
-			$stmt = $db->prepare('UPDATE history SET endTime = :endtime');
-			$stmt->bindValue(':endtime', $endTime);
-			$stmt->execute();
+		foreach ($allItemsCurPot as $item) {
+			if ($steamId !== $item['ownerSteamId64']) {
+				# There are multiple people in the pot, start the timer
+				$endTime = round(microtime(true) * 1000 + 120000.0);
+				$stmt = $db->prepare('UPDATE history SET endTime = :endtime');
+				$stmt->bindValue(':endtime', $endTime);
+				$stmt->execute();
 
-			$startTimer = 1;
+				$startTimer = 1;
+			}
 		}
 	}
+} else { # This is if the timer is already running. It doesn't matter what $startTimer is
+	$startTimer = 0;
 }
 
 # Check if there are over the max number of items in the pot
@@ -237,12 +241,14 @@ if ($currentPotCount >= $maxPotCount) {
 
 	$allItemsJsonForDB = json_encode($allItemsInPrevGame);
 
-	# Add this game to the past games database
+	# Get the round id, from mostRecentHistory, above
+	$roundId = $mostRecentHistory['id'];
+
+	# Update the history entry for this round to add all the items and the winner
 	$sql =
-		'INSERT INTO history
-		(winnerSteamId32, winnerSteamId64, userPutInPrice, potPrice, allItemsJson, date)
-		VALUES
-		(:id32, :id64, :userprice, :potprice, :allitemsjson, NOW())';
+	'UPDATE history
+	SET winnerSteamId32 = :id32, winnerSteamId64 = :id64, userPutInPrice = :userprice, potPrice = :potprice, allItemsJson = :allitemsjson, date = NOW()
+	WHERE id = :roundid';
 
 	$stmt = $db->prepare($sql);
 	$stmt->bindValue(':id32', $winnerSteamId32);
@@ -250,6 +256,7 @@ if ($currentPotCount >= $maxPotCount) {
 	$stmt->bindValue(':userprice', $userPrice);
 	$stmt->bindValue(':potprice', $totalPotPrice);
 	$stmt->bindValue(':allitemsjson', $allItemsJsonForDB);
+	$stmt->bindValue(':roundid', $roundId);
 	$stmt->execute();
 
 	# Clear the current pot

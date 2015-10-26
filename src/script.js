@@ -200,6 +200,43 @@ $(function () {
 	});
 });
 
+var mTimeLeft = 120;
+var timerRunning = false;
+function timer (timeLeft) {
+	if (!timerRunning || timeLeft <= 0) {
+		timerRunning = false;
+		return;
+	}
+
+	if (timeLeft !== undefined) {
+		mTimeLeft = timeLeft;
+	}
+
+	//Set something on the page to show the time left
+	//First, convert the seconds to minutes and seconds
+	var minutes = parseInt(mTimeLeft / 60);
+	var seconds = parseInt(mTimeLeft - (minutes * 60));
+
+	var secondsStr = null;
+	if (seconds < 10) {
+		secondsStr = '0' + seconds;
+	} else {
+		secondsStr = seconds + '';
+	}
+
+	var timeLeftStr = minutes + ' minutes, ' + secondsStr + ' seconds';
+	$('#time-left').text(timeLeftStr);
+
+	mTimeLeft--;
+
+	if (mTimeLeft <= 0) {
+		timerRunning = false;
+		return;
+	}
+
+	setTimeout(timer, 1000);
+}
+
 function update () {
 	$.getJSON('php/update.php', function (jsonObj) {
 		//console.log(JSON.stringify(jsonObj));
@@ -207,7 +244,36 @@ function update () {
 			var chat = data['chat'],
 				pot = data['pot'],
 				potPrice = data['potPrice'],
+				roundEndTime = data['roundEndTime'],
+				mostRecentAllItems = data['mostRecentAllItems'],
 				mostRecentGame = data['mostRecentGame'];
+			
+			console.log(roundEndTime);
+
+			if (roundEndTime !== null && roundEndTime !== '0') {
+				//Calculate the time left in the timer, depending on the end time
+				roundEndTime = parseInt(roundEndTime);
+				console.log('Round end time after parse as int: ' + roundEndTime);
+
+				if (roundEndTime !== NaN) {
+					var curTimeMillis = Date.now();
+
+					if (curTimeMillis > roundEndTime) {
+						timerRunning = false;
+					}
+
+					timeLeft = (roundEndTime - curTimeMillis) / 1000;
+
+					if (!timerRunning) {
+						console.log('Starting timer');
+						timerRunning = true;
+						timer(timeLeft);
+					}
+				}
+			} else {
+				//If the round end time is null or 0
+				$('#time-left').text('0 minutes, 0 seconds');
+			}
 
 			var serverMostRecentID = parseInt(chat[chat.length - 1]['id'], 10);
 
@@ -232,6 +298,7 @@ function update () {
 			//First, check if a round just ended
 			//This will only be null when the current round is the first one ever
 			if (mostRecentGame['prevGameID'] !== null) {
+				//Get all of the info for the previous game
 				var prevGameID = parseInt(mostRecentGame['prevGameID']),
 					winnerSteamInfo = mostRecentGame['winnerSteamInfo'],
 					userPutInPrice = parseInt(mostRecentGame['userPutInPrice']),
@@ -239,8 +306,13 @@ function update () {
 					allItems = JSON.parse(mostRecentGame['allItems']),
 					paid = mostRecentGame['paid'];
 
-				if (prevGameID > mLastGameID && mLastGameID !== 0) {
+				//if (allItemsJson.length > 0 && mLastGameID !== 0)
+				if (prevGameID > mLastGameID && mostRecentAllItems.length > 0 && mLastGameID !== 0) {
 					//A round just ended and someone just now won. For now, just sweetalert the winner.
+					
+					//First, stop the timer
+					timerRunning = false;
+
 					mLastGameID = prevGameID;
 
 					//Do some fancy stuff
@@ -280,8 +352,6 @@ function update () {
 						$('#items-deposited-chance').text(chance);
 					}
 
-					console.log('About to show popup.');
-
 					setTimeout(function () {
 						var potPriceReal = getFormattedPrice(potPricePrevGame);
 						var percentageChance = (userPutInPrice / potPricePrevGame * 100).toFixed(2);
@@ -308,7 +378,7 @@ function update () {
 								html: true,
 							});
 						} else {
-							swal('Round ended!', winnerProfileName + ' has won ' + potPriceReal + ', with a ' + percentageChance + ' chance!', 'success');
+							swal('Round ended!', winnerProfileName + ' has won ' + potPriceReal + ', with a ' + percentageChance + '% chance!', 'success');
 						}
 
 						potCount = -1;

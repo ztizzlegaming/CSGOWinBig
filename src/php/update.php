@@ -29,7 +29,19 @@ foreach ($currentPotArr as $item) {
 
 # Get previous winner's steam ID
 $stmt = $db->query('SELECT * FROM history ORDER BY id DESC');
-$prevPot = $stmt->fetch();
+$allRounds = $stmt->fetchAll();
+
+$mostRecentRound = $allRounds[0];
+# If the most recent round in history has items in it, then the current round doesn't have any items in it,
+# and there isn't a current round in the history table yet
+if (strlen($mostRecentRound['allItemsJson']) > 0) {
+	$prevPot = $mostRecentRound;
+	$currentRound = null;
+} else {
+	$prevPot = $allRounds[1];
+	$currentRound = $mostRecentRound;
+}
+
 $prevWinner = $prevPot['winnerSteamId64'];
 
 $prevWinnerArr = array($prevWinner);
@@ -81,6 +93,14 @@ foreach ($currentPotArr as $itemInPot) {
 	$potPrice += $itemPrice;
 }
 
+# Get the time left in the current round
+$roundEndTime = is_null($currentRound) ? null : $currentRound['endTime'];
+
+$stmt = $db->query('SELECT * FROM history ORDER BY id DESC');
+$mostRecentInHistory = $stmt->fetch();
+
+$mostRecentAllItems = $mostRecentInHistory['allItemsJson'];
+
 # Get the past pot and check if someone just now won
 $prevGameID = $prevPot['id'];
 $winnerSteamId = $prevPot['winnerSteamId'];
@@ -92,6 +112,7 @@ $allItems = $prevPot['allItemsJson'];
 $winnerSteamInfo = getSteamProfileInfoForSteamID($usersInfoStr, $winnerSteamId64);
 $winnerSteamInfo['personaname'] = html_entity_decode($winnerSteamInfo['personaname']);
 
+# The information for the previous round
 $mostRecentGame = array(
 	'prevGameID' => $prevGameID,
 	'winnerSteamInfo' => $winnerSteamInfo,
@@ -100,10 +121,13 @@ $mostRecentGame = array(
 	'allItems' => $allItems
 );
 
+# The information for the current round
 $data = array(
 	'chat' => $chatMessagesArr,
 	'pot' => $currentPot,
 	'potPrice' => $potPrice,
+	'roundEndTime' => $roundEndTime,
+	'mostRecentAllItems' => $mostRecentAllItems,
 	'mostRecentGame' => $mostRecentGame
 );
 echo jsonSuccess($data);
