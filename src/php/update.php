@@ -81,6 +81,9 @@ $potPrice = 0;
 foreach ($currentPotArr as $itemInPot) {
 	$itemID = $itemInPot['id'];
 	$itemName = $itemInPot['itemName'];
+	if ($itemName[0] === '?') {
+		$itemName = substr($itemName, 2);
+	}
 	$itemPrice = $itemInPot['itemPrice'];
 	$itemIcon = $itemInPot['itemIcon'];
 
