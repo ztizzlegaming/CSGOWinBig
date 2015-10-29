@@ -61,16 +61,17 @@ CREATE TABLE IF NOT EXISTS currentPot (
 -- Table structure for table 'history'
 --
 
-DROP TABLE IF EXISTS history;
-CREATE TABLE IF NOT EXISTS history (
-  id int(11) NOT NULL AUTO_INCREMENT,
-  winnerSteamId32 text NOT NULL,
-  winnerSteamId64 bigint(20) NOT NULL,
-  userPutInPrice int(11) NOT NULL,
-  potPrice int(11) NOT NULL,
-  allItemsJson longtext NOT NULL,
+DROP TABLE IF EXISTS `history`;
+CREATE TABLE IF NOT EXISTS `history` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `endTime` bigint(20) NOT NULL,
+  `winnerSteamId32` text NOT NULL,
+  `winnerSteamId64` bigint(20) NOT NULL,
+  `userPutInPrice` int(11) NOT NULL,
+  `potPrice` int(11) NOT NULL,
+  `allItemsJson` longtext NOT NULL,
   `date` date NOT NULL,
-  PRIMARY KEY (id)
+  PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
