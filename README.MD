@@ -1,3 +1,5 @@
+OUT OF DATE AT THE MOMENT - NEXT TIME I MAKE ALL NEW FOR YOU GUYS
+
 UPDATES ONLY FOR DEVELOPER GREATINGS - RATEXINDEX!
 
 ###History
@@ -14,7 +16,7 @@ Informations about how it works, click on a link from this Adds or Fixes.
 * Red is a line Delete
 
 
-All Adds and Fixes are tested Example: http://csgowinbig.csgoking.de
+All Adds and Fixes are tested Example: -> NEXT TIME <-
 
 ###Contact
 If you have any questions so contact us, or tell us any issues please! 
