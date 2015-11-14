@@ -119,6 +119,8 @@ input {
 .chat-message {
 	word-wrap: break-word;
 	position: relative;
+
+	padding: 2px 2px;
 }
 
 .chat-profile-pic {

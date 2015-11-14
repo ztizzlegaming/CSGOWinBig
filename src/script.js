@@ -158,6 +158,10 @@ $(function () {
 		window.location = 'donations.html';
 	});
 
+	$('#history-btn').on('click', function () {
+		window.location = 'history.html';
+	});
+
 	$('#logout-btn').on('click', function () {
 		window.location = 'php/SteamAuthentication/steamauth/logout.php';
 	});
@@ -247,13 +251,10 @@ function update () {
 				roundEndTime = data['roundEndTime'],
 				mostRecentAllItems = data['mostRecentAllItems'],
 				mostRecentGame = data['mostRecentGame'];
-			
-			console.log(roundEndTime);
 
 			if (roundEndTime !== null && roundEndTime !== '0') {
 				//Calculate the time left in the timer, depending on the end time
 				roundEndTime = parseInt(roundEndTime);
-				console.log('Round end time after parse as int: ' + roundEndTime);
 
 				if (roundEndTime !== NaN) {
 					var curTimeMillis = Date.now();
@@ -497,19 +498,36 @@ function generateChatMsgStr (msg) {
 	var moderators = ['76561198026845481', '76561198058039750', '76561198079439072', '76561198202339448'];
 
 	var str = '<div class="chat-message ' + colorClass + '">';
-	str += '<a href="' + profileURL + '" target="_blank" class="link">';
-	str += '<img src="' + profilePicSmall + '" class="chat-profile-pic">';
-	str += '</a>';
-	str += '<div class="chat-profile-name"><a href="' + profileURL + '" target="_blank" class="link">' + profileName + '</a>';
+	str += '<a href="' + profileURL + '" target="_blank" class="link">' + profileName + '</a>';
+
 	if (steamID === '76561198020620333') {
 		str += ' (Owner)';
 	} else if ($.inArray(steamID, moderators) !== -1) {
 		str += ' (Moderator)';
 	}
+
+	str += ': ';
+
+	str += text;
+	str += '</div>';
+
+	//This code is for the 
+	/* var str = '<div class="chat-message ' + colorClass + '">';
+	str += '<a href="' + profileURL + '" target="_blank" class="link">';
+	str += '<img src="' + profilePicSmall + '" class="chat-profile-pic">';
+	str += '</a>';
+	str += '<div class="chat-profile-name"><a href="' + profileURL + '" target="_blank" class="link">' + profileName + '</a>';
+
+	if (steamID === '76561198020620333') {
+		str += ' (Owner)';
+	} else if ($.inArray(steamID, moderators) !== -1) {
+		str += ' (Moderator)';
+	}
+
 	str += '</div>';
 	str += '<div class="chat-date-time">' + date + ' at ' + time + '</div>';
 	str += '<div class="chat-text">' + text + '</div>';
-	str += '</div>';
+	str += '</div>'; */
 
 	return str;
 }
