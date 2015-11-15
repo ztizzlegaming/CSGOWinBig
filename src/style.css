@@ -5,9 +5,11 @@ html {
 }
 
 body {
+	background: fixed;       /* this makes the background not moving */
 	background-image: url(images/background.jpg);
 	background-color: black;
 	background-repeat: no-repeat;
+	background-size: cover;      /* this makes the background to auto adjust to screen dimensions (resizing) */
 	/* background-position: center top; */
 	height: 100%;
 	width: 100%;
@@ -129,6 +131,8 @@ input {
 	left: 2px;
 	height: 30px;
 	width: 30px;
+	border: 2px solid black;   /* adds a nice border, personal preference */
+	border-radius: 15px;  /* makes the picture round, also personal preference */
 }
 
 .chat-profile-name {
