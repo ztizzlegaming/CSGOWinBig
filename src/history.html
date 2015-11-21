@@ -158,18 +158,27 @@
 					str += '<div class="history-chance-wrapper">Chance: ' + percentageChance + '%</div>';
 					str += '<div class="history-all-items">Items won:<br>';
 
+					//Sort all of the items by the price, and if the price is the same, sort it by the name
+					allItems.sort(function (a, b) {
+						return b['itemPrice'] - a['itemPrice'] || a['itemName'].localeCompare(b['itemName']);
+					});
+
 					for (var i2 = 0; i2 < allItems.length; i2++) {
 						var item = allItems[i2];
 
-						var itemName = item['itemName'], itemIcon = item['itemIcon'];
+						var itemName = item['itemName'], itemIcon = item['itemIcon'], itemPrice = item['itemPrice'];
 
 						if (itemName.charAt(0) === '?') {
 							itemName = '&#9733;' + itemName.substring(1);
 						}
 
-						var itemIconUrl = 'http://steamcommunity-a.akamaihd.net/economy/image/' + itemIcon + '/360fx360f';
+						if (itemName.indexOf("Sticker %7C")) {
+							itemIcon = 'http://steamcommunity-a.akamaihd.net/economy/image/' + itemIcon + '/90fx90f';
+						} else {
+							itemIcon = 'http://steamcommunity-a.akamaihd.net/economy/image/' + itemIcon + '/360fx360f';
+						}
 
-						str += '<a href="https://steamcommunity.com/market/listings/730/' + itemName + '" target="_blank"><img src="' + itemIconUrl + '" class="history-item-img"></a>';
+						str += '<span title="' + getFormattedPrice(itemPrice) + '"><a href="https://steamcommunity.com/market/listings/730/' + itemName + '" target="_blank"><img src="' + itemIcon + '" class="history-item-img"></a></span>';
 					}
 
 					str += '</div></div>';
