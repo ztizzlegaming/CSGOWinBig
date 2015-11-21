@@ -5,7 +5,8 @@ html {
 }
 
 body {
-	background-image: url(images/background.jpg);
+	/* background-image: url(images/background.jpg); */ /* Background with 2 dudes */
+	background-image: url(images/background-2.png); /* Blue digital camo background */
 	background-color: black;
 	background-repeat: no-repeat;
 	/* background-position: center top; */
