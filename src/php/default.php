@@ -80,4 +80,29 @@ function getVar($varName) {
 		return $var;
 	}
 }
+
+# Thanks to TheAnthonyNL on Github for this function
+function steamid32ToSteamid64($steamid32) {
+    $iServer = "0";
+    $iAuthID = "0";
+
+    $szTmp = strtok($steamid32, ":");
+
+    while(($szTmp = strtok(":")) !== false)
+    {
+        $szTmp2 = strtok(":");
+        if($szTmp2 !== false)
+        {
+            $iServer = $szTmp;
+            $iAuthID = $szTmp2;
+        }
+    }
+    if($iAuthID == "0")
+        return "0";
+
+    $steamId64 = bcmul($iAuthID, "2");
+    $steamId64 = bcadd($steamId64, bcadd("76561197960265728", $iServer)); 
+    $part = explode('.',$steamId64);
+    return $part[0];
+}
 ?>
