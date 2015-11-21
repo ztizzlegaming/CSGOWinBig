@@ -604,7 +604,7 @@ function generatePotStr (pot) {
 
 		var rgbRarityColor = hexToRgb(itemRarityColor);
 
-		if (itemName.indexOf("Sticker |")) {
+		if (itemName.indexOf("Sticker %7C")) {
 			itemIcon = 'http://steamcommunity-a.akamaihd.net/economy/image/' + itemIcon + '/90fx90f';
 		} else {
 			itemIcon = 'http://steamcommunity-a.akamaihd.net/economy/image/' + itemIcon + '/360fx360f';
