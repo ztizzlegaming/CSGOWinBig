@@ -13,7 +13,6 @@ body {
 	height: 100%;
 	width: 100%;
 	font-family: Arial;
-	color: white;
 }
 
 input {
@@ -65,30 +64,27 @@ input {
 	border-bottom: 1px solid black;
 }
 
-.modal {
-	color: black;
-}
-
 .link {
-	color: white;
+	color: black;
 	text-decoration: underline;
 }
 .link:hover {
-	color: white;
+	color: black;
 	text-decoration: none;
 }
 .link:active, .link:visited {
-	color: white;
+	color: black;
 }
 
 .bg {
-	background-color: #4A636B;
+	background-color: white;
+	border: 1px solid blue;
 	border-radius: 3px;
 }
 
 .info {
 	font-size: 30px;
-	color: #33FF00;
+	color: #5CB85C;
 }
 
 #deposit-link {
@@ -162,6 +158,7 @@ input {
 	/* height: 75px; */
 	/* border: 1px solid black; */
 	margin-bottom: 5px;
+	border-radius: 5px;
 }
 
 .pot-item-inner-container {
