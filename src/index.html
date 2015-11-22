@@ -18,21 +18,15 @@
 	<!-- Favicon -->
 	<link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
 	<link rel="icon" href="images/favicon.ico" type="image/x-icon">
-	
-	<!-- Progressbar -->
-	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
-	<link rel="stylesheet" type="text/css" href="progressbar/goalProgress.css" />
-	<script type="text/javascript" src="progressbar/goalProgress.js"></script>
 
-	<!-- Others -->
 	<link rel="stylesheet" type="text/css" href="style.css">
 	<script src="script.js"></script>
 </head>
 <body>
-	<div class="navbar navbar-inverse navbar-static-top">
+	<div class="navbar navbar-default navbar-static-top">
 		<div class="container">
 			<a href="/" class="navbar-brand">
-				<img src="images/logo.png" style="height: 100%;">
+				<img src="images/logo-black.png" style="height: 100%;">
 			</a>
 
 			<button class="navbar-toggle" data-toggle="collapse" data-target=".navHeaderCollapse">
@@ -43,6 +37,16 @@
 
 			<div class="collapse navbar-collapse navHeaderCollapse">
 				<ul class="nav navbar-nav navbar-right">
+					<li>
+						<a href="http://steamcommunity.com/groups/csgo_win_big" title="Join our Steam group!" target="_blank">
+							<img src="images/steam.png" style="width: 30px;">
+						</a>
+					</li>
+					<li style="margin-right: 10px;">
+						<a href="http://twitter.com/csgowinbig" title="Follow us on Twitter!" target="_blank">
+							<img src="images/twitter.png" style="width: 30px;">
+						</a>
+					</li>
 					<li id="loading-menubar">
 						<a>loading&hellip;</a>
 					</li>
@@ -66,14 +70,13 @@
 		<audio src="sounds/gun-sound.mp3" id="gun-sound"></audio>
 	</div>
 
-	<div class="container" style="background-color: rgba(0, 0, 0, 0.75); min-height: 100%; border-radius: 10px;">
-		<div class="row">
-			<div class="col-sm-4">
-				<div style="padding: 10px; padding-bottom: 0px;">
+	<!-- <h1>NOTE: The site is undergoing maintenance. Please bear with us.</h1> -->
+
+	<div class="container" id="main-container">
+		<div class="row main-row">
+			<div class="col-sm-3">
+				<div style="padding-top: 10px; margin-bottom: 20px;">
 					<div id="topleft-menu">Menu</div>
-					<div class="topleft-link-wrapper logout" style="display: none;">
-						<button class="topleft-link btn btn-success btn-block deposit-btn"><span class="glyphicon glyphicon-plus-sign"></span> Deposit Skins</button>
-					</div>
 					<div class="topleft-link-wrapper logout" style="display: none;">
 						<button class="topleft-link btn btn-primary btn-block" id="change-trade-url-btn"><span class="glyphicon glyphicon-pencil"></span> Change Trade URL</button>
 					</div>
@@ -86,14 +89,31 @@
 					<div class="topleft-link-wrapper">
 						<button class="topleft-link btn btn-default btn-block" id="donate-btn"><span class="glyphicon glyphicon-usd"></span> Donate</button>
 					</div>
-					<div class="topleft-link-wrapper logout" style="display: none;">
-						<button class="topleft-link btn btn-danger btn-block" id="logout-btn"><span class="glyphicon glyphicon-log-out"></span> Logout</button>
+					<div class="topleft-link-wrapper">
+						<button class="topleft-link btn btn-success btn-block" id="history-btn"><span class="glyphicon glyphicon-list"></span> History</button>
 					</div>
 				</div>
+				<div class="bg" style="text-align: center; margin-bottom: 20px;">
+					<h4 style="padding: 0px; margin: 10px 0px;">Previous winner:</h4>
+					<img src="" id="prev-winner-pic" style="width: 150px; height: 150px; border-radius: 5px;">
+					<br>
+					<h4 id="prev-winner-name" style="margin-bottom: "></h4>
+					<h4>
+						Win: <span id="prev-winner-amnt"></span>
+						<br>
+						Chance: <span id="prev-winner-chance"></span>
+					</h4>
+				</div>
+				<div class="bg" style="margin-bottom: 20px;">
+					<div id="chatbox">
+						<div id="chatmessages">Loading chat, please wait&hellip;</div>
+					</div>
+					<input id="chat-input" style="width: 100%; display: none;" placeholder="Send message (press 'Enter' to send)">
+				</div>
 			</div>
-			<div class="col-sm-8">
-				<h2 class="bg" style="padding: 10px; padding-bottom: 0px; margin-top: 10px; height: 100%;">
-					Welcome to <span style="font-weight: bold; color: yellow;">CSGO Win Big</span>! Try your luck and deposit items, and see if you can win big! Good luck and have fun!
+			<div class="col-sm-9">
+				<h2 class="bg" style="padding: 10px; padding-bottom: 0px; margin-top: 10px; margin-bottom: 20px; height: 100%;">
+					Welcome to <span style="font-weight: bold; /* color: yellow; */">CSGO Win Big</span>! Try your luck and deposit items, and see if you can win big! Good luck and have fun!
 					<br><br>
 					<a href="https://steamcommunity.com/openid/login?openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.mode=checkid_setup&openid.return_to=http%3A%2F%2Fwww.csgowinbig.com%2Fphp%2Fsteam-login-handle.php&openid.realm=http%3A%2F%2Fwww.csgowinbig.com&openid.ns.sreg=http%3A%2F%2Fopenid.net%2Fextensions%2Fsreg%2F1.1&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select" class="btn btn-lg btn-success" id="login-main" style="display: none; margin-bottom: 10px;">
 						<img src="images/steam-logo.png" style="height: 1em;"> Login for your chance to win!
@@ -102,78 +122,69 @@
 						<img src="images/steam-logo.png" style="height: 1em;"> Deposit skins for your chance to win!
 					</button>
 				</h2>
+				<div style="width: 100%; margin-bottom: 20px;">
+					<table style="width: 100%">
+						<tr>
+							<td style="width: 25%; padding-left: 0px; padding-right: 5px;">
+								<div class="bg" style="padding: 15px; font-size: 18px;">
+									Minimum Deposit:
+									<br>
+									<div class="info">$0.20</div>
+								</div>
+							</td>
+							<td style="width: 25%; padding-left: 5px; padding-right: 5px;">
+								<div class="bg" style="padding: 15px; font-size: 18px;">
+									Total Games Played:
+									<br>
+									<div class="info" id="total-games-played">&hellip;</div>
+								</div>
+							</td>
+							<td style="width: 25%; padding-left: 5px; padding-right: 5px;">
+								<div class="bg" style="padding: 15px; font-size: 18px;">
+									Total Money Won:
+									<br>
+									<div class="info" id="total-money-won">&hellip;</div>
+								</div>
+							</td>
+							<td style="width: 25%; padding-left: 5px; padding-right: 0px;">
+								<div class="bg" style="padding: 15px; font-size: 18px;">
+									Biggest Pot Ever:
+									<br>
+									<div class="info" id="biggest-pot-ever">&hellip;</div>
+								</div>
+							</td>
+						</tr>
+					</table>
+				</div>
+				<div class="bg" style="padding: 5px; margin-bottom: 20px;">
+					<div id="pot-items-price" style="display: none; position: relative;">
+						<div class="row">
+							<div class="col-sm-4">
+								<canvas id="items-canvas" width="250" height="250"></canvas>
+								<br>
+								<table cellpadding="0" style="position: absolute; text-align: center; vertical-align: middle; width: 250px; height: 250px; top: 0px; font-size: 35px;">
+									<tr>
+										<td style="padding: 0px;">
+											<span id="pot-items"></span>/60
+											<br>
+											<span id="pot-price"></span>
+											<br>
+											<span id="time-left"></span>
+										</td>
+									</tr>
+								</table>
+							</div>
+							<div class="col-sm-7" style="height: 250px; overflow-x: auto; margin-left: 20px;">
+								<h3 style="text-align: center; margin: 0px; margin-bottom: 5px;">Players:</h3>
+								<table id="users-deposited-table" style="width: 100%;"></table>
+							</div>
+						</div>
+						<hr style="border-top: 1px solid #777;">
+					</div>
+					<div id="pot">&nbsp;loading&hellip;</div>
+				</div>
 			</div>
 		</div>
-		<div class="row" style="margin-top: 1.5em; margin-bottom: 1.5em;">
-			<div class="col-sm-3">
-				<div class="bg" style="padding: 25px;">
-					Games played today:
-					<br><br>
-					<div class="info" id="games-played-today"></div>
-				</div>
-			</div>
-			<div class="col-sm-3">
-				<div class="bg" style="padding: 25px;">
-					Money won today:
-					<br><br>
-					<div class="info" id="money-won-today"></div>
-				</div>
-			</div>
-			<div class="col-sm-3">
-				<div class="bg" style="padding: 25px;">
-					Biggest pot today:
-					<br><br>
-					<div class="info" id="biggest-pot-today"></div>
-				</div>
-			</div>
-			<div class="col-sm-3">
-				<div class="bg" style="padding: 25px;">
-					Biggest pot ever:
-					<br><br>
-					<div class="info" id="biggest-pot-ever"></div>
-				</div>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-sm-4">
-				<div class="bg">
-					<div style="text-align: center;">
-						<h4 style="padding: 0px; margin: 10px 0px;">Previous winner:</h4>
-						<img src="" id="prev-winner-pic" style="width: 150px; height: 150px;">
-						<br>
-						<h4 id="prev-winner-name" style="margin-bottom: "></h4>
-						<h4>
-							Win: <span id="prev-winner-amnt"></span>
-							<br>
-							Chance: <span id="prev-winner-chance"></span>
-						</h4>
-					</div>
-				</div>
-				<br>
-				<div class="bg" style="padding: 5px 0px;">
-					<div id="chatbox">
-						<div id="chatmessages">Loading chat, please wait&hellip;</div>
-					</div>
-					<input id="chat-input" style="width: 100%; display: none;" placeholder="Send message (press 'Enter' to send)">
-				</div>
-				<br>
-			</div>
-			<div class="col-sm-8">
-				<div class="bg" style="padding: 5px;">
-					<div id="pot-items-price" style="display: none;">
-						Items: <span id="pot-items"></span>/60 | Total Pot Price: <span id="pot-price"></span>
-						<br>
-						<div id="progress"></div>
-						<br>
-						You have deposited <span id="items-deposited-count">0</span> items worth <span id="items-deposited-price">$0.00</span> for a <span id="items-deposited-chance">0</span>% chance.
-					</div>
-					<div id="pot">loading&hellip;</div>
-				</div>
-				<br>
-			</div>
-		</div>
-	</div>
-
 	<div class="modal fade" id="about-modal" role="dialog" tabindex="-1">
 		<div class="modal-dialog modal-lg">
 			<div class="modal-content">
@@ -197,7 +208,7 @@
 							Low minimum bet
 							<ul>
 								<li>
-									The minimum bet is only $1, in comparison to $2 and $3 from similar sites; low enough that anyone can participate, but high enough that the pot doesn't fill up with 4 cent skins.
+									The minimum bet is only $0.20, in comparison to $2 and $3 from similar sites; low enough that anyone can participate, but high enough that the pot doesn't fill up with 4 cent skins.
 								</li>
 							</ul>
 						</li>
@@ -241,7 +252,7 @@
 					"Why was my trade offer declined?" Your trade offer may have been declined because:
 					<ul>
 						<li>Your inventory is set to private.</li>
-						<li>Your offer didn't meet the minimum bet of $1.</li>
+						<li>Your offer didn't meet the minimum bet of $0.20.</li>
 						<li>Your offer was not a gift (you tried to get items from the bot instead of just giving).</li>
 						<li>Your offer contained more than the 10 item limit.</li>
 						<li>One or more of the items in your offer was not for CS: GO.</li>
@@ -258,7 +269,7 @@
 
 					<hr>
 
-					Copyright &copy; 2015 Jordan Turley, CSGO Win Big. All Rights Reserved. Background image is from Steam, and can be found <a href="http://cdn.akamai.steamstatic.com/steamcommunity/public/images/items/730/ef7cb44d312df5038cba0f69a0901da427900645.jpg">here</a>.
+					Copyright &copy; 2015 Jordan Turley, CSGO Win Big. All Rights Reserved. Background image is from Steam, and can be found <a href="http://cdn.akamai.steamstatic.com/steamcommunity/public/images/items/730/955e56085e78606ce8b56d7d912e2cd738af4215.png">here</a>.
 				</div>
 				<div class="modal-footer">
 					<button class="btn btn-default" data-dismiss="modal">Close</button>

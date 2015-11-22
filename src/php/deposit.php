@@ -17,10 +17,7 @@ if (is_null($password) || is_null($tradeOwnerSteamId32) || is_null($allItemsJson
 }
 
 # Convert Steam ID to Steam64 ID
-$idParts = explode(':', $tradeOwnerSteamId32);
-$authServer = intval($idParts[1]);
-$accountNumber = intval($idParts[2]);
-$tradeOwnerSteamId64 = $accountNumber * 2 + 76561197960265728 + $authServer;
+$tradeOwnerSteamId64 = steamid32ToSteamid64($tradeOwnerSteamId32);
 
 # Get the password from config file and make sure it matches
 $fileLoc = $_SERVER['DOCUMENT_ROOT'] . '/../passwords.txt';
@@ -85,13 +82,50 @@ foreach ($allItems as $item) {
 	$stmt->execute();
 }
 
+# Check if this is the first, second, or another deposit
+$stmt = $db->query('SELECT * FROM history ORDER BY id DESC');
+$mostRecentHistory = $stmt->fetch();
+
+# If items is not empty, then this is the first deposit
+$mostRecentItems = $mostRecentHistory['allItemsJson'];
+if (strlen($mostRecentItems) > 0) {
+	# Put a new row in, starting the next pot/round. However, don't start the timer yet.
+	$stmt = $db->query('INSERT INTO history (endTime) VALUES (0)');
+	$startTimer = 0;
+}
+
+# If there is already a round going but the timer hasn't started yet, then check to see if there are multiple people in the round
+if ($mostRecentHistory['endTime'] === '0') {
+	if (strlen($mostRecentItems) === 0) {
+		$stmt = $db->query('SELECT * FROM currentPot');
+		$allItemsCurPot = $stmt->fetchAll();
+		$steamId = $allItemsCurPot[0]['ownerSteamId64'];
+
+		$startTimer = 0;
+
+		foreach ($allItemsCurPot as $item) {
+			if ($steamId !== $item['ownerSteamId64']) {
+				# There are multiple people in the pot, start the timer
+				$endTime = round(microtime(true) * 1000 + 120000.0);
+				$stmt = $db->prepare('UPDATE history SET endTime = :endtime');
+				$stmt->bindValue(':endtime', $endTime);
+				$stmt->execute();
+
+				$startTimer = 1;
+			}
+		}
+	}
+} else { # This is if the timer is already running. It doesn't matter what $startTimer is
+	$startTimer = 0;
+}
+
+# Check if there are over the max number of items in the pot
 # Get count of all items in pot
 $stmt = $db->query('SELECT COUNT(*) FROM `currentPot`');
 $countRow = $stmt->fetch();
 $currentPotCount = $countRow['COUNT(*)'];
 
-# Check if this deposit put the pot over the top
-# If it did, generate the array of tickets and pick a winner
+# If the pot is over the max, pick a winner, and tell the bot to stop the timer
 if ($currentPotCount >= $maxPotCount) {
 	$stmt = $db->query('SELECT * FROM currentPot');
 	$allPotItems = $stmt->fetchAll();
@@ -204,12 +238,14 @@ if ($currentPotCount >= $maxPotCount) {
 
 	$allItemsJsonForDB = json_encode($allItemsInPrevGame);
 
-	# Add this game to the past games database
+	# Get the round id, from mostRecentHistory, above
+	$roundId = $mostRecentHistory['id'];
+
+	# Update the history entry for this round to add all the items and the winner
 	$sql =
-		'INSERT INTO history
-		(winnerSteamId32, winnerSteamId64, userPutInPrice, potPrice, allItemsJson, date)
-		VALUES
-		(:id32, :id64, :userprice, :potprice, :allitemsjson, NOW())';
+	'UPDATE history
+	SET winnerSteamId32 = :id32, winnerSteamId64 = :id64, userPutInPrice = :userprice, potPrice = :potprice, allItemsJson = :allitemsjson, date = NOW()
+	WHERE id = :roundid';
 
 	$stmt = $db->prepare($sql);
 	$stmt->bindValue(':id32', $winnerSteamId32);
@@ -217,6 +253,7 @@ if ($currentPotCount >= $maxPotCount) {
 	$stmt->bindValue(':userprice', $userPrice);
 	$stmt->bindValue(':potprice', $totalPotPrice);
 	$stmt->bindValue(':allitemsjson', $allItemsJsonForDB);
+	$stmt->bindValue(':roundid', $roundId);
 	$stmt->execute();
 
 	# Clear the current pot
@@ -236,6 +273,6 @@ if ($currentPotCount >= $maxPotCount) {
 }
 
 # If the pot was not over the top, potOver = 0
-$data = array('minDeposit' => 1, 'potOver' => 0);
+$data = array('minDeposit' => 1, 'potOver' => 0, 'startTimer' => $startTimer);
 echo jsonSuccess($data);
 ?>

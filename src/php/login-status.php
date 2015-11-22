@@ -32,8 +32,19 @@ if ($loginStatus === 1) {
 	$tradeToken = null;
 }
 
+# Home page stuff: Minimum bet ($0.20), total games played, total money won, biggest pot ever
+$stmt = $db->query('SELECT * FROM history');
+$allGames = $stmt->fetchAll();
+
+$totalGamesPlayed = count($allGames);
+
+$totalMoneyWon = 0;
+foreach ($allGames as $game) {
+	$totalMoneyWon += intval($game['potPrice']);
+}
+
 # Get all games from the past 24 hours for home page info shit
-$stmt = $db->query('SELECT * FROM history WHERE date > DATE_SUB(NOW(), INTERVAL 24 HOUR) AND date <= NOW()');
+/* $stmt = $db->query('SELECT * FROM history WHERE date > DATE_SUB(NOW(), INTERVAL 24 HOUR) AND date <= NOW()');
 
 $gamesPlayedToday = $stmt->rowCount();
 
@@ -49,7 +60,7 @@ foreach ($allFromPastDay as $pot) {
 	if ($potPrice > $biggestPotToday) {
 		$biggestPotToday = $potPrice;
 	}
-}
+} */
 
 # Get the max pot price ever
 $stmt = $db->query('SELECT MAX(potPrice) FROM history');
@@ -57,9 +68,8 @@ $row = $stmt->fetch();
 $biggestPotEver = $row['MAX(potPrice)'];
 
 $infoArr = array(
-	'gamesPlayedToday' => $gamesPlayedToday,
-	'moneyWonToday' => $moneyWonToday,
-	'biggestPotToday' => $biggestPotToday,
+	'totalGamesPlayed' => $totalGamesPlayed,
+	'totalMoneyWon' => $totalMoneyWon,
 	'biggestPotEver' => $biggestPotEver
 );
 

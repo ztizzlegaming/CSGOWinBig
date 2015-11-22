@@ -17,10 +17,7 @@ if (is_null($password) || is_null($tradeOwnerSteamId32) || is_null($allItemsJson
 }
 
 # Convert Steam ID to Steam64 ID
-$idParts = explode(':', $tradeOwnerSteamId32);
-$authServer = intval($idParts[1]);
-$accountNumber = intval($idParts[2]);
-$tradeOwnerSteamId64 = $accountNumber * 2 + 76561197960265728 + $authServer;
+$tradeOwnerSteamId64 = steamid32ToSteamid64($tradeOwnerSteamId32);
 
 # Get the password from config file and make sure it matches
 $fileLoc = $_SERVER['DOCUMENT_ROOT'] . '/../passwords.txt';
@@ -163,7 +160,8 @@ foreach ($allItems as $item) {
 	}
 }
 
-$minDeposit = $totalPrice >= 100 ? 1 : 0;
+# 20 means $0.20, or 20 cents
+$minDeposit = $totalPrice >= 20 ? 1 : 0;
 
 $allItemsObj = json_encode($itemsArr);
 
