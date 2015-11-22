@@ -1,29 +1,4 @@
-OUT OF DATE AT THE MOMENT - NEXT TIME I MAKE ALL NEW FOR YOU GUYS
-
-UPDATES ONLY FOR DEVELOPER GREATINGS - RATEXINDEX!
-
-###History
-* Firefox Fix
-* Add Progressbar
-* Chat Url Delete
-* Add Smileys to Chatbox 
-
-Change the Path /yourpic.png and Names :smileycode: to your smiley name / word. Make sure you upload your pics with the name if you need.
-
-###Other Informations / Help
-Informations about how it works, click on a link from this Adds or Fixes.
-* Green is a line Add
-* Red is a line Delete
-
-
-All Adds and Fixes are tested Example: -> NEXT TIME <-
-
-###Contact
-If you have any questions so contact us, or tell us any issues please! 
-
-Ratexindex = webmaster@ratexindex.de
-
-TheAnthonyNL =  theanthonynl@gmail.com
+Under Construction !!!!!
 
 ###Credits
 * RatexIndex = https://github.com/RatexIndex
