@@ -31,7 +31,7 @@ If you would like to setup this project for your own project, there are a couple
 {"default-password":"YOUR DATABASE PASSWORD","steamAPIKey":"YOUR STEAM API KEY"}
 
 ### Troubleshooting
-* If you are trying to get this website set up and encounter any errors, please add [TheAnthonyNL](http://steamcommunity.com/profiles/76561198001581508/) on Steam. DO NOT submit an issue, only submit an issue if there is something legitimately wrong with the code. Also, please try something on your own before messaging.
+* If you are trying to get this website set up and encounter any errors, please add [TheAnthonyNL](http://steamcommunity.com/profiles/76561198001581508/) on Steam, and leave a comment on his profile, saying that you need help setting up this project. DO NOT submit an issue, only submit an issue if there is something legitimately wrong with the code. Also, please try something on your own before messaging.
 * Please DO NOT add me on Steam, add Anthony. I apologize, but I am too busy as it is with school and my own site to help troubleshoot other peoples' sites.
 * One very common error people have been getting is their site being stuck at "loading...". If this is the case, go to the /php/login-status.php file on your server, and see what it says. If it says "file not found", this means that the passwords.txt file cannot be found on your server. You may have it in the wrong location; it is supossed to be located outside of the web root, one level up from the public_html folder on your server. It is possible, however, that your hosting doesn't allow access outside of the web root, so if this is the case, you will just have to hard code in your API Key and password. To hard code in your password, follow these steps: http://pastebin.com/8ZCNq7f8
 
