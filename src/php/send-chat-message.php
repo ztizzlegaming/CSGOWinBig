@@ -20,6 +20,19 @@ if (is_null($text) || strlen($text) === 0) {
 
 $steamUserID = $steamprofile['steamid'];
 
+# Check if they are on the blacklist for the chat
+$stmt = $db->query('SELECT * FROM chatBlacklist');
+$blacklist = $stmt->fetchAll();
+
+foreach ($blacklist as $user) {
+	$steamId64 = $user['steamId64'];
+
+	if ($steamId64 === $steamUserID) {
+		echo jsonSuccess(array('message' => 'You have been banned from the chat.'));
+		return;
+	}
+}
+
 $stmt = $db->prepare('INSERT INTO `chat` (`steamUserID`, `text`, `date`, `time`) VALUES (:userid, :text, CURDATE(), CURTIME())');
 $stmt->bindValue(':userid', $steamUserID);
 $stmt->bindValue(':text', $text);
