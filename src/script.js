@@ -553,7 +553,7 @@ function generateChatMsgStr (msg) {
 
 	var colorClass = id % 2 === 0 ? 'chat-message-even' : 'chat-message-odd';
 
-	var moderators = ['76561198026845481', '76561198058039750', '76561198079439072', '76561198202339448'];
+	var moderators = ['76561198026845481', '76561198058039750', '76561198079439072', '76561198202339448', '76561197995164153'];
 
 	var str = '<div class="chat-message ' + colorClass + '" title="' + date + ' at ' + time + '">';
 	str += '<a href="' + profileURL + '" target="_blank" class="link">' + profileName + '</a>';
