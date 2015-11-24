@@ -26,6 +26,8 @@ If you would like to setup this project for your own project, there are a couple
   * [Line 6 of bot-withdraw.php](https://github.com/ztizzlegaming/CSGOWinBig/blob/master/src/php/bot-withdraw.php#L6). For this, you will need to enter the 64bit ID of your Steam bot. You can find this in the bot's profile url, or on websites such as http://steamrep.com.
   * [Lines 44](https://github.com/ztizzlegaming/CSGOWinBig/blob/master/src/index.html#L44) and [92](https://github.com/ztizzlegaming/CSGOWinBig/blob/master/src/index.html#L92) of index.html, [line 96 of support.html](https://github.com/ztizzlegaming/CSGOWinBig/blob/master/src/support.html#L96), [line 82 of donations.html](https://github.com/ztizzlegaming/CSGOWinBig/blob/master/src/donations.html#L82), and [line 148 of prices.html](https://github.com/ztizzlegaming/CSGOWinBig/blob/master/src/prices.html#L148). Here, you must modify the sign in url to have your own website's url. You must change where it says 'openid.return_to=' and 'openid.realm=' to be your own website's url.
   * [Line 149 of script.js](https://github.com/ztizzlegaming/CSGOWinBig/blob/master/src/script.js#L149). Here, you must put in the trade url of your own bot.
+  * [Line 252 of script.js](https://github.com/ztizzlegaming/CSGOWinBig/blob/master/src/script.js#L252). Replace " CSGO Win Big" with your website title ;
+
 * One last thing, the site assumes that there will always be chat messages, so you have to manually insert one chat message into the chat database table.
 * Here is an example of my passwords.txt:  
 {"default-password":"YOUR DATABASE PASSWORD","steamAPIKey":"YOUR STEAM API KEY"}
