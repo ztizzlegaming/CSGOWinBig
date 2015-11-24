@@ -124,7 +124,7 @@ foreach ($allItems as $item) {
 		$hash = urlencode($marketName);
 		$marketObj = json_decode(file_get_contents("http://steamcommunity.com/market/priceoverview/?currency=1&appid=730&market_hash_name=$hash"), true);
 		if ($marketObj['success'] !== true) {
-			echo jsonErr('An error occured while fetching market price for an item.');
+			echo jsonErr('An error occured while fetching market price for an item. Item name: ' . $marketName);
 			return;
 		}
 
