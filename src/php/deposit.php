@@ -4,7 +4,14 @@
 include 'default.php';
 $db = getDB();
 
+# Maximum number of items in the pot
 $maxPotCount = 60;
+
+# Minimum percentage to keep from the pot (1.00 = 100%, 0.25 = 25%, etc.)
+$minCut = 0.02;
+
+# Maximum percentage to keep from the pot (1.00 = 100%, 0.25 = 25%, etc.)
+$maxCut = 0.05;
 
 # Get password, owner steam ID, and all deposit items
 $password = isset($_POST['password']) ? $_POST['password'] : null;
@@ -194,13 +201,13 @@ if ($currentPotCount >= $maxPotCount) {
 		$itemPrice = intval($item['itemPrice']);
 		$itemPercentage = $itemPrice / $totalPotPrice;
 
-		if ($keepPercentage + $itemPercentage > 0.05) {
+		if ($keepPercentage + $itemPercentage > $maxCut) {
 			array_push($itemsToGive, $item);
 			$give = true;
 			continue;
 		}
 
-		if ($keepPercentage + $itemPercentage >= 0.02 && $keepPercentage < 0.02) {
+		if ($keepPercentage + $itemPercentage >= $minCut && $keepPercentage < $minCut) {
 			array_push($itemsToKeep, $item);
 			$give = true;
 			continue;
