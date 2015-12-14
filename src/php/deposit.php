@@ -12,7 +12,7 @@ $tradeOwnerSteamId32 = isset($_POST['owner']) ? $_POST['owner'] : null;
 $allItemsJson = isset($_POST['items']) ? $_POST['items'] : null;
 
 if (is_null($password) || is_null($tradeOwnerSteamId32) || is_null($allItemsJson) || strlen($password) === 0 || strlen($tradeOwnerSteamId32) === 0 || strlen($allItemsJson) === 0) {
-	echo jsonErr('One of the required fields was not sent correctly or was left blank.');
+	echo jsonErr('One of the required fields was not sent correctly or was left blank, in deposit.php');
 	return;
 }
 
@@ -194,13 +194,13 @@ if ($currentPotCount >= $maxPotCount) {
 		$itemPrice = intval($item['itemPrice']);
 		$itemPercentage = $itemPrice / $totalPotPrice;
 
-		if ($keepPercentage + $itemPercentage > 0.1) {
+		if ($keepPercentage + $itemPercentage > 0.5) {
 			array_push($itemsToGive, $item);
 			$give = true;
 			continue;
 		}
 
-		if ($keepPercentage + $itemPercentage >= 0.05 && $keepPercentage < 0.05) {
+		if ($keepPercentage + $itemPercentage >= 0.03 && $keepPercentage < 0.03) {
 			array_push($itemsToKeep, $item);
 			$give = true;
 			continue;

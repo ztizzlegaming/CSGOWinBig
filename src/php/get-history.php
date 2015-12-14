@@ -9,9 +9,10 @@ $alreadyLoadedCount = (int) $alreadyLoadedCount;
 if ($alreadyLoadedCount === 0) {
 	$sql = 'SELECT * FROM history ORDER BY id DESC LIMIT 0, 11';
 } else {
-	$alreadyLoadedCount++;
 	$sql = "SELECT * FROM history ORDER BY id DESC LIMIT $alreadyLoadedCount, 10";
 }
+
+
 
 $stmt = $db->query($sql);
 $allRounds = $stmt->fetchAll();

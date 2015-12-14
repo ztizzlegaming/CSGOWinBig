@@ -95,13 +95,13 @@ foreach ($allItems as $item) {
 	$itemPrice = intval($item['itemPrice']);
 	$itemPercentage = $itemPrice / $totalPotPrice;
 
-	if ($keepPercentage + $itemPercentage > 0.1) {
+	if ($keepPercentage + $itemPercentage > 0.5) {
 		array_push($itemsToGive, $item);
 		$give = true;
 		continue;
 	}
 
-	if ($keepPercentage + $itemPercentage >= 0.05 && $keepPercentage < 0.05) {
+	if ($keepPercentage + $itemPercentage >= 0.03 && $keepPercentage < 0.03) {
 		array_push($itemsToKeep, $item);
 		$give = true;
 		continue;

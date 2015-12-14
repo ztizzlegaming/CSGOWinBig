@@ -12,7 +12,7 @@ $tradeOwnerSteamId32 = isset($_POST['owner']) ? $_POST['owner'] : null;
 $allItemsJson = isset($_POST['items']) ? $_POST['items'] : null;
 
 if (is_null($password) || is_null($tradeOwnerSteamId32) || is_null($allItemsJson) || strlen($password) === 0 || strlen($tradeOwnerSteamId32) === 0 || strlen($allItemsJson) === 0) {
-	echo jsonErr('One of the required fields was not sent correctly or was left blank.');
+	echo jsonErr('One of the required fields was not sent correctly or was left blank, in check-items.php ' . $password . ' \ ' . $tradeOwnerSteamId32 . ' \ ' . $allItemsJson);
 	return;
 }
 
@@ -122,9 +122,17 @@ foreach ($allItems as $item) {
 	# If all of those are 0, set it to the Steam market price
 	if ($price === 0) {
 		$hash = urlencode($marketName);
-		$marketObj = json_decode(file_get_contents("http://steamcommunity.com/market/priceoverview/?currency=1&appid=730&market_hash_name=$hash"), true);
+		$marketObj = json_decode(file_get_contents('http://steamcommunity.com/market/priceoverview/?currency=1&appid=730&market_hash_name=' . $hash), true);
+
+		/* if ($marketObjStr === false) {
+			echo jsonErr('An error occured while doing the url request');
+			return;
+		}
+
+		$marketObj = json_decode($marketObjStr, true); */
+
 		if ($marketObj['success'] !== true) {
-			echo jsonErr('An error occured while fetching market price for an item. Item name: ' . $marketName);
+			echo jsonErr('An error occured while fetching market price for an item.');#' Server response: |' . $marketObjStr . '|');
 			return;
 		}
 
