@@ -138,7 +138,13 @@ $(function () {
 				}, 'json');
 			});
 		} else {
-			$('<a>').attr('href', 'https://steamcommunity.com/tradeoffer/new/?partner=278478260&token=s8MZ56C5').attr('target', '_blank')[0].click();
+			if (navigator.userAgent.toLowerCase().indexOf('firefox') > -1) {
+				window.open('your steam trade offer url of your bot', '_blank');
+				console.log('firefox');
+			} else {
+				$('<a>').attr('href', 'your steam trade offer url of your bot').attr('target', '_blank')[0].click();            
+				console.log('not firefox');
+			}
 		}
 	});
 
