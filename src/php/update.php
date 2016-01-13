@@ -28,7 +28,7 @@ foreach ($currentPotArr as $item) {
 }
 
 # Get previous winner's steam ID
-$stmt = $db->query('SELECT * FROM history ORDER BY id DESC');
+$stmt = $db->query('SELECT * FROM history ORDER BY id DESC  LIMIT 0, 5');
 $allRounds = $stmt->fetchAll();
 
 $mostRecentRound = $allRounds[0];
@@ -107,7 +107,7 @@ foreach ($currentPotArr as $itemInPot) {
 # Get the time left in the current round
 $roundEndTime = is_null($currentRound) ? null : $currentRound['endTime'];
 
-$stmt = $db->query('SELECT * FROM history ORDER BY id DESC');
+$stmt = $db->query('SELECT * FROM history ORDER BY id DESC  LIMIT 0, 5');
 $mostRecentInHistory = $stmt->fetch();
 
 $mostRecentAllItems = $mostRecentInHistory['allItemsJson'];
