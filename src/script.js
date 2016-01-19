@@ -20,6 +20,13 @@ var mTradeToken = null;
 
 var updateWaitTime = 1000;
 
+var circle = new ProgressBar.Circle('#items-canvas', {
+    color: 'Blue',
+    duration: 1000,
+    trailWidth: 4,
+    strokeWidth: 5
+});
+
 $(function () {
 	$.getJSON('php/login-status.php', function (jsonObj) {
 		handleJsonResponse(jsonObj, function (data) {
@@ -485,48 +492,7 @@ function update () {
 }
 
 function drawCircle (itemCount) {
-	var perc = itemCount / 60;
-	var percRadians = perc * (2 * Math.PI);
-
-	var c = $('#items-canvas')[0];
-	var ctx = c.getContext('2d');
-
-	var cSize = c.width;
-
-	ctx.rect(0, 0, cSize, cSize);
-	ctx.fillStyle = 'white';
-	ctx.fill();
-
-	/* ctx.beginPath();
-	ctx.arc(cSize / 2, cSize / 2, cSize / 2, 0, 2 * Math.PI);
-	ctx.stroke(); */
-
-	//Draw gray background circle
-	ctx.beginPath();
-	ctx.arc(cSize / 2, cSize / 2, cSize / 2, 0, 2 * Math.PI);
-	ctx.fillStyle = '#C7C7C7';
-	ctx.fill();
-
-	//Draw part of circle taken up
-	ctx.beginPath();
-	ctx.moveTo(cSize / 2, cSize / 2);
-	ctx.lineTo(cSize / 2, cSize * 3 / 4);
-	ctx.arc(cSize / 2, cSize / 2, cSize / 2, Math.PI / 2, Math.PI / 2 - percRadians, true);
-	ctx.lineTo(cSize / 2, cSize / 2);
-	ctx.fillStyle = 'blue';
-	ctx.fill();
-
-	//Draw white circle in the middle	
-	ctx.beginPath();
-	ctx.arc(cSize / 2, cSize / 2, cSize * 3 / 8, 0, Math.PI * 2, true);
-	ctx.fillStyle = 'white';
-	ctx.fill();
-
-	//Draw black circle outline around white circle
-	/* ctx.beginPath();
-	ctx.arc(cSize / 2, cSize / 2, cSize * 1 / 4, 0, Math.PI * 2, true);
-	ctx.fillStyle = 'black';
-	ctx.stroke(); */
+	circle.animate((itemCount*1.666)/100);
 }
 
 function generateChatStr (chat) {
