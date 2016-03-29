@@ -37,6 +37,20 @@ CREATE TABLE IF NOT EXISTS chat (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table 'chatblacklist'
+--
+
+CREATE TABLE IF NOT EXISTS `chatblacklist` (
+  `steamId64` bigint(20) NOT NULL,
+  UNIQUE KEY `steamId64` (`steamId64`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;CREATE TABLE IF NOT EXISTS `chatblacklist` (
+  `steamId64` bigint(20) NOT NULL,
+  UNIQUE KEY `steamId64` (`steamId64`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table 'currentPot'
 --
 
